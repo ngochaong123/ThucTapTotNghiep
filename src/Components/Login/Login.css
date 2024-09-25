@@ -1,0 +1,123 @@
+/* General styling for the login page */
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url('../../images/BG.jpg');
+  min-height: 100vh;
+  background-size: cover;         /* Ensure the background image covers the logo */
+  background-position: center;    /* Center the background image */
+  background-repeat: no-repeat;   /* Prevent the image from repeating */
+}
+
+/* Logo container styling */
+.logo-container {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center; /* Center the logo horizontally */
+  align-items: center;
+}
+
+.logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;    /* Make the image circular */
+  background-size: cover;         /* Ensure the background image covers the logo */
+  background-position: center;    /* Center the background image */
+  background-repeat: no-repeat;   /* Prevent the image from repeating */
+}
+
+/* Logo name styling */
+.NameLogoLogin {
+  color: white;                   /* White text color */
+  margin-top: 10px;              /* Space between logo and text */
+  font-size: 20px;                /* Adjust font size */
+  font-weight: bold;              /* Make the text bold */
+  text-align: center;             /* Center-align the text */
+  padding: 5px 10px 20px;        /* Add some padding around the text */
+  border-radius: 10px;            /* Optional: rounded edges for the background */
+}
+
+/* Login container styling */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styling */
+.login-form {
+  width: 100%;
+}
+
+/* Heading styling */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Input group styling */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  width: 300px;
+}
+
+.input-group label {
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Button styling */
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Styling for the Remember Me and Forgot Password row */
+.flex-container {
+  display: flex;
+  align-items: center; /* Aligns items vertically centered */
+  justify-content: space-between; /* Space between the checkbox and link */
+  margin-top: 10px; /* Add space above this row */
+  width: 100%; /* Make sure this occupies full width */
+  margin-bottom: 10px;
+}
+
+/* Link styling */
+.link {
+  color: #007bff; /* Link color */
+  text-decoration: none; /* Remove underline */
+  margin-left: 10px; /* Space to the left of the link */
+}
+
+.link:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+/* Links container */
+.links-container-Login {
+  display: flex;
+  justify-content: center; /* Center the links */
+  margin-top: 10px; /* Add some space above the links */
+}
