@@ -1,0 +1,126 @@
+.containerMenu {
+    display: flex;
+}
+
+.SibarMenu {
+    width: 250px;
+    height: 100vh; /* Full viewport height */
+    padding: 10px;
+    color: white; /* Text color */
+    position: fixed; /* Make the sidebar fixed in position */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    overflow-y: auto; /* Allows scrolling inside the sidebar if needed */
+    background-color: #2864F6;
+    border: 2px solid ;
+    border-radius: 10px;
+    margin: 4px;
+}
+
+.LogoMenu {
+    display: flex;
+    align-items: center; /* Align logo and text vertically */
+
+    .Logo {
+        width: 50px;
+        height: 50px;
+        margin: 16px 10px 0 10px;
+        border-radius: 50%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    h1 {
+        margin-left: 10px;
+        font-size: 24px;
+        color: white;
+    }
+}
+
+.ButtonMenu {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    background-color: transparent;
+    padding: 10px;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+
+    .NameOptionIcon {
+        color: white;
+        text-decoration: none;
+    }
+
+    .IconOption {
+        width: 20px;
+        height: 20px;
+        margin: 10px 20px 10px 20px ;
+    }
+}
+
+.ButtonMenu:hover {
+    background-color: #497DF7;
+    border-radius: 10px;
+}
+
+.ButtonMenu:active{
+    background-color: #497DF7;
+    opacity: 0.9;
+}
+
+.ButtonloginOut{
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    background-color: transparent;
+    width: 230px;
+    padding: 10px;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 10px;
+    text-decoration: none;
+    .NameOptionIcon {
+        color: white;
+    }
+
+    .IconOption {
+        width: 20px;
+        height: 20px;
+        margin: 10px 20px 10px 20px ;
+    }
+}
+
+.ButtonloginOut:hover {
+    background-color: #497DF7;
+    border-radius: 10px;
+}
+
+.ButtonloginOut:active{
+    background-color: #497DF7;
+    opacity: 0.9;
+}
+
+.OptionSidebar {
+    margin-left: 320px; /* Make space for the fixed sidebar */
+    width: calc(100% - 320px); /* Adjust the width of the main content */
+    padding: 20px;
+    margin-right: 50px;
+
+}
+
+.ShowOption{
+    padding: 30px;
+}

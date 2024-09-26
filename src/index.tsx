@@ -8,6 +8,10 @@ import reportWebVitals from './reportWebVitals';
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register'; 
 import Menu from './Components/Menu/Menu'; 
+import LibraryBook from "./Components/libraryBooks/libraryBooks";
+import Member from "./Components/Member/Member"; // Fixed typo
+import Report from "./Components/Report/Report";
+import User from "./Components/User/User";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,9 +21,17 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/Login" element={<Login />} />  {/* Default route for login */}
-        <Route path="/Register" element={<Register />} />  {/* Route for registration */}
-        <Route path="/Menu" element={<Menu />} />  {/* Route for registration */}
+        {/* Main routes */}
+        <Route path="/Login" element={<Login />} />  
+        <Route path="/Register" element={<Register />} />  
+        
+        {/* Menu route with nested routes */}
+        <Route path="/Menu" element={<Menu />}>
+          <Route path="LibraryBook" element={<LibraryBook />} />
+          <Route path="Member" element={<Member />} /> {/* Corrected the path */}
+          <Route path="Report" element={<Report />} />
+          <Route path="User" element={<User />} />
+        </Route>
       </Routes>
     </Router>
   </React.StrictMode>

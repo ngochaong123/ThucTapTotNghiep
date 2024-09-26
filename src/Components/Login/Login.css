@@ -24,8 +24,8 @@
   height: 70px;
   border-radius: 50%;    /* Make the image circular */
   background-size: cover;         /* Ensure the background image covers the logo */
-  background-position: center;    /* Center the background image */
-  background-repeat: no-repeat;   /* Prevent the image from repeating */
+  background-position: center;    /* revent tCenter the background image */
+  background-repeat: no-repeat;   /* Phe image from repeating */
 }
 
 /* Logo name styling */
