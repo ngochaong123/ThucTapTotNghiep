@@ -6,7 +6,6 @@
     width: 250px;
     height: 100vh; /* Full viewport height */
     padding: 10px;
-    color: white; /* Text color */
     position: fixed; /* Make the sidebar fixed in position */
     top: 0;
     left: 0;
@@ -16,6 +15,7 @@
     border: 2px solid ;
     border-radius: 10px;
     margin: 4px;
+    border: none;
 }
 
 .LogoMenu {
@@ -116,11 +116,10 @@
 .OptionSidebar {
     margin-left: 320px; /* Make space for the fixed sidebar */
     width: calc(100% - 320px); /* Adjust the width of the main content */
-    padding: 20px;
-    margin-right: 50px;
-
+    padding: 7px;
 }
 
 .ShowOption{
-    padding: 30px;
+    margin-left: -50px;
+    background-color: white;
 }

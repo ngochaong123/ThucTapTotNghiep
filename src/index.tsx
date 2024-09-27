@@ -27,8 +27,10 @@ root.render(
         
         {/* Menu route with nested routes */}
         <Route path="/Menu" element={<Menu />}>
+          {/* Index route: LibraryBook will be shown by default */}
+          <Route index element={<LibraryBook />} />
           <Route path="LibraryBook" element={<LibraryBook />} />
-          <Route path="Member" element={<Member />} /> {/* Corrected the path */}
+          <Route path="Member" element={<Member />} />
           <Route path="Report" element={<Report />} />
           <Route path="User" element={<User />} />
         </Route>

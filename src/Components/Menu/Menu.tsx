@@ -54,6 +54,7 @@ export default function Menu() {
         {/* Outlet to display nested routes */}
         <div className='ShowOption'>
           <Outlet />
+          
         </div>
         
       </div>

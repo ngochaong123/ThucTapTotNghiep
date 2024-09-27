@@ -1,0 +1,216 @@
+.HeaderLibrarybook {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    height: 80px; 
+    padding: 0 20px; 
+    background-color: white;
+}
+
+h1 {
+    font-size: 24px; 
+    color: #333;
+    margin: 0; 
+}
+
+.UserIcon{
+    width: 45px;
+    height: 45px;
+    margin: 0px 0px 10px 20px;
+}
+
+.SearchHeader {
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9; 
+    border-radius: 25px;
+    border: 2px solid #E0E0E0; 
+    padding: 5px 10px; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+    width: 300px;
+    height: 30px;
+}
+
+.search-icon {
+    margin-right: 0px; 
+}
+
+.search-icon img {
+    width: 15px; 
+    height: 15px; 
+}
+
+.contanierHeaderLeft{
+    display: flex;
+}
+
+.SearchInput {
+    width: 400px;
+    height: 40px;
+    border: none; 
+    border-radius: 20px;
+    padding-left: 10px; 
+    background-color: transparent; /* Nền trong suốt */
+    font-size: 16px; 
+}
+
+.SearchInput::placeholder {
+    color: #A0A0A0; 
+    font-size: 14px;
+}
+
+.SearchInput:focus {
+    outline: none; 
+}
+
+.CurrentInformation{
+    background-color: #F4F4F4;
+    height: 590px;
+    border-radius: 10px;
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.Filter{
+    display: flex;
+    width: 110px;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: #2864F6;
+    margin: 20px 20px 50px 20px;
+
+    .iconFilter{
+        width: 20px;
+        height: 20px;
+        margin-top: 3px;
+        margin-left: 4px;
+    }
+    
+    .NameiconFilter{
+        margin: 5px 7px ;
+        color: white;
+    }
+}
+
+.Filter:hover {
+    background-color: #497DF7;
+    border-radius: 10px;
+}
+
+.Filter:active{
+    background-color: #497DF7;
+    opacity: 0.9;
+}
+
+.OptionFilter{
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #2864F6;
+    position: absolute;
+    margin: -49px 0px 0px 20px;
+    color: white;
+    z-index: 3;
+}
+
+.OptionFilter ul {
+    list-style-type: none;
+    padding: 8px 0;
+    cursor: pointer;
+    width: 80px;
+    text-align: center; 
+    margin: 0 auto; /* Đảm bảo danh sách nằm giữa trong khung cha */
+}
+  
+.OptionFilter ul:hover {
+    background-color: #497DF7;
+    border-radius: 10px;
+}
+
+/* table  */
+/* Container for the table */
+.container-table {
+    margin: 20px;
+    margin-top: -50px;
+    max-height: none; /* Hoặc xóa thuộc tính này nếu không cần */
+    overflow-y: visible; /* Đảm bảo nội dung hiển thị đầy đủ */
+}
+
+/* Styling for the table */
+.book-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* phần ẩn thanh cuộn */
+/* Chỉ áp dụng cuộn trong phần thân của bảng */
+.book-table tbody {
+    display: block;
+    max-height: 300px; /* Giới hạn chiều cao và kích hoạt thanh cuộn khi nội dung vượt quá */
+    overflow-y: scroll; /* Cho phép cuộn theo chiều dọc */
+    scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
+}
+
+.book-table thead, .book-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* Đảm bảo các cột có kích thước cố định và đồng đều */
+}
+
+/* Ẩn thanh cuộn trên trình duyệt WebKit (Chrome, Safari) */
+.book-table tbody::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn */
+}
+
+/* Đảm bảo chiều rộng của cột khớp giữa thead và tbody */
+.book-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+/* phần ẩn thanh cuộn */
+
+.book-table thead th {
+    background-color: #2864F6; 
+    color: white;              
+    font-weight: bold;         
+    padding: 10px;             
+    text-align: center;        
+    border: 1px solid #ddd;    
+}
+
+.book-table th, .book-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+/* Fix table header to the top */
+.book-table thead {
+    display: block;
+    width: 100%;
+}
+
+/* Set scroll only on tbody */
+.book-table tbody {
+    display: block;
+    max-height: 400px; /* Set the desired height for the scroll */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    width: 100%;
+}
+
+.book-table tbody td, .book-table thead th {
+    width: 150px; /* Adjust the width of each cell */
+}
+
+/* Ensure alternating row colors for better readability */
+.book-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.book-table tbody tr:hover {
+    background-color: #ddd;
+}
+
+.BookImage {
+    width: 50px;
+    height: auto;
+}
