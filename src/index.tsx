@@ -12,6 +12,7 @@ import LibraryBook from "./Components/libraryBooks/libraryBooks";
 import Member from "./Components/Member/Member"; // Fixed typo
 import Report from "./Components/Report/Report";
 import User from "./Components/User/User";
+import AddMember from "./Components/Member/addMember/addMember";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -30,7 +31,9 @@ root.render(
           {/* Index route: LibraryBook will be shown by default */}
           <Route index element={<LibraryBook />} />
           <Route path="LibraryBook" element={<LibraryBook />} />
-          <Route path="Member" element={<Member />} />
+          <Route path="Member" element={<Member />} >
+            <Route path="AddMember" element={<AddMember />} />
+          </Route>
           <Route path="Report" element={<Report />} />
           <Route path="User" element={<User />} />
         </Route>

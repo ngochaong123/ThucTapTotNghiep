@@ -1,25 +1,4 @@
-.HeaderLibrarybook {
-    display: flex;
-    justify-content: space-between; 
-    align-items: center; 
-    height: 80px; 
-    padding: 0 20px; 
-    background-color: white;
-}
-
-h1 {
-    font-size: 24px; 
-    color: #333;
-    margin: 0; 
-}
-
-.UserIcon{
-    width: 45px;
-    height: 45px;
-    margin: 0px 0px 10px 20px;
-}
-
-.SearchHeader {
+.LibraryBooksSearchHeader {
     display: flex;
     align-items: center;
     background-color: #f9f9f9; 
@@ -28,23 +7,33 @@ h1 {
     padding: 5px 10px; 
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
     width: 300px;
-    height: 30px;
+    height: 20px;
 }
 
-.search-icon {
+.LibraryBookstileBook{
+    margin: 20px 0px 0px 30px;
+    font-size: 30px;
+}
+
+.LibraryBookssearch-icon {
     margin-right: 0px; 
 }
 
-.search-icon img {
+.LibraryBookssearch-icon img {
     width: 15px; 
     height: 15px; 
 }
 
-.contanierHeaderLeft{
+.LibraryBookscontanierHeaderLeft{
     display: flex;
+
+    h1{
+        margin-top: 9px;
+        font-size: 18px;
+    }
 }
 
-.SearchInput {
+.LibraryBooksSearchInput {
     width: 400px;
     height: 40px;
     border: none; 
@@ -54,163 +43,263 @@ h1 {
     font-size: 16px; 
 }
 
-.SearchInput::placeholder {
+.LibraryBooksSearchInput::placeholder {
     color: #A0A0A0; 
     font-size: 14px;
 }
 
-.SearchInput:focus {
+.LibraryBooksSearchInput:focus {
     outline: none; 
 }
 
-.CurrentInformation{
-    background-color: #F4F4F4;
-    height: 590px;
+.LibraryBooksCurrentInformation{
     border-radius: 10px;
+    height: 180px;
     padding: 5px;
     margin-left: 10px;
+    background-color: white;
 }
 
-.Filter{
+.LibraryBooksChooseBook{
     display: flex;
-    width: 110px;
-    border-radius: 10px;
-    padding: 5px;
-    background-color: #2864F6;
-    margin: 20px 20px 50px 20px;
+}
 
-    .iconFilter{
-        width: 20px;
-        height: 20px;
-        margin-top: 3px;
+.LibraryBooksNameChooseBook{
+    font-weight: bold;
+    margin: 0px 10px 5px 15px;
+}
+
+.LibraryBooksheaderBook{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: -20px;
+}
+
+.LibraryBooksFilter{
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    border-radius: 15px;
+    padding: 5px 15px 5px 10px;
+    background-color: white;
+    margin: 0px 20px 20px 20px;
+    border: 2px solid #CBCBDC;
+
+    .LibraryBooksiconFilter{
+        width: 15px;
+        height: 15px;
+        margin-top: 5px;
         margin-left: 4px;
     }
     
-    .NameiconFilter{
+    .LibraryBooksNameiconFilter{
         margin: 5px 7px ;
-        color: white;
+        color: black;
     }
 }
 
-.Filter:hover {
-    background-color: #497DF7;
-    border-radius: 10px;
+.LibraryBooksFilter:hover {
+    background-color: white;
+    border-radius: 15px;
 }
 
-.Filter:active{
-    background-color: #497DF7;
+.LibraryBooksFilter:active{
+    background-color: white;
     opacity: 0.9;
 }
 
-.OptionFilter{
+.LibraryBooksSearchBook{
+    display: flex;
+    justify-content: space-between;
+    border-radius: 15px;
+    padding: 5px 15px 5px 10px;
+    background-color: white;
+    margin: 0 20px 20px 20px;
+    border: 2px solid #CBCBDC;
+    align-items: center;
+    width: 300px;
+    height: 28px;
+    
+}
+
+.LibraryBooksNameiconFilter{
+    margin: 5px 7px ;
+    color: black;
+}
+
+.LibraryBooksSearch-Book{
+    width: 15px;
+    height: 15px;
+    margin-top: 5px;
+    margin-left: 4px;
+}
+
+.LibraryBookssearchIcon {
+    margin-right: 0px; 
+}
+
+.LibraryBookssearchIcon img {
+    width: 15px; 
+    height: 15px; 
+}
+
+.LibraryBooksAddlibrary{
+    display: flex;
+    justify-content: space-between;
+    width: 170px;
+    border-radius: 15px;
+    padding: 5px 15px 5px 17px;
+    background-color: white;
+    margin: 20px 20px 50px 20px;
+    border: 2px solid #CBCBDC;
+
+    .LibraryBooksiconFilter{
+        width: 15px;
+        height: 15px;
+        margin-top: 5px;
+        margin-left: 4px;
+    }
+    
+    .LibraryBooksNameiconFilter{
+        margin: 5px 10px ;
+        color: black;
+    }
+}
+
+.LibraryBooksAddlibrary:hover {
+    background-color: white;
+    border-radius: 15px;
+}
+
+.LibraryBooksAddlibrary:active{
+    background-color: white;
+    opacity: 0.7;
+}
+
+.LibraryBooksOptionFilter{
     border-radius: 10px;
     padding: 10px;
-    background-color: #2864F6;
+    width: 175px;
+    border-radius: 15px;
+    background-color: white;
+    border: 2px solid #CBCBDC;
     position: absolute;
-    margin: -49px 0px 0px 20px;
-    color: white;
+    margin: -17px 0px 0px 20px;
+    color: black;
     z-index: 3;
 }
 
-.OptionFilter ul {
+.LibraryBooksOptionFilter ul {
+    display: flex;
     list-style-type: none;
     padding: 8px 0;
     cursor: pointer;
-    width: 80px;
-    text-align: center; 
+    width: 180px;
     margin: 0 auto; /* Đảm bảo danh sách nằm giữa trong khung cha */
 }
+
+.LibraryBooksOptionFilter img{
+    width: 20px;
+    height: 20px;
+}
+
+.LibraryBooksOptionFilter div{
+    margin-left: 20px;
+}
   
-.OptionFilter ul:hover {
-    background-color: #497DF7;
+.LibraryBooksOptionFilter ul:hover {
+    /* background-color: #497DF7; */
+    background-color: white;
+    opacity: 0.8;
     border-radius: 10px;
 }
 
 /* table  */
 /* Container for the table */
-.container-table {
-    margin: 20px;
-    margin-top: -50px;
-    max-height: none; /* Hoặc xóa thuộc tính này nếu không cần */
-    overflow-y: visible; /* Đảm bảo nội dung hiển thị đầy đủ */
+.LibraryBookscontainer-table {
+    margin-left: 10px;
+    margin-top: 10px;
+    max-height: none; 
+    overflow-y: visible; 
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px; 
 }
 
 /* Styling for the table */
-.book-table {
+.LibraryBooksbook-table {
     width: 100%;
     border-collapse: collapse;
+    border-right: 2px solid #CBCBDC;
+    border-radius: 7px; 
+    overflow: hidden; 
+    
 }
 
 /* phần ẩn thanh cuộn */
 /* Chỉ áp dụng cuộn trong phần thân của bảng */
-.book-table tbody {
+.LibraryBooksbook-table tbody {
     display: block;
-    max-height: 300px; /* Giới hạn chiều cao và kích hoạt thanh cuộn khi nội dung vượt quá */
+    max-height: 400px; /* Giới hạn chiều cao và kích hoạt thanh cuộn khi nội dung vượt quá */
     overflow-y: scroll; /* Cho phép cuộn theo chiều dọc */
     scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
 }
 
-.book-table thead, .book-table tbody tr {
+.LibraryBooksbook-table thead, .LibraryBooksbook-table tbody tr {
     display: table;
     width: 100%;
     table-layout: fixed; /* Đảm bảo các cột có kích thước cố định và đồng đều */
 }
 
 /* Ẩn thanh cuộn trên trình duyệt WebKit (Chrome, Safari) */
-.book-table tbody::-webkit-scrollbar {
+.LibraryBooksbook-table tbody::-webkit-scrollbar {
     display: none; /* Ẩn thanh cuộn */
 }
 
 /* Đảm bảo chiều rộng của cột khớp giữa thead và tbody */
-.book-table {
+.LibraryBooksbook-table {
     width: 100%;
     border-collapse: collapse;
 }
+
 /* phần ẩn thanh cuộn */
 
-.book-table thead th {
+.LibraryBooksbook-table thead th {
     background-color: #2864F6; 
     color: white;              
     font-weight: bold;         
     padding: 10px;             
     text-align: center;        
     border: 1px solid #ddd;    
+    border-radius: 0px; /* Đảm bảo không có bo góc riêng cho phần header */
 }
 
-.book-table th, .book-table td {
+.LibraryBooksbook-table th, .LibraryBooksbook-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
 }
 
 /* Fix table header to the top */
-.book-table thead {
-    display: block;
+.LibraryBooksbook-table thead {
     width: 100%;
 }
 
 /* Set scroll only on tbody */
-.book-table tbody {
+.LibraryBooksbook-table tbody {
     display: block;
-    max-height: 400px; /* Set the desired height for the scroll */
+    max-height: 380px; /* Set the desired height for the scroll */
     overflow-y: auto;  /* Enable vertical scrolling */
     width: 100%;
 }
 
-.book-table tbody td, .book-table thead th {
+.LibraryBooksbook-table tbody td, .LibraryBooksbook-table thead th {
     width: 150px; /* Adjust the width of each cell */
+    border-right: 2px solid #CBCBDC;
 }
 
-/* Ensure alternating row colors for better readability */
-.book-table tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.book-table tbody tr:hover {
-    background-color: #ddd;
-}
-
-.BookImage {
+.LibraryBooksBookImage {
     width: 50px;
     height: auto;
+    border-radius: 5px; /* Thêm bo góc cho hình ảnh sách */
 }

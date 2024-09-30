@@ -4,7 +4,13 @@ import './libraryBooks.css';
 // icon
 import Magnifier from '../../images/icon/magnifier.png';
 import Filter from '../../images/icon/filter.png';
-import User from "../../images/icon/UserHeader.png";
+import ArrowDown from "../../images/icon/ArrowDown.png";
+import Plus from "../../images/icon/plus.png";
+import Math from "../../images/icon/math-book.png"
+import literature from "../../images/icon/literature.png"
+import Biology from "../../images/icon/biology.png"
+import History from "../../images/icon/history-book.png"
+import Science from "../../images/icon/science-book.png"
 
 // book
 import Books from "../../images/book/TuyetTacCuashakes.png";
@@ -57,55 +63,84 @@ export default function LibraryBooks() {
 
   return (
     <div>
-      <div className='HeaderLibrarybook'>
+      <div className='LibraryBooksCurrentInformation'>
         {/* tile */}
-        <h1> Sách thư viện </h1>
-
-        {/* search */}
-        <div className='contanierHeaderLeft'>
-          <div className="SearchHeader">
-            <div className="search-icon">
-              <img src={Magnifier} alt="Search Icon" />
+        <div className='LibraryBooksheaderBook'>
+          <h1 className='LibraryBookstileBook'> Sách thư viện </h1>
+          {/* add menber */}
+          <button className='LibraryBooksAddlibrary'>
+            <div style={{display:'flex'}}>
+            <img src={Plus} className='LibraryBooksiconFilter' alt="Filter Icon" />
+              <div className='LibraryBooksNameiconFilter'> Thêm Sách mới </div>
             </div>
-            <input className="SearchInput" type="text" placeholder="Tìm kiếm sách..." />
-          </div>
-
-          {/* avatar */}
-          <img src={User} className='UserIcon' />
+          </button>
+          
         </div>
         
+        {/* option */}
+        <div className='LibraryBooksChooseBook'>
+          <div>
+            <div className='LibraryBooksNameChooseBook'> Thể loại </div>
+            <div 
+              className='LibraryBooksContanierFilter'
+              ref={filterRef}  // Gắn reference vào khu vực menu
+            >
+              <button
+                className='LibraryBooksFilter'
+                onClick={toggleFilterMenu}  // Hiển thị menu khi nhấn vào
+                ref={buttonRef}  // Gắn reference vào button
+              >
+                <div style={{display:'flex'}}>
+                  <img src={Filter} className='LibraryBooksiconFilter' alt="Filter Icon" />
+                  <div className='LibraryBooksNameiconFilter'> Thể loại </div>
+                </div>
+                <img src={ArrowDown} className='LibraryBooksiconFilter' alt="Filter Icon" />
+              </button>
+
+              {/* Menu "Thể loại" sẽ hiện hoặc ẩn dựa trên trạng thái của state */}
+              {showFilterMenu && (
+                <div className='LibraryBooksOptionFilter'>
+                  <ul>
+                    <img src={Math} />
+                    <div>Toán</div>
+                  </ul>
+                  <ul>
+                    <img src={literature} />
+                    <div>Văn học</div>
+                  </ul>
+                  <ul>
+                    <img src={Biology} />
+                    <div>Sinh học</div>
+                  </ul>
+                  <ul>
+                    <img src={History} />
+                    <div>Lịch sử</div>
+                  </ul>
+                  <ul>
+                    <img src={Science} />
+                    <div>Khoa học</div>
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* search */}
+          <div>
+            <div className='LibraryBooksNameChooseBook'> Tìm kiếm </div>
+            <div className="LibraryBooksSearchBook">
+              <div className="LibraryBookssearchIcon">
+                <img src={Magnifier} alt="Search Icon" />
+              </div>
+              <input className="LibraryBooksSearchInput" type="text" placeholder="Tìm kiếm sách..." />
+            </div>
+          </div>
+           
+        </div>
       </div>
 
-      <div className='CurrentInformation'>
-        {/* option */}
-        <div 
-          className='ContanierFilter'
-          ref={filterRef}  // Gắn reference vào khu vực menu
-        >
-          <button
-            className='Filter'
-            onClick={toggleFilterMenu}  // Hiển thị menu khi nhấn vào
-            ref={buttonRef}  // Gắn reference vào button
-          >
-            <img src={Filter} className='iconFilter' alt="Filter Icon" />
-            <div className='NameiconFilter'> Thể loại </div>
-          </button>
-
-          {/* Menu "Thể loại" sẽ hiện hoặc ẩn dựa trên trạng thái của state */}
-          {showFilterMenu && (
-            <div className='OptionFilter'>
-              <ul>Toán</ul>
-              <ul>Lý</ul>
-              <ul>Hóa</ul>
-              <ul>Sinh</ul>
-              <ul>Văn</ul>
-            </div>
-          )}
-        </div>
-
-        <div className="container-table">
-          <h2 className='NameTable'>Thư viện sách</h2>
-          <table className="book-table">
+      <div className="LibraryBookscontainer-table">
+          <table className="LibraryBooksbook-table">
             <thead>
               <tr>
                 <th>STT</th>
@@ -122,7 +157,7 @@ export default function LibraryBooks() {
                 <tr key={book.id}>
                   <td>{index + 1}</td> {/* STT là thứ tự từ 1 */}
                   <td>{book.name}</td>
-                  <td><img src={book.image} alt={book.name} className="BookImage" /></td>
+                  <td><img src={book.image} alt={book.name} className="LibraryBooksBookImage" /></td>
                   <td>{book.quantity}</td>
                   <td>{book.location}</td>
                   <td>{book.author}</td>
@@ -132,7 +167,6 @@ export default function LibraryBooks() {
             </tbody>
           </table>
         </div>
-      </div>
     </div>
   );
 }
