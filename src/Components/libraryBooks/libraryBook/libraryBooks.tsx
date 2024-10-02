@@ -23,6 +23,7 @@ interface Book {
   title: string;
   author: string;
   quantity: number;
+  category:string;
   publishDate: string;
   updatedDate: string;
   location: string;  // New field for book location
@@ -32,26 +33,29 @@ interface Book {
 export default function LibraryBooks() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [books, setBooks] = useState<Book[]>([
-    { id: 3, maSach: 'BOOK003', title: 'Pride and Prejudice', author: 'Jane Austen', quantity: 5, publishDate: '28/01/1813', updatedDate: '2024-06-05', location: 'C1', receivedDate: '13/06/2024' },
-    { id: 4, maSach: 'BOOK004', title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', quantity: 12, publishDate: '10/04/1925', updatedDate: '2024-06-06', location: 'A3', receivedDate: '14/06/2024' },
-    { id: 5, maSach: 'BOOK005', title: 'Moby-Dick', author: 'Herman Melville', quantity: 6, publishDate: '18/10/1851', updatedDate: '2024-06-07', location: 'B1', receivedDate: '15/06/2024' },
-    { id: 6, maSach: 'BOOK006', title: 'War and Peace', author: 'Leo Tolstoy', quantity: 4, publishDate: '09/01/1869', updatedDate: '2024-06-08', location: 'D2', receivedDate: '16/06/2024' },
-    { id: 7, maSach: 'BOOK007', title: 'The Catcher in the Rye', author: 'J.D. Salinger', quantity: 9, publishDate: '16/07/1951', updatedDate: '2024-06-09', location: 'C2', receivedDate: '17/06/2024' },
-    { id: 8, maSach: 'BOOK008', title: 'The Lord of the Rings', author: 'J.R.R. Tolkien', quantity: 7, publishDate: '29/07/1954', updatedDate: '2024-06-10', location: 'E3', receivedDate: '18/06/2024' },
-    { id: 9, maSach: 'BOOK009', title: 'The Hobbit', author: 'J.R.R. Tolkien', quantity: 10, publishDate: '21/09/1937', updatedDate: '2024-06-11', location: 'F1', receivedDate: '19/06/2024' },
-    { id: 10, maSach: 'BOOK010', title: 'Crime and Punishment', author: 'Fyodor Dostoevsky', quantity: 8, publishDate: '01/01/1866', updatedDate: '2024-06-12', location: 'B3', receivedDate: '20/06/2024' },
-    { id: 11, maSach: 'BOOK011', title: 'The Brothers Karamazov', author: 'Fyodor Dostoevsky', quantity: 5, publishDate: '01/01/1880', updatedDate: '2024-06-13', location: 'C3', receivedDate: '21/06/2024' },
-    { id: 12, maSach: 'BOOK012', title: 'Brave New World', author: 'Aldous Huxley', quantity: 11, publishDate: '01/01/1932', updatedDate: '2024-06-14', location: 'D1', receivedDate: '22/06/2024' },
-    { id: 13, maSach: 'BOOK013', title: 'The Grapes of Wrath', author: 'John Steinbeck', quantity: 6, publishDate: '14/04/1939', updatedDate: '2024-06-15', location: 'F2', receivedDate: '23/06/2024' },
-    { id: 14, maSach: 'BOOK014', title: 'Jane Eyre', author: 'Charlotte Brontë', quantity: 9, publishDate: '16/10/1847', updatedDate: '2024-06-16', location: 'E1', receivedDate: '24/06/2024' },
-    { id: 15, maSach: 'BOOK015', title: 'Wuthering Heights', author: 'Emily Brontë', quantity: 4, publishDate: '01/12/1847', updatedDate: '2024-06-17', location: 'B4', receivedDate: '25/06/2024' },
-    { id: 16, maSach: 'BOOK016', title: 'Les Misérables', author: 'Victor Hugo', quantity: 7, publishDate: '01/01/1862', updatedDate: '2024-06-18', location: 'A2', receivedDate: '26/06/2024' },
-    { id: 17, maSach: 'BOOK017', title: 'Don Quixote', author: 'Miguel de Cervantes', quantity: 3, publishDate: '01/01/1605', updatedDate: '2024-06-19', location: 'E2', receivedDate: '27/06/2024' },
-    { id: 18, maSach: 'BOOK018', title: 'Ulysses', author: 'James Joyce', quantity: 10, publishDate: '02/02/1922', updatedDate: '2024-06-20', location: 'C4', receivedDate: '28/06/2024' },
-    { id: 19, maSach: 'BOOK019', title: 'The Odyssey', author: 'Homer', quantity: 8, publishDate: '01/01/800 BC', updatedDate: '2024-06-21', location: 'D3', receivedDate: '29/06/2024' },
-    { id: 20, maSach: 'BOOK020', title: 'Hamlet', author: 'William Shakespeare', quantity: 15, publishDate: '01/01/1600', updatedDate: '2024-06-22', location: 'A4', receivedDate: '30/06/2024' },
-    { id: 21, maSach: 'BOOK021', title: 'A Tale of Two Cities', author: 'Charles Dickens', quantity: 7, publishDate: '01/01/1859', updatedDate: '2024-06-23', location: 'F3', receivedDate: '01/07/2024' },
-    { id: 22, maSach: 'BOOK022', title: 'The Divine Comedy', author: 'Dante Alighieri', quantity: 5, publishDate: '01/01/1320', updatedDate: '2024-06-24', location: 'D4', receivedDate: '02/07/2024' }
+    { id: 1, maSach: 'BOOK001', title: 'The Elements of Mathematical Logic', author: 'Georg Kreisel', quantity: 4, category: 'Toán', publishDate: '01/01/1972', updatedDate: '2024-06-01', location: 'A1', receivedDate: '01/06/2024' },
+    { id: 2, maSach: 'BOOK002', title: 'Algebra', author: 'Michael Artin', quantity: 6, category: 'Toán', publishDate: '01/01/1991', updatedDate: '2024-06-02', location: 'B2', receivedDate: '02/06/2024' },
+    { id: 3, maSach: 'BOOK003', title: 'Pride and Prejudice', author: 'Jane Austen', quantity: 5, category: 'Văn học', publishDate: '28/01/1813', updatedDate: '2024-06-05', location: 'C1', receivedDate: '13/06/2024' },
+    { id: 4, maSach: 'BOOK004', title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', quantity: 12, category: 'Văn học', publishDate: '10/04/1925', updatedDate: '2024-06-06', location: 'A3', receivedDate: '14/06/2024' },
+    { id: 5, maSach: 'BOOK005', title: 'Moby-Dick', author: 'Herman Melville', quantity: 6, category: 'Văn học', publishDate: '18/10/1851', updatedDate: '2024-06-07', location: 'B1', receivedDate: '15/06/2024' },
+    { id: 6, maSach: 'BOOK006', title: 'War and Peace', author: 'Leo Tolstoy', quantity: 4, category: 'Lịch sử', publishDate: '09/01/1869', updatedDate: '2024-06-08', location: 'D2', receivedDate: '16/06/2024' },
+    { id: 7, maSach: 'BOOK007', title: 'The Catcher in the Rye', author: 'J.D. Salinger', quantity: 9, category: 'Văn học', publishDate: '16/07/1951', updatedDate: '2024-06-09', location: 'C2', receivedDate: '17/06/2024' },
+    { id: 8, maSach: 'BOOK008', title: 'The Lord of the Rings', author: 'J.R.R. Tolkien', quantity: 7, category: 'Văn học', publishDate: '29/07/1954', updatedDate: '2024-06-10', location: 'E3', receivedDate: '18/06/2024' },
+    { id: 9, maSach: 'BOOK009', title: 'The Hobbit', author: 'J.R.R. Tolkien', quantity: 10, category: 'Văn học', publishDate: '21/09/1937', updatedDate: '2024-06-11', location: 'F1', receivedDate: '19/06/2024' },
+    { id: 10, maSach: 'BOOK010', title: 'Crime and Punishment', author: 'Fyodor Dostoevsky', quantity: 8, category: 'Lịch sử', publishDate: '01/01/1866', updatedDate: '2024-06-12', location: 'B3', receivedDate: '20/06/2024' },
+    { id: 11, maSach: 'BOOK011', title: 'The Brothers Karamazov', author: 'Fyodor Dostoevsky', quantity: 5, category: 'Lịch sử', publishDate: '01/01/1880', updatedDate: '2024-06-13', location: 'C3', receivedDate: '21/06/2024' },
+    { id: 12, maSach: 'BOOK012', title: 'Brave New World', author: 'Aldous Huxley', quantity: 11, category: 'Khoa học', publishDate: '01/01/1932', updatedDate: '2024-06-14', location: 'D1', receivedDate: '22/06/2024' },
+    { id: 13, maSach: 'BOOK013', title: 'The Grapes of Wrath', author: 'John Steinbeck', quantity: 6, category: 'Văn học', publishDate: '14/04/1939', updatedDate: '2024-06-15', location: 'F2', receivedDate: '23/06/2024' },
+    { id: 14, maSach: 'BOOK014', title: 'Jane Eyre', author: 'Charlotte Brontë', quantity: 9, category: 'Văn học', publishDate: '16/10/1847', updatedDate: '2024-06-16', location: 'E1', receivedDate: '24/06/2024' },
+    { id: 15, maSach: 'BOOK015', title: 'Wuthering Heights', author: 'Emily Brontë', quantity: 4, category: 'Văn học', publishDate: '01/12/1847', updatedDate: '2024-06-17', location: 'B4', receivedDate: '25/06/2024' },
+    { id: 16, maSach: 'BOOK016', title: 'Les Misérables', author: 'Victor Hugo', quantity: 7, category: 'Lịch sử', publishDate: '01/01/1862', updatedDate: '2024-06-18', location: 'A2', receivedDate: '26/06/2024' },
+    { id: 17, maSach: 'BOOK017', title: 'Don Quixote', author: 'Miguel de Cervantes', quantity: 3, category: 'Văn học', publishDate: '01/01/1605', updatedDate: '2024-06-19', location: 'E2', receivedDate: '27/06/2024' },
+    { id: 18, maSach: 'BOOK018', title: 'Ulysses', author: 'James Joyce', quantity: 10, category: 'Văn học', publishDate: '02/02/1922', updatedDate: '2024-06-20', location: 'C4', receivedDate: '28/06/2024' },
+    { id: 19, maSach: 'BOOK019', title: 'The Odyssey', author: 'Homer', quantity: 8, category: 'Lịch sử', publishDate: '01/01/800 BC', updatedDate: '2024-06-21', location: 'D3', receivedDate: '29/06/2024' },
+    { id: 20, maSach: 'BOOK020', title: 'Hamlet', author: 'William Shakespeare', quantity: 15, category: 'Văn học', publishDate: '01/01/1600', updatedDate: '2024-06-22', location: 'A4', receivedDate: '30/06/2024' },
+    { id: 21, maSach: 'BOOK021', title: 'A Tale of Two Cities', author: 'Charles Dickens', quantity: 7, category: 'Lịch sử', publishDate: '01/01/1859', updatedDate: '2024-06-23', location: 'F3', receivedDate: '01/07/2024' },
+    { id: 22, maSach: 'BOOK022', title: 'The Divine Comedy', author: 'Dante Alighieri', quantity: 5, category: 'Văn học', publishDate: '01/01/1320', updatedDate: '2024-06-24', location: 'D4', receivedDate: '02/07/2024' }
+    // data
   ]);
   const [selectedBooks, setSelectedBooks] = useState<number[]>([]);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -217,7 +221,7 @@ export default function LibraryBooks() {
                       <img src={ImageBook} alt="Book Image" className='LibraryImageBook' />
                     </td>
                     <td>{book.quantity}</td>
-                    <td>{book.quantity}</td>
+                    <td>{book.category}</td>
                     <td>{book.author}</td>
                     <td>{book.location}</td>
                     <td>{book.publishDate}</td>

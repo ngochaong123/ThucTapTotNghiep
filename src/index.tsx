@@ -16,6 +16,8 @@ import ChangeBook from "./Components/libraryBooks/ChangeBook/ChangeBook";
 import Member from "./Components/Member/Member/Member"; 
 import AddMember from "./Components/Member/addMember/addMember";
 import ChangeInfo from './Components/Member/changeInfor/changeInfor';
+// mượn sách
+import BorrowBooks from "./Components/borrowBooks/borrowBooks";
 // bao cao
 import Report from "./Components/Report/Report";
 // nguoi dung
@@ -45,6 +47,8 @@ root.render(
           <Route path="Member" element={<Member />} />
           <Route path="changeMemberInfor" element={<ChangeInfo />} />
           <Route path="AddMember" element={<AddMember />} />
+          {/* Mượn sách */}
+          <Route path="borrowBooks" element={<BorrowBooks />} />
           {/* bao cao */}
           <Route path="Report" element={<Report />} />
           {/* nguoi dung */}

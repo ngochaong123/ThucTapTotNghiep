@@ -9,6 +9,8 @@ import Group from "../../images/icon/group.png";
 import Report from "../../images/icon/report.png";
 import User from "../../images/icon/user.png";
 import loginOut from "../../images/icon/loginOut.png";
+import borrowBooks from "../../images/icon/borrow-book.png";
+
 
 export default function Menu() {
   return (
@@ -30,6 +32,11 @@ export default function Menu() {
         <Link to="Member" className='ButtonMenu'>
           <img src={Group} alt="Group Icon" className='IconOption' />
           <div className='NameOptionIcon'>Thành viên</div>
+        </Link>
+
+        <Link to="Member" className='ButtonMenu'>
+          <img src={borrowBooks} alt="Group Icon" className='IconOption' />
+          <div className='NameOptionIcon'>Mượn sách</div>
         </Link>
 
         <Link to="Report" className='ButtonMenu'>
