@@ -8,11 +8,16 @@ import reportWebVitals from './reportWebVitals';
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register'; 
 import Menu from './Components/Menu/Menu'; 
-import LibraryBook from "./Components/libraryBooks/libraryBooks";
-import Member from "./Components/Member/Member"; 
-import Report from "./Components/Report/Report";
-import User from "./Components/User/User";
+// sach thu vien
+import LibraryBook from "./Components/libraryBooks/libraryBook/libraryBooks";
+// thanh vien
+import Member from "./Components/Member/Member/Member"; 
 import AddMember from "./Components/Member/addMember/addMember";
+import ChangeInfo from './Components/Member/changeInfor/changeInfor';
+// bao cao
+import Report from "./Components/Report/Report";
+// nguoi dung
+import User from "./Components/User/User";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -30,11 +35,15 @@ root.render(
         <Route path="/Menu" element={<Menu />}>
           {/* Index route: LibraryBook will be shown by default */}
           <Route index element={<LibraryBook />} />
+          {/* sach thu vien */}
           <Route path="LibraryBook" element={<LibraryBook />} />
+          {/* thanh vien */}
           <Route path="Member" element={<Member />} />
-          {/* Directly accessible AddMember route */}
+          <Route path="changeInfo" element={<ChangeInfo />} />
           <Route path="AddMember" element={<AddMember />} />
+          {/* bao cao */}
           <Route path="Report" element={<Report />} />
+          {/* nguoi dung */}
           <Route path="User" element={<User />} />
         </Route>
       </Routes>

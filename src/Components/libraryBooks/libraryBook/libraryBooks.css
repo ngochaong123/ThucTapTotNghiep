@@ -1,4 +1,4 @@
-.MemberSearchHeader {
+.LibrarySearchHeader {
     display: flex;
     align-items: center;
     background-color: #f9f9f9; 
@@ -10,27 +10,27 @@
     height: 20px;
 }
 
-.MembertileBook{
+.LibrarytileBook{
     margin: 20px 0px 0px 30px;
     font-size: 30px;
 }
 
-.Membersearch-icon {
+.Librarysearch-icon {
     margin-right: 0px; 
 }
 
-.Membersearch-icon img {
+.Librarysearch-icon img {
     width: 15px; 
     height: 15px; 
 }
 
-.MemberheaderMember{
+.LibraryheaderLibrary{
     display: flex;
     justify-content: space-between;
     margin-bottom: -20px;
 }
 
-.MembercontanierHeaderLeft{
+.LibrarycontanierHeaderLeft{
     display: flex;
 
     h1{
@@ -39,12 +39,12 @@
     }
 }
 
-.MemberOptionsRow{
+.LibraryOptionsRow{
     display: flex;
     justify-content: space-between;
 }
 
-.MemberSearchInput {
+.LibrarySearchInput {
     width: 400px;
     height: 40px;
     border: none; 
@@ -54,16 +54,16 @@
     font-size: 16px; 
 }
 
-.MemberSearchInput::placeholder {
+.LibrarySearchInput::placeholder {
     color: #A0A0A0; 
     font-size: 14px;
 }
 
-.MemberSearchInput:focus {
+.LibrarySearchInput:focus {
     outline: none; 
 }
 
-.MemberCurrentInformation{
+.LibraryCurrentInformation{
     border-radius: 10px;
     height: 180px;
     padding: 5px;
@@ -71,56 +71,56 @@
     background-color: white;
 }
 
-.MemberChooseMember{
+.LibraryChooseLibrary{
     display: flex;
 }
 
-.MemberNameChooseBook{
+.LibraryNameChooseBook{
     display: flex;
     font-weight: bold;
     margin: 0px 10px 5px 15px;
 }
 
-.MemberheaderBook{
+.LibraryheaderBook{
     display: flex;
     justify-content: space-between;
     margin-bottom: -20px;
 }
 
-.MemberFilter{
+.LibraryFilter{
     display: flex;
     justify-content: space-between;
     width: 200px;
     border-radius: 15px;
-    padding: 5px 15px 5px 10px;
+    padding: 7px 15px 5px 10px;
     background-color: white;
-    margin: 0px 20px 20px 20px;
+    margin: 0px 20px 0px 20px;
     border: 2px solid #CBCBDC;
 
-    .MembericonFilter{
+    .LibraryiconFilter{
         width: 15px;
         height: 15px;
         margin-top: 5px;
         margin-left: 4px;
     }
     
-    .MemberNameiconFilter{
+    .LibraryNameiconFilter{
         margin: 5px 7px ;
-        color: black;
+        color: #A0A0A9;
     }
 }
 
-.MemberFilter:hover {
+.LibraryFilter:hover {
     background-color: white;
     border-radius: 15px;
 }
 
-.MemberFilter:active{
+.LibraryFilter:active{
     background-color: white;
     opacity: 0.9;
 }
 
-.MemberSearchBook{
+.LibrarySearchBook{
     display: flex;
     justify-content: space-between;
     border-radius: 15px;
@@ -134,61 +134,62 @@
     
 }
 
-.MemberNameiconFilter{
+.LibraryNameiconFilter{
     margin: 5px 7px ;
     color: black;
 }
 
-.MemberSearch-Book{
+.LibrarySearch-Book{
     width: 15px;
     height: 15px;
     margin-top: 5px;
     margin-left: 4px;
 }
 
-.MembersearchIcon {
+.LibrarysearchIcon {
     margin-right: 0px; 
 }
 
-.MembersearchIcon img {
+.LibrarysearchIcon img {
     width: 15px; 
     height: 15px; 
 }
 
-.MemberAddMember{
+.LibraryAddLibrary{
     display: flex;
     justify-content: space-between;
-    width: 210px;
+    width: 167px;
     border-radius: 15px;
     padding: 5px 15px 5px 17px;
-    background-color: white;
+    background-color: #2864F6;
     margin: 20px 20px 50px 20px;
-    border: 2px solid #CBCBDC;
+    border: 2px solid #2864F6;
 
-    .MembericonFilter{
+    .LibraryiconFilter{
         width: 15px;
         height: 15px;
         margin-top: 5px;
         margin-left: 4px;
     }
     
-    .MemberNameiconFilter{
+    .LibraryNameiconFilter{
         margin: 5px 10px ;
-        color: black;
+        color: white;
     }
 }
 
-.MemberAddMember:hover {
-    background-color: white;
+.LibraryAddLibrary:hover {
+    background-color: #2864F6;
+    opacity: 0.8;
     border-radius: 15px;
 }
 
-.MemberAddMember:active{
-    background-color: white;
+.LibraryAddLibrary:active{
+    background-color: #2864F6;
     opacity: 0.7;
 }
 
-.MemberOptionFilter{
+.LibraryOptionFilter{
     border-radius: 10px;
     padding: 10px;
     width: 175px;
@@ -201,7 +202,7 @@
     z-index: 4;
 }
 
-.MemberOptionFilter ul {
+.LibraryOptionFilter ul {
     display: flex;
     list-style-type: none;
     padding: 8px 0;
@@ -210,67 +211,68 @@
     margin: 0 auto; /* Đảm bảo danh sách nằm giữa trong khung cha */
 }
 
-.MemberOptionFilter img{
+.LibraryOptionFilter img{
     width: 20px;
     height: 20px;
 }
 
-.MemberOptionFilter div{
+.LibraryOptionFilter div{
     margin-left: 20px;
 }
   
-.MemberOptionFilter ul:hover {
+.LibraryOptionFilter ul:hover {
     /* background-color: #497DF7; */
     background-color: white;
     opacity: 0.8;
     border-radius: 10px;
 }
 
-.MemberEditMember{
+.LibraryEditbrary{
     display: flex;
     justify-content: space-between;
     width: 180px;
     border-radius: 15px;
     padding: 5px 15px 5px 17px;
-    background-color: white;
+    background-color: #2864F6;
     margin: 20px 20px 50px 20px;
-    border: 2px solid #CBCBDC;
+    border: 2px solid #2864F6;
 
-    .MembericonFilter{
+    .LibraryiconFilter{
         width: 15px;
         height: 15px;
         margin-top: 5px;
         margin-left: 4px;
     }
     
-    .MemberNameiconFilter{
-        margin: 5px 10px ;
-        color: black;
+    .LibraryNameDelete{
+        margin: 5px 14px ;
+        color: white;
     }
 }
 
-.MemberEditMember:hover {
-    background-color: white;
+.LibraryEditbrary:hover {
+    background-color: #2864F6;
     border-radius: 15px;
+    opacity: 0.8;
 }
 
-.MemberEditMember:active{
-    background-color: white;
+.LibraryEditbrary:active{
+    background-color: #2864F6;
     opacity: 0.7;
 }
 
 
 /* table */
 
-.FrameMembertableContainer{
+.FrameLibrarytableContainer{
     background-color: white;
     padding: 1px 20px 10px 20px;
     border-radius: 10px;
     margin: -3px -5px 0px -5px;
 }
 
-/* Member table container with scrolling */
-.MembertableContainer {
+/* Library table container with scrolling */
+.LibrarytableContainer {
   margin-top: 20px; /* Space above the table */
   max-height: 440px; /* Set a max height for the container */
   overflow-y: scroll; /* Enable vertical scrolling */
@@ -278,8 +280,13 @@
   border-radius: 5px; /* Optional: Round the corners of the container */
 }
 
+.LibraryImageBook {
+    width: 50px;
+    height: auto;
+}
+  
 /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
-.MembertableContainer::-webkit-scrollbar {
+.LibrarytableContainer::-webkit-scrollbar {
   width: 0; /* Hide vertical scrollbar */
   background: transparent; /* Make background transparent */
 }
@@ -293,7 +300,7 @@
   z-index: 2; /* Ensure header is above other content */
 }
 
-/* Member table */
+/* Library table */
 .memberTable {
   width: 100%; /* Full width of the container */
   border-collapse: collapse; /* Remove spacing between cells */
@@ -314,6 +321,18 @@
 /* Selected member checkbox styles */
 .memberTable input[type="checkbox"]:checked {
   accent-color: #007bff; /* Change checkbox color when checked */
+}
+
+/* change image */
+.avatarAddmember{
+    width: 30px;
+    height: 30px;
+    border-radius: 50px;
+}
+
+.nameAvatarAddmember{
+    margin-top: 5px;
+    margin-left: 10px;
 }
 
 /* Responsive design */

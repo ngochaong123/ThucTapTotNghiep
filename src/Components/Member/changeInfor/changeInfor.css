@@ -101,9 +101,12 @@
     margin-right: 80px;
 }
 
-.SaveButtonMember,
-.ResetButtonMember{
+.SaveButtonMember{
     width: 100px;
+}
+
+.ResetButtonMember{
+    width: 130px;
 }
 
 .SaveButtonMember{
