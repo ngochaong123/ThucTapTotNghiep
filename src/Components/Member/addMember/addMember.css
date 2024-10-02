@@ -1,0 +1,133 @@
+.FrameContanieraddMember{
+    background-color: white;
+    margin-left: 10px;
+    padding: 10px;
+    padding-left: 50px;
+    border-radius: 10px;
+}
+
+.uploadAvatarMember{
+    padding: 30px 0px 30px 0px;
+    margin-left: 20px;
+}
+
+.containeruploadAvatarMember{
+    display: flex;
+
+    img{
+        width: 100px;
+        height: 100px;
+        border-radius: 10px;
+        margin-right: 50px;
+    }
+
+    div h2{
+        font-size: 20px;
+        text-align: start;
+        margin:0 ;
+        margin-left: 0;
+    }
+
+    div div{
+        font-size: 13px;
+        text-align: start;
+        margin: 10px 10px 10px 10px;
+        margin-left: 0;
+        color: #CDCDD0;
+        font-weight: bold;
+    }
+}
+
+.ButtonuploadImage{
+    width: 100px;
+    margin: -25px 0px 20px 150px;
+    background-color: #2864F6;
+    position: absolute;
+}
+
+.ButtonuploadImage:hover{
+    opacity: 0.9;
+}
+
+.ButtonuploadImage:active{
+    opacity: 0.8;
+}
+
+.containeraddMemeber{
+    display: flex;
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+/* right and left */
+
+.containeraddMemeberRight,
+.containeraddMemeberleft{
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+
+    input{
+        width: 300px;
+        border-radius: 10px;
+        padding: 10px;
+        background-color: white;
+        border: 2px solid #CBCBDC;
+       
+    }
+
+    select{
+        width: 323px;
+        border-radius: 10px;
+        padding: 10px;
+        background-color: white;
+        border: 2px solid #CBCBDC;
+    }
+
+    .inputInfoMember{
+        margin-bottom: 50px;
+
+        div{
+            margin-bottom: 10px;
+        }
+    }
+}
+
+.ButtonAddMember{
+    margin: 0px 0px 10px 80px;
+}
+
+.SaveButtonMember{
+    margin-right: 80px;
+}
+
+.SaveButtonMember,
+.ResetButtonMember{
+    width: 100px;
+}
+
+.SaveButtonMember{
+    background-color: #2864F6;
+}
+
+.ResetButtonMember{
+    background-color: red;
+}
+
+.SaveButtonMember:hover{
+    opacity: 0.7;
+}
+
+.ResetButtonMember:hover{
+    background-color: red;
+    opacity: 0.7;
+}
+
+.SaveButtonMember:active{
+    opacity: 0.6;
+}
+
+.ResetButtonMember:active{
+    background-color: red;
+    opacity: 0.6;
+}

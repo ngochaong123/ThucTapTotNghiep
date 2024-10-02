@@ -100,12 +100,14 @@ export default function LibraryBooks() {
       <div className='MemberCurrentInformation'>
         <div className='MemberheaderMember'>
           <h1 className='MembertileBook'> Dữ liệu thành viên </h1>
-          <button className='MemberAddMember'>
-            <div style={{ display: 'flex' }}>
-              <img src={Plus} className='MembericonFilter' alt="Add Member Icon" />
-              <div className='MemberNameiconFilter'> Thêm Thành viên mới </div>
-            </div>
-          </button>
+          <Link to='/Menu/AddMember' style={{ textDecoration: 'none' }}>
+            <button className='MemberAddMember' >
+              <div style={{ display: 'flex' }}>
+                <img src={Plus} className='MembericonFilter' alt="Add Member Icon" />
+                <div className='MemberNameiconFilter'> Thêm Thành viên mới </div>
+              </div>
+            </button>
+          </Link>
         </div>
 
         {/* Flex container for options row */}
@@ -187,7 +189,7 @@ export default function LibraryBooks() {
                       checked={selectedMembers.length === members.length}
                     />
                   </th>
-                  <th>Mã thành viên</th> {/* Thêm cột Mã thành viên */}
+                  <th>Mã thành viên</th>
                   <th>Tên thành viên</th>
                   <th>Email</th>
                   <th>Số điện thoại</th>
@@ -220,6 +222,7 @@ export default function LibraryBooks() {
           </div>
         </div>
       </div>
+      <Outlet />
     </div>
   );
 }

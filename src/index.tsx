@@ -9,7 +9,7 @@ import Login from './Components/Login/Login';
 import Register from './Components/Register/Register'; 
 import Menu from './Components/Menu/Menu'; 
 import LibraryBook from "./Components/libraryBooks/libraryBooks";
-import Member from "./Components/Member/Member"; // Fixed typo
+import Member from "./Components/Member/Member"; 
 import Report from "./Components/Report/Report";
 import User from "./Components/User/User";
 import AddMember from "./Components/Member/addMember/addMember";
@@ -23,17 +23,17 @@ root.render(
     <Router>
       <Routes>
         {/* Main routes */}
-        <Route path="/Login" element={<Login />} />  
-        <Route path="/Register" element={<Register />} />  
+        <Route path="/Login" element={<Login />} />
+        <Route path="/Register" element={<Register />} />
         
         {/* Menu route with nested routes */}
         <Route path="/Menu" element={<Menu />}>
           {/* Index route: LibraryBook will be shown by default */}
           <Route index element={<LibraryBook />} />
           <Route path="LibraryBook" element={<LibraryBook />} />
-          <Route path="Member" element={<Member />} >
-            <Route path="AddMember" element={<AddMember />} />
-          </Route>
+          <Route path="Member" element={<Member />} />
+          {/* Directly accessible AddMember route */}
+          <Route path="AddMember" element={<AddMember />} />
           <Route path="Report" element={<Report />} />
           <Route path="User" element={<User />} />
         </Route>
