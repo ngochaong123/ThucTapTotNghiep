@@ -1,0 +1,127 @@
+.FrameContanieraddBorrowBooks{
+    background-color: white;
+    margin-left: 10px;
+    padding: 10px;
+    padding-left: 50px;
+    border-radius: 10px;
+}
+
+.uploadAvataraddBorrowBooks{
+    padding: 30px 0px 30px 0px;
+    margin-left: 20px;
+}
+
+.containeruploadAvataraddBorrowBooks{
+    display: flex;
+
+    img{
+        width: 100px;
+        height: 100px;
+        border-radius: 100px;
+        margin-right: 30px;
+    }
+
+    div h2{
+        font-size: 20px;
+        text-align: start;
+        margin-left: 0;
+        margin-top: 15px;
+    }
+
+    div div{
+        font-size: 13px;
+        text-align: start;
+        margin: 10px 10px 10px 10px;
+        margin-left: 0;
+        color: #CDCDD0;
+        font-weight: bold;
+    }
+}
+
+.containeraddMemeber{
+    display: flex;
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+/* right and left */
+
+.containeraddMemeberRight,
+.containeraddMemeberleft{
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+
+    input{
+        width: 300px;
+        border-radius: 10px;
+        padding: 10px;
+        background-color: white;
+        border: 2px solid #CBCBDC;
+    }
+
+    .inputInfoaddBorrowBooks{
+        margin-bottom: 50px;
+
+        div{
+            margin-bottom: 10px;
+        }
+    }
+}
+
+.bookReturnDate{
+    /* margin-left: 80px;
+    margin-bottom: 50px; */
+    margin: -15px 0px 50px 80px;
+
+    div{
+        margin-bottom: 10px;
+    }
+
+    input{
+        width: 675px;
+        border-radius: 10px;
+        padding: 10px;
+        background-color: white;
+        border: 2px solid #CBCBDC;
+    }
+}
+
+.ButtonAddaddBorrowBooks{
+    margin: 0px 0px 10px 80px;
+}
+
+.SaveButtonaddBorrowBooks{
+    margin-right: 80px;
+}
+
+.SaveButtonaddBorrowBooks,
+.ResetButtonaddBorrowBooks{
+    width: 100px;
+}
+
+.SaveButtonaddBorrowBooks{
+    background-color: #2864F6;
+}
+
+.ResetButtonaddBorrowBooks{
+    background-color: red;
+}
+
+.SaveButtonaddBorrowBooks:hover{
+    opacity: 0.7;
+}
+
+.ResetButtonaddBorrowBooks:hover{
+    background-color: red;
+    opacity: 0.7;
+}
+
+.SaveButtonaddBorrowBooks:active{
+    opacity: 0.6;
+}
+
+.ResetButtonaddBorrowBooks:active{
+    background-color: red;
+    opacity: 0.6;
+}

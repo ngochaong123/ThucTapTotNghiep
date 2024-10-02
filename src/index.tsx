@@ -17,7 +17,9 @@ import Member from "./Components/Member/Member/Member";
 import AddMember from "./Components/Member/addMember/addMember";
 import ChangeInfo from './Components/Member/changeInfor/changeInfor';
 // mượn sách
-import BorrowBooks from "./Components/borrowBooks/borrowBooks";
+import BorrowBooks from "./Components/borrowBooks/borrowBooks/borrowBooks";
+import AddBorrowBooks from "./Components/borrowBooks/addBorrowBooks/addBorrowBooks";
+import ChangeBorrowBooks from "./Components/borrowBooks/changeBorrowBooks/changeBorrowBooks";
 // bao cao
 import Report from "./Components/Report/Report";
 // nguoi dung
@@ -48,7 +50,9 @@ root.render(
           <Route path="changeMemberInfor" element={<ChangeInfo />} />
           <Route path="AddMember" element={<AddMember />} />
           {/* Mượn sách */}
-          <Route path="borrowBooks" element={<BorrowBooks />} />
+          <Route path="BorrowBooks" element={<BorrowBooks />} />
+          <Route path="AddBorrowBooks" element={<AddBorrowBooks />} />
+          <Route path="ChangeBorrowBooks" element={<ChangeBorrowBooks />} />
           {/* bao cao */}
           <Route path="Report" element={<Report />} />
           {/* nguoi dung */}

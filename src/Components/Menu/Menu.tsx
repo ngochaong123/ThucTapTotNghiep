@@ -34,7 +34,7 @@ export default function Menu() {
           <div className='NameOptionIcon'>Thành viên</div>
         </Link>
 
-        <Link to="Member" className='ButtonMenu'>
+        <Link to="borrowBooks" className='ButtonMenu'>
           <img src={borrowBooks} alt="Group Icon" className='IconOption' />
           <div className='NameOptionIcon'>Mượn sách</div>
         </Link>

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './addBook.css';
-import DatePicker from 'react-datepicker'; // Import DatePicker
-import 'react-datepicker/dist/react-datepicker.css'; // Import styles for DatePicker
 
 // icon
 import DefaultAvatar from "../../../images/icon/avatar.jpg";
@@ -15,8 +13,8 @@ export default function AddBook() {
     avatar: '',
     country: '',
     age: '', 
-    publishDate: null, 
-    receiveDate: null,
+    publishDate: '',  // Change to string for HTML date input
+    receiveDate: '',  // Change to string for HTML date input
   });
 
   const [countries, setCountries] = useState<string[]>([]); // State for storing the countries
@@ -24,29 +22,11 @@ export default function AddBook() {
 
   const isFormValid = formValues.name && formValues.phone && formValues.email && formValues.memberCode;
 
-  useEffect(() => {
-    // Fetch countries from the API when the component mounts
-    fetch('https://restcountries.com/v3.1/all')
-      .then((response) => response.json())
-      .then((data) => {
-        const countryNames = data.map((country: any) => country.name.common);
-        setCountries(countryNames); // Set the country names in state
-      })
-      .catch((error) => console.error('Error fetching countries:', error));
-  }, []);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormValues({
       ...formValues,
       [name]: value,
-    });
-  };
-
-  const handleDateChange = (date: Date | null, fieldName: string) => {
-    setFormValues({
-      ...formValues,
-      [fieldName]: date,
     });
   };
 
@@ -59,8 +39,8 @@ export default function AddBook() {
       avatar: '',
       country: '',
       age: '',
-      publishDate: null,
-      receiveDate: null,
+      publishDate: '',
+      receiveDate: '',
     });
     setAvatarPreview(DefaultAvatar);
   };
@@ -130,10 +110,11 @@ export default function AddBook() {
           {/* Năm xuất bản */}
           <div className='inputInfoBook'>
             <div>Năm xuất bản </div>
-            <DatePicker
-              selected={formValues.publishDate}
-              onChange={(date) => handleDateChange(date, 'publishDate')}
-              dateFormat="dd/MM/yyyy"
+            <input 
+              type="date" 
+              name="publishDate" 
+              value={formValues.publishDate} 
+              onChange={handleChange} 
             />
           </div>
         </div>
@@ -157,10 +138,11 @@ export default function AddBook() {
           {/* Thời gian nhận sách */}
           <div className='inputInfoBook'>
             <div>Thời gian nhận sách </div>
-            <DatePicker
-              selected={formValues.receiveDate}
-              onChange={(date) => handleDateChange(date, 'receiveDate')}
-              dateFormat="dd/MM/yyyy"
+            <input 
+              type="date" 
+              name="receiveDate" 
+              value={formValues.receiveDate} 
+              onChange={handleChange} 
             />
           </div>
         </div>

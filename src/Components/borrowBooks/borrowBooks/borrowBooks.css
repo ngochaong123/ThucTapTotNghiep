@@ -1,0 +1,356 @@
+.borrowBooksSearch {
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9; 
+    border-radius: 25px;
+    border: 2px solid #E0E0E0; 
+    padding: 5px 10px; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+    width: 300px;
+    height: 20px;
+}
+
+.borrowBookstile{
+    margin: 20px 0px 0px 30px;
+    font-size: 30px;
+}
+
+.borrowBookssearchIcon {
+    margin-right: 0px; 
+}
+
+borrowBookssearchIcon img {
+    width: 15px; 
+    height: 15px; 
+}
+
+.borrowBooksheaderborrowBooks{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: -20px;
+}
+
+.borrowBookscontanierHeaderLeft{
+    display: flex;
+
+    h1{
+        margin-top: 9px;
+        font-size: 18px;
+    }
+}
+
+.borrowBooksOptionsRow{
+    display: flex;
+    justify-content: space-between;
+}
+
+.borrowBooksSearchInput {
+    width: 400px;
+    height: 40px;
+    border: none; 
+    border-radius: 20px;
+    padding-left: 10px; 
+    background-color: transparent; /* Nền trong suốt */
+    font-size: 16px; 
+}
+
+.borrowBooksSearchInput::placeholder {
+    color: #A0A0A0; 
+    font-size: 14px;
+}
+
+.borrowBooksSearchInput:focus {
+    outline: none; 
+}
+
+.borrowBooksCurrentInformation{
+    border-radius: 10px;
+    height: 180px;
+    padding: 5px;
+    margin-left: 10px;
+    background-color: white;
+}
+
+.borrowBooksChooseborrowBooks{
+    display: flex;
+}
+
+.borrowBooksNameChoose{
+    display: flex;
+    font-weight: bold;
+    margin: 0px 10px 5px 15px;
+}
+
+.borrowBooksheader{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: -20px;
+}
+
+.borrowBooksCalendar{
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    border-radius: 15px;
+    padding: 3px 15px 4px 10px;
+    background-color: white;
+    margin: 0px 20px 20px 20px;
+    border: 2px solid #CBCBDC;
+
+    .borrowBooksiconCalender{
+        width: 15px;
+        height: 15px;
+        margin-top: 8px;
+        margin-left: 4px;
+    }
+
+    .borrowBooksiconPlus{
+        width: 15px;
+        height: 15px;
+        margin-top: 9px;
+        margin-left: 4px;
+    }
+    
+    .borrowBooksNameCalender{
+        margin: 5px 7px ;
+        color: #A0A0A0;
+    }
+}
+
+.borrowBooksCalendar:hover {
+    background-color: white;
+    border-radius: 15px;
+}
+
+.borrowBooksCalendar:active{
+    background-color: white;
+    opacity: 0.9;
+}
+
+.CalenderborrowBooks{
+    z-index: 4;
+    margin: 4px 0px 6px 0px;
+}
+
+.borrowBooksNameSearch{
+    display: flex;
+    font-weight: bold;
+    margin: 0px 10px 5px 15px;
+}
+
+.borrowBooksSearch{
+    display: flex;
+    justify-content: space-between;
+    border-radius: 15px;
+    padding: 5px 15px 5px 10px;
+    background-color: white;
+    margin: 0 20px 20px 20px;
+    border: 2px solid #CBCBDC;
+    align-items: center;
+    width: 300px;
+    height: 28px;
+    
+}
+
+.borrowBooksNameiconFilter{
+    margin: 5px 7px ;
+    color: black;
+}
+
+.borrowBookssearchIcon {
+    margin-right: 0px; 
+}
+
+.borrowBookssearchIcon img {
+    width: 15px; 
+    height: 15px; 
+}
+
+.borrowBooksAddborrowBooks{
+    display: flex;
+    justify-content: space-between;
+    width: 150px;
+    border-radius: 15px;
+    padding: 5px 15px 5px 17px;
+    background-color: #2864F6;
+    margin: 20px 20px 50px 20px;
+    border: 2px solid #2864F6;
+
+    .borrowBooksiconFilter{
+        width: 15px;
+        height: 15px;
+        margin-top: 5px;
+        margin-left: 4px;
+    }
+    
+    .borrowBooksNameiconFilter{
+        margin: 5px 10px ;
+        color: white;
+    }
+}
+
+.borrowBooksAddborrowBooks:hover {
+    background-color: #2864F6;
+    opacity: 0.8;
+    border-radius: 15px;
+}
+
+.borrowBooksAddborrowBooks:active{
+    background-color: #2864F6;
+    opacity: 0.7;
+}
+
+.borrowBooksDatePicker{
+    width: 120px;
+    margin-left: 10px;
+    border: none;
+    outline: none; 
+    background-color: transparent; 
+    font-size: 15px; 
+    margin-top: 3px;
+}
+
+.borrowBooksDatePicker:focus {
+    border: none; 
+    outline: none; 
+}
+
+.borrowBooksOptionFilter ul {
+    display: flex;
+    list-style-type: none;
+    padding: 8px 0;
+    cursor: pointer;
+    width: 180px;
+    margin: 0 auto; /* Đảm bảo danh sách nằm giữa trong khung cha */
+}
+
+.borrowBooksOptionFilter img{
+    width: 20px;
+    height: 20px;
+}
+
+.borrowBooksOptionFilter div{
+    margin-left: 20px;
+}
+  
+.borrowBooksOptionFilter ul:hover {
+    /* background-color: #497DF7; */
+    background-color: white;
+    opacity: 0.8;
+    border-radius: 10px;
+}
+
+.borrowBooksEditborrowBooks{
+    display: flex;
+    justify-content: space-between;
+    width: 180px;
+    border-radius: 15px;
+    padding: 5px 15px 5px 17px;
+    background-color: #2864F6;
+    margin: 20px 20px 50px 20px;
+    border: 2px solid #2864F6;
+
+    .borrowBooksiconPlus{
+        width: 15px;
+        height: 15px;
+        margin-top: 5px;
+        margin-left: 4px;
+    }
+    
+    .borrowBooksNameEdit{
+        margin: 5px 10px ;
+        color: white;
+    }
+}
+
+.borrowBooksEditborrowBooks:hover {
+    background-color: #2864F6;
+    opacity: 0.8;
+    border-radius: 15px;
+}
+
+.borrowBooksEditborrowBooks:active{
+    background-color: #2864F6;
+    opacity: 0.7;
+}
+
+
+/* table */
+
+.FrameborrowBookstableContainer{
+    background-color: white;
+    padding: 1px 20px 10px 20px;
+    border-radius: 10px;
+    margin: -3px -5px 0px -5px;
+}
+
+/* borrowBooks table container with scrolling */
+.borrowBookstableContainer {
+  margin-top: 20px; /* Space above the table */
+  max-height: 440px; /* Set a max height for the container */
+  overflow-y: scroll; /* Enable vertical scrolling */
+  border: 1px solid #ccc; /* Optional: Add a border around the container */
+  border-radius: 5px; /* Optional: Round the corners of the container */
+}
+
+/* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+.borrowBookstableContainer::-webkit-scrollbar {
+  width: 0; /* Hide vertical scrollbar */
+  background: transparent; /* Make background transparent */
+}
+
+/* Header styles */
+.memberTable thead {
+  position: sticky; /* Make the header sticky */
+  top: 0; /* Stick to the top of the container */
+  background-color: #2864F6; /* Bootstrap primary color for header */
+  color: white; /* White text color for header */
+  z-index: 2; /* Ensure header is above other content */
+}
+
+/* borrowBooks table */
+.memberTable {
+  width: 100%; /* Full width of the container */
+  border-collapse: collapse; /* Remove spacing between cells */
+}
+
+.memberTable th,
+.memberTable td {
+  padding: 10px; /* Padding for cells */
+  text-align: left; /* Left align text */
+  border-bottom: 1px solid #ccc; /* Border below cells */
+}
+
+/* Checkbox styles */
+.memberTable input[type="checkbox"] {
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+/* Selected member checkbox styles */
+.memberTable input[type="checkbox"]:checked {
+  accent-color: #007bff; /* Change checkbox color when checked */
+}
+
+/* change image */
+.avatarAddmember{
+    width: 30px;
+    height: 30px;
+    border-radius: 50px;
+}
+
+.nameAvatarAddmember{
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .memberTable {
+    font-size: 14px; /* Reduce font size on small screens */
+  }
+
+  .memberTable th,
+  .memberTable td {
+    padding: 8px; /* Reduce padding on small screens */
+  }
+}
