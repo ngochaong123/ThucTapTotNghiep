@@ -10,6 +10,8 @@ import Register from './Components/Register/Register';
 import Menu from './Components/Menu/Menu'; 
 // sach thu vien
 import LibraryBook from "./Components/libraryBooks/libraryBook/libraryBooks";
+import AddBook from "./Components/libraryBooks/AddBook/addBook";
+import ChangeBook from "./Components/libraryBooks/ChangeBook/ChangeBook";
 // thanh vien
 import Member from "./Components/Member/Member/Member"; 
 import AddMember from "./Components/Member/addMember/addMember";
@@ -37,9 +39,11 @@ root.render(
           <Route index element={<LibraryBook />} />
           {/* sach thu vien */}
           <Route path="LibraryBook" element={<LibraryBook />} />
+          <Route path="AddBook" element={<AddBook />} />
+          <Route path="changeBookInfor" element={<ChangeBook />} />
           {/* thanh vien */}
           <Route path="Member" element={<Member />} />
-          <Route path="changeInfo" element={<ChangeInfo />} />
+          <Route path="changeMemberInfor" element={<ChangeInfo />} />
           <Route path="AddMember" element={<AddMember />} />
           {/* bao cao */}
           <Route path="Report" element={<Report />} />

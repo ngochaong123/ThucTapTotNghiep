@@ -100,7 +100,7 @@ export default function LibraryBooks() {
       <div className='LibraryCurrentInformation'>
         <div className='LibraryheaderLibrary'>
           <h1 className='LibrarytileBook'> Sách thư viện </h1>
-          <Link to='/Menu/AddLibrary' style={{ textDecoration: 'none' }}>
+          <Link to='/Menu/AddBook' style={{ textDecoration: 'none' }}>
             <button className='LibraryAddLibrary'>
               <div style={{ display: 'flex' }}>
                 <img src={Plus} className='LibraryiconFilter' alt="Add Library Icon" />
@@ -169,7 +169,7 @@ export default function LibraryBooks() {
           </div>
 
           {/* edit book  */}
-          <Link to='' style={{ textDecoration: 'none' }}>
+          <Link to='/Menu/changeBookInfor' style={{ textDecoration: 'none' }}>
             <button className='LibraryEditbrary'>
               <div className='LibraryNameDelete'> Chỉnh sửa thông tin </div>
             </button>

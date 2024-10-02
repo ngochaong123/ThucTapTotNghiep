@@ -124,6 +124,7 @@ export default function LibraryBooks() {
                       onChange={(date: Date | null) => setSelectedDate(date)}
                       dateFormat="dd/MM/yyyy"
                       className='MemberDatePicker'
+                      placeholderText='Thời gian'
                       onFocus={(e) => e.target.blur()} // Remove focus outline
                     />
                   </div>                     
@@ -145,7 +146,7 @@ export default function LibraryBooks() {
             </div>
 
             {/* Edit member button aligned to the right */}
-            <Link to='/Menu/changeInfo' style={{ textDecoration: 'none' }}>
+            <Link to='/Menu/changeMemberInfor' style={{ textDecoration: 'none' }}>
               <button className='MemberEditMember'>
                 <div className='MemberNameEdit'> Chỉnh sửa thông tin </div>
               </button>

@@ -9,7 +9,7 @@ export default function AddMember() {
     name: '',
     phone: '',
     email: '',
-    address: '',
+    memberCode: '',
     avatar: '',
     country: '',
     age: '', // Changed from "language" to "age"
@@ -18,7 +18,7 @@ export default function AddMember() {
   const [countries, setCountries] = useState<string[]>([]); // State for storing the countries
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
 
-  const isFormValid = formValues.name && formValues.phone && formValues.email && formValues.address;
+  const isFormValid = formValues.name && formValues.phone && formValues.email && formValues.memberCode;
 
   useEffect(() => {
     // Fetch countries from the API when the component mounts
@@ -44,7 +44,7 @@ export default function AddMember() {
       name: '',
       phone: '',
       email: '',
-      address: '',
+      memberCode: '',
       avatar: '',
       country: '',
       age: '', // Reset the age field as well
@@ -106,8 +106,8 @@ export default function AddMember() {
           </div>
           {/* Địa chỉ */}
           <div className='inputInfoMember'>
-            <div>Địa chỉ </div>
-            <input name="address" value={formValues.address} onChange={handleChange} style={{ marginBottom: 0 }}/>
+            <div>Mã thành viên </div>
+            <input name="memberCode" value={formValues.memberCode} onChange={handleChange} style={{ marginBottom: 0 }}/>
           </div>
           {/* Độ tuổi */}
           <div className='inputInfoMember'>
