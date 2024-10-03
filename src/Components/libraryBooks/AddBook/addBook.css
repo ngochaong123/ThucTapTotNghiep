@@ -80,14 +80,6 @@
        
     }
 
-    select{
-        width: 323px;
-        border-radius: 10px;
-        padding: 10px;
-        background-color: white;
-        border: 2px solid #CBCBDC;
-    }
-
     .inputInfoBook{
         margin-bottom: 50px;
 
@@ -96,6 +88,15 @@
         }
     }
 }
+
+.MemberDatePickerAddBook{
+    width: 323px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    border: 2px solid #CBCBDC;
+}
+
 
 .ButtonAddBook{
     margin: 0px 0px 10px 80px;

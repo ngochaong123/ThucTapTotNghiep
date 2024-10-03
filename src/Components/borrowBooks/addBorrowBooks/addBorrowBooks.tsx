@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './addBorrowBooks.css';
+import DatePicker from 'react-datepicker'; // Importing the DatePicker component
+import 'react-datepicker/dist/react-datepicker.css'; // Importing DatePicker styles
 
 // icon
 import DefaultAvatar from "../../../images/icon/avatar.jpg";
@@ -19,8 +21,10 @@ export default function AddBorrowBooks() {
   });
 
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
+  const [selectedBorrowDate, setSelectedBorrowDate] = useState<Date | null>(null);
+  const [selectedReturnDate, setSelectedReturnDate] = useState<Date | null>(null);
 
-  const isFormValid = formValues.name && formValues.phone && formValues.email && formValues.memberCode && formValues.borrowDate && formValues.returnDate && formValues.bookTitle && (new Date(formValues.returnDate) > new Date(formValues.borrowDate));
+  const isFormValid = formValues.name && formValues.phone && formValues.email && formValues.memberCode && formValues.bookTitle && selectedBorrowDate && selectedReturnDate && (selectedReturnDate > selectedBorrowDate);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -44,6 +48,8 @@ export default function AddBorrowBooks() {
       bookTitle: '', // Reset tên sách
     });
     setAvatarPreview(DefaultAvatar);
+    setSelectedBorrowDate(null);
+    setSelectedReturnDate(null);
   };
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,22 +94,22 @@ export default function AddBorrowBooks() {
           {/* Tên thành viên */}
           <div className='inputInfoaddBorrowBooks'>
             <div>Tên thành viên </div>
-            <input name="name" value={formValues.name} onChange={handleChange} />
+            <input name="name" value={formValues.name} onChange={handleChange} placeholder='Tên thành viên' />
           </div>
           {/* Mã thành viên */}
           <div className='inputInfoaddBorrowBooks'>
             <div>Mã thành viên </div>
-            <input name="memberCode" value={formValues.memberCode} onChange={handleChange} style={{ marginBottom: 0 }} />
+            <input name="memberCode" value={formValues.memberCode} onChange={handleChange} style={{ marginBottom: 0 }} placeholder='Mã thành viên' />
           </div>
           {/* Tên sách */}
           <div className='inputInfoaddBorrowBooks'>
             <div>Tên sách </div>
-            <input name="bookTitle" value={formValues.bookTitle} onChange={handleChange} />
+            <input name="bookTitle" value={formValues.bookTitle} onChange={handleChange} placeholder='Tên sách' />
           </div>
           {/* Độ tuổi */}
           <div className='inputInfoaddBorrowBooks'>
             <div>Tuổi </div>
-            <input name="age" value={formValues.age} onChange={handleChange} />
+            <input name="age" value={formValues.age} onChange={handleChange} placeholder='Tuổi' />
           </div>
         </div>
         
@@ -111,26 +117,27 @@ export default function AddBorrowBooks() {
           {/* Số điện thoại */}
           <div className='inputInfoaddBorrowBooks'>
             <div>Số điện thoại </div>
-            <input name="phone" value={formValues.phone} onChange={handleChange} />
+            <input name="phone" value={formValues.phone} onChange={handleChange} placeholder='Số điện thoại' />
           </div>
           {/* Email */}
           <div className='inputInfoaddBorrowBooks'>
             <div>Email </div>
-            <input name="email" value={formValues.email} onChange={handleChange} />
+            <input name="email" value={formValues.email} onChange={handleChange} placeholder='Email' />
           </div>
           {/* Loại sách */}
           <div className='inputInfoaddBorrowBooks'>
             <div>Loại sách </div>
-            <input name="bookType" onChange={handleChange} />
+            <input name="bookType" onChange={handleChange} placeholder='Loại sách' />
           </div>
           {/* Ngày mượn sách */}
           <div className='inputInfoaddBorrowBooks'>
             <div>Ngày mượn sách </div>
-            <input 
-              type="date" 
-              name="borrowDate" 
-              value={formValues.borrowDate} 
-              onChange={handleChange} 
+            <DatePicker
+              selected={selectedBorrowDate}
+              onChange={(date: Date | null) => setSelectedBorrowDate(date)}
+              dateFormat="dd/MM/yyyy"
+              className='MemberDatePickerAddBorrowBooks'
+              placeholderText='Ngày/Tháng/Năm'
             />
           </div>
         </div>
@@ -139,11 +146,12 @@ export default function AddBorrowBooks() {
       {/* Ngày trả sách */}
       <div className='bookReturnDate'>
         <div>Ngày trả sách </div>
-        <input 
-          type="date" 
-          name="returnDate" 
-          value={formValues.returnDate} 
-          onChange={handleChange} 
+        <DatePicker
+          selected={selectedReturnDate}
+          onChange={(date: Date | null) => setSelectedReturnDate(date)}
+          dateFormat="dd/MM/yyyy"
+          className='MemberDatePickerAddBorrowBooks'
+          placeholderText='Ngày/Tháng/Năm'
         />
       </div>
 

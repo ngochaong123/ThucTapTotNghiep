@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './addBook.css';
+import DatePicker from 'react-datepicker'; // Import DatePicker
+import 'react-datepicker/dist/react-datepicker.css'; // Import DatePicker styles
 
 // icon
 import DefaultAvatar from "../../../images/icon/avatar.jpg";
@@ -13,11 +15,10 @@ export default function AddBook() {
     avatar: '',
     country: '',
     age: '', 
-    publishDate: '',  // Change to string for HTML date input
-    receiveDate: '',  // Change to string for HTML date input
+    publishDate: null,  // Set as null for DatePicker
+    receiveDate: null,  // Set as null for DatePicker
   });
 
-  const [countries, setCountries] = useState<string[]>([]); // State for storing the countries
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
 
   const isFormValid = formValues.name && formValues.phone && formValues.email && formValues.memberCode;
@@ -30,6 +31,13 @@ export default function AddBook() {
     });
   };
 
+  const handleDateChange = (date: Date | null, name: string) => {
+    setFormValues({
+      ...formValues,
+      [name]: date,
+    });
+  };
+
   const handleReset = () => {
     setFormValues({
       name: '',
@@ -39,8 +47,8 @@ export default function AddBook() {
       avatar: '',
       country: '',
       age: '',
-      publishDate: '',
-      receiveDate: '',
+      publishDate: null,
+      receiveDate: null,
     });
     setAvatarPreview(DefaultAvatar);
   };
@@ -95,26 +103,27 @@ export default function AddBook() {
           {/* Tên thành viên */}
           <div className='inputInfoBook'>
             <div>Tên Sách </div>
-            <input name="name" value={formValues.name} onChange={handleChange} />
+            <input name="name" value={formValues.name} onChange={handleChange} placeholder='Tên sách' />
           </div>
           {/* Địa chỉ */}
           <div className='inputInfoBook'>
             <div>Mã sách </div>
-            <input name="memberCode" value={formValues.memberCode} onChange={handleChange} style={{ marginBottom: 0 }}/>
+            <input name="memberCode" value={formValues.memberCode} onChange={handleChange} style={{ marginBottom: 0 }} placeholder='Mã sách' />
           </div>
           {/* Tác giả */}
           <div className='inputInfoBook'>
             <div>Tác giả </div>
-            <input name="age" value={formValues.age} onChange={handleChange} />
+            <input name="age" value={formValues.age} onChange={handleChange} placeholder='Tác giả' />
           </div>
           {/* Năm xuất bản */}
           <div className='inputInfoBook'>
             <div>Năm xuất bản </div>
-            <input 
-              type="date" 
-              name="publishDate" 
-              value={formValues.publishDate} 
-              onChange={handleChange} 
+            <DatePicker
+              selected={formValues.publishDate}
+              onChange={(date) => handleDateChange(date, 'publishDate')}
+              dateFormat="dd/MM/yyyy"
+              className='MemberDatePickerAddBook'
+              placeholderText='Ngày/Tháng/Năm'
             />
           </div>
         </div>
@@ -123,26 +132,27 @@ export default function AddBook() {
           {/* Thể loại sách */}
           <div className='inputInfoBook'>
             <div>Thể loại sách </div>
-            <input name="phone" value={formValues.phone} onChange={handleChange} />
+            <input name="phone" value={formValues.phone} onChange={handleChange}  placeholder='Thể loại sách' />
           </div>
           {/* Số lượng */}
           <div className='inputInfoBook'>
             <div>Số lượng </div>
-            <input name="email" value={formValues.email} onChange={handleChange} />
+            <input name="email" value={formValues.email} onChange={handleChange} placeholder='Số lượng' />
           </div>
           {/* Vị trí sách */}
           <div className='inputInfoBook'>
             <div>Vị trí sách </div>
-            <input name="email" value={formValues.email} onChange={handleChange} />
+            <input name="email" value={formValues.email} onChange={handleChange} placeholder='Vị trí sách' />
           </div>
           {/* Thời gian nhận sách */}
           <div className='inputInfoBook'>
             <div>Thời gian nhận sách </div>
-            <input 
-              type="date" 
-              name="receiveDate" 
-              value={formValues.receiveDate} 
-              onChange={handleChange} 
+            <DatePicker
+              selected={formValues.receiveDate}
+              onChange={(date) => handleDateChange(date, 'receiveDate')}
+              dateFormat="dd/MM/yyyy"
+              className='MemberDatePickerAddBook'
+              placeholderText='Ngày/Tháng/Năm'
             />
           </div>
         </div>

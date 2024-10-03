@@ -74,8 +74,8 @@ export default function AddMember() {
   };
 
   return (
-    <div className='FrameContanieraddMember'>
-      <h1> Thông tin thành viên </h1>
+    <div className='FrameContanierChangeMember'>
+      <h1> Chỉnh sửa thông tin thành viên </h1>
 
       {/* Upload avatar */}
       <div className='uploadAvatarMember'>
@@ -102,17 +102,17 @@ export default function AddMember() {
           {/* Tên thành viên */}
           <div className='inputInfoMember'>
             <div>Tên thành viên </div>
-            <input name="name" value={formValues.name} onChange={handleChange} />
+            <input name="name" value={formValues.name} onChange={handleChange} placeholder='Tên thành viên' />
           </div>
           {/* Địa chỉ */}
           <div className='inputInfoMember'>
             <div>Mã thành viên </div>
-            <input name="memberCode" value={formValues.memberCode} onChange={handleChange} style={{ marginBottom: 0 }}/>
+            <input name="memberCode" value={formValues.memberCode} onChange={handleChange} style={{ marginBottom: 0 }} placeholder='Mã thành viên' />
           </div>
           {/* Độ tuổi */}
           <div className='inputInfoMember'>
             <div>Độ tuổi </div>
-            <input name="age" value={formValues.age} onChange={handleChange} />
+            <input name="age" value={formValues.age} onChange={handleChange} placeholder='Độ tuổi' />
           </div>
         </div>
         
@@ -120,12 +120,12 @@ export default function AddMember() {
           {/* Số điện thoại */}
           <div className='inputInfoMember'>
             <div>Số điện thoại </div>
-            <input name="phone" value={formValues.phone} onChange={handleChange} />
+            <input name="phone" value={formValues.phone} onChange={handleChange} placeholder='Số điện thoại' />
           </div>
           {/* Email */}
           <div className='inputInfoMember'>
             <div>Email </div>
-            <input name="email" value={formValues.email} onChange={handleChange} />
+            <input name="email" value={formValues.email} onChange={handleChange} placeholder='Email' />
           </div>
           {/* Quốc gia */}
           <div className='inputInfoMember'>
@@ -150,7 +150,7 @@ export default function AddMember() {
         > 
           Lưu 
         </button>
-        <button className='ResetButtonMember' onClick={handleReset}> Xóa thành viên </button>
+        <button className='ResetButtonMember' onClick={handleReset}> Đặt lại </button>
       </div>
     </div>
   );

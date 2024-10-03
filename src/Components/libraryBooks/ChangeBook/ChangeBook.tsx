@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './ChangeBook.css';
 import DatePicker from 'react-datepicker'; // Import DatePicker
-import 'react-datepicker/dist/react-datepicker.css'; // Import styles for DatePicker
+import 'react-datepicker/dist/react-datepicker.css'; // Import DatePicker styles
 
 // icon
 import DefaultAvatar from "../../../images/icon/avatar.jpg";
 
-export default function ChangeBook() {
+export default function AddBook() {
   const [formValues, setFormValues] = useState({
     name: '',
     phone: '',
@@ -15,25 +15,13 @@ export default function ChangeBook() {
     avatar: '',
     country: '',
     age: '', 
-    publishDate: null, 
-    receiveDate: null,
+    publishDate: null,  // Set as null for DatePicker
+    receiveDate: null,  // Set as null for DatePicker
   });
 
-  const [countries, setCountries] = useState<string[]>([]); // State for storing the countries
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
 
   const isFormValid = formValues.name && formValues.phone && formValues.email && formValues.memberCode;
-
-  useEffect(() => {
-    // Fetch countries from the API when the component mounts
-    fetch('https://restcountries.com/v3.1/all')
-      .then((response) => response.json())
-      .then((data) => {
-        const countryNames = data.map((country: any) => country.name.common);
-        setCountries(countryNames); // Set the country names in state
-      })
-      .catch((error) => console.error('Error fetching countries:', error));
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -43,10 +31,10 @@ export default function ChangeBook() {
     });
   };
 
-  const handleDateChange = (date: Date | null, fieldName: string) => {
+  const handleDateChange = (date: Date | null, name: string) => {
     setFormValues({
       ...formValues,
-      [fieldName]: date,
+      [name]: date,
     });
   };
 
@@ -87,19 +75,19 @@ export default function ChangeBook() {
   };
 
   return (
-    <div className='FrameContanieraddChangeBook'>
-      <h1> Thay đổi thông tin sách </h1>
+    <div className='FrameContanierChangeBook'>
+      <h1> Chỉnh sửa thông tin sách thư viện </h1>
 
       {/* Upload avatar */}
-      <div className='uploadAvatarChangeBook'>
-        <div className='containeruploadAvatarChangeBook'>
+      <div className='uploadAvatarBook'>
+        <div className='containeruploadAvatarBook'>
           <img src={avatarPreview} alt="Avatar Preview" />
           <div>
             <h2> Tên sách </h2>
             <div> Chấp nhận ảnh nhỏ hơn 1Mb </div>
           </div>
         </div>
-        <button className='ButtonuploadImageChangeBook' onClick={triggerFileInput}>Đăng lên</button>
+        <button className='ButtonuploadImageBook' onClick={triggerFileInput}>Đăng lên</button>
         <input 
           id="avatarInput" 
           type="file" 
@@ -113,68 +101,72 @@ export default function ChangeBook() {
       <div className='containerChangeBook'>
         <div className='containerChangeBookRight'> 
           {/* Tên thành viên */}
-          <div className='inputInfoChangeBook'>
+          <div className='inputInfoBook'>
             <div>Tên Sách </div>
-            <input name="name" value={formValues.name} onChange={handleChange} />
+            <input name="name" value={formValues.name} onChange={handleChange} placeholder='Tên sách' />
           </div>
           {/* Địa chỉ */}
-          <div className='inputInfoChangeBook'>
+          <div className='inputInfoBook'>
             <div>Mã sách </div>
-            <input name="memberCode" value={formValues.memberCode} onChange={handleChange} style={{ marginBottom: 0 }}/>
+            <input name="memberCode" value={formValues.memberCode} onChange={handleChange} style={{ marginBottom: 0 }} placeholder='Mã sách' />
           </div>
           {/* Tác giả */}
-          <div className='inputInfoChangeBook'>
+          <div className='inputInfoBook'>
             <div>Tác giả </div>
-            <input name="age" value={formValues.age} onChange={handleChange} />
+            <input name="age" value={formValues.age} onChange={handleChange} placeholder='Tác giả' />
           </div>
           {/* Năm xuất bản */}
-          <div className='inputInfoChangeBook'>
+          <div className='inputInfoBook'>
             <div>Năm xuất bản </div>
             <DatePicker
               selected={formValues.publishDate}
               onChange={(date) => handleDateChange(date, 'publishDate')}
               dateFormat="dd/MM/yyyy"
+              className='MemberDatePickerAddBook'
+              placeholderText='Ngày/Tháng/Năm'
             />
           </div>
         </div>
         
         <div className='containerChangeBookleft'>
           {/* Thể loại sách */}
-          <div className='inputInfoChangeBook'>
+          <div className='inputInfoBook'>
             <div>Thể loại sách </div>
-            <input name="phone" value={formValues.phone} onChange={handleChange} />
+            <input name="phone" value={formValues.phone} onChange={handleChange}  placeholder='Thể loại sách' />
           </div>
           {/* Số lượng */}
-          <div className='inputInfoChangeBook'>
+          <div className='inputInfoBook'>
             <div>Số lượng </div>
-            <input name="email" value={formValues.email} onChange={handleChange} />
+            <input name="email" value={formValues.email} onChange={handleChange} placeholder='Số lượng' />
           </div>
           {/* Vị trí sách */}
-          <div className='inputInfoChangeBook'>
+          <div className='inputInfoBook'>
             <div>Vị trí sách </div>
-            <input name="email" value={formValues.email} onChange={handleChange} />
+            <input name="email" value={formValues.email} onChange={handleChange} placeholder='Vị trí sách' />
           </div>
           {/* Thời gian nhận sách */}
-          <div className='inputInfoChangeBook'>
+          <div className='inputInfoBook'>
             <div>Thời gian nhận sách </div>
             <DatePicker
               selected={formValues.receiveDate}
               onChange={(date) => handleDateChange(date, 'receiveDate')}
               dateFormat="dd/MM/yyyy"
+              className='MemberDatePickerAddBook'
+              placeholderText='Ngày/Tháng/Năm'
             />
           </div>
         </div>
       </div>
 
       {/* Buttons */}
-      <div className='ButtonAddChangeBook'>
+      <div className='ButtonAddBook'>
         <button 
-          className='SaveButtonChangeBook' 
+          className='SaveButtonBook' 
           disabled={!isFormValid} // Disable if form is invalid
         > 
           Lưu 
         </button>
-        <button className='ResetButtonChangeBook' onClick={handleReset}> Đặt lại </button>
+        <button className='ResetButtonBook' onClick={handleReset}> Đặt lại </button>
       </div>
     </div>
   );
