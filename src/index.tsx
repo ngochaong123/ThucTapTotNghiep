@@ -33,28 +33,35 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        {/* Main routes */}
+        {/* Root route redirects to Login */}
+        <Route path="/" element={<Login />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
         
         {/* Menu route with nested routes */}
         <Route path="/Menu" element={<Menu />}>
-          {/* Index route: LibraryBook will be shown by default */}
+          {/* Index route: LibraryBook will be shown by default inside Menu */}
           <Route index element={<LibraryBook />} />
+          
+          {/* Nested routes under Menu */}
           {/* sach thu vien */}
           <Route path="LibraryBook" element={<LibraryBook />} />
           <Route path="AddBook" element={<AddBook />} />
           <Route path="changeBookInfor" element={<ChangeBook />} />
+          
           {/* thanh vien */}
           <Route path="Member" element={<Member />} />
           <Route path="changeMemberInfor" element={<ChangeInfo />} />
           <Route path="AddMember" element={<AddMember />} />
+          
           {/* Mượn sách */}
           <Route path="BorrowBooks" element={<BorrowBooks />} />
           <Route path="AddBorrowBooks" element={<AddBorrowBooks />} />
           <Route path="ChangeBorrowBooks" element={<ChangeBorrowBooks />} />
+          
           {/* bao cao */}
           <Route path="Report" element={<Report />} />
+          
           {/* nguoi dung */}
           <Route path="User" element={<User />} />
         </Route>

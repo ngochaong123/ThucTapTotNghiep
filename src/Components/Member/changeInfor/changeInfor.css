@@ -101,19 +101,16 @@
     margin-right: 80px;
 }
 
-.SaveButtonMember{
+.SaveButtonMember,
+.ResetButtonChangeMember{
     width: 100px;
-}
-
-.ResetButtonMember{
-    width: 130px;
 }
 
 .SaveButtonMember{
     background-color: #2864F6;
 }
 
-.ResetButtonMember{
+.ResetButtonChangeMember{
     background-color: red;
 }
 
@@ -121,7 +118,7 @@
     opacity: 0.7;
 }
 
-.ResetButtonMember:hover{
+.ResetButtonChangeMember:hover{
     background-color: red;
     opacity: 0.7;
 }
@@ -130,7 +127,7 @@
     opacity: 0.6;
 }
 
-.ResetButtonMember:active{
+.ResetButtonChangeMember:active{
     background-color: red;
     opacity: 0.6;
 }

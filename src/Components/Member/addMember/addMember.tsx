@@ -150,7 +150,7 @@ export default function AddMember() {
         > 
           Lưu 
         </button>
-        <button className='ResetButtonMember' onClick={handleReset}> Đặt lại </button>
+        <button className='ResetButtonAddMember' onClick={handleReset}> Đặt lại </button>
       </div>
     </div>
   );

@@ -102,7 +102,7 @@
 }
 
 .SaveButtonMember,
-.ResetButtonMember{
+.ResetButtonAddMember{
     width: 100px;
 }
 
@@ -110,7 +110,7 @@
     background-color: #2864F6;
 }
 
-.ResetButtonMember{
+.ResetButtonAddMember{
     background-color: red;
 }
 
@@ -118,7 +118,7 @@
     opacity: 0.7;
 }
 
-.ResetButtonMember:hover{
+.ResetButtonAddMember:hover{
     background-color: red;
     opacity: 0.7;
 }
@@ -127,7 +127,7 @@
     opacity: 0.6;
 }
 
-.ResetButtonMember:active{
+.ResetButtonAddMember:active{
     background-color: red;
     opacity: 0.6;
 }
