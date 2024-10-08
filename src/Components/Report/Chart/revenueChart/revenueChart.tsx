@@ -46,7 +46,7 @@ interface ChartState {
   };
 }
 
-class DoanhThu extends React.Component<{}, ChartState> {
+class revenueChart extends React.Component<{}, ChartState> {
   constructor(props: {}) {
     super(props);
 
@@ -118,4 +118,4 @@ class DoanhThu extends React.Component<{}, ChartState> {
   }
 }
 
-export default DoanhThu;
+export default revenueChart;

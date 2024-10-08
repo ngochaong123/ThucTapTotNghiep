@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import './LineChart.css'
 import ReactApexChart from "react-apexcharts"; // Correct import
 
-class LineChart extends Component<{}, { options: any, series: any[] }> {
+class ReaderTrends extends Component<{}, { options: any, series: any[] }> {
   constructor(props: {}) {
     super(props);
 
@@ -63,4 +63,4 @@ class LineChart extends Component<{}, { options: any, series: any[] }> {
   }
 }
 
-export default LineChart;
+export default ReaderTrends;

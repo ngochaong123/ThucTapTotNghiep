@@ -27,7 +27,7 @@ interface ApexChartState {
   };
 }
 
-class ApexChart extends React.Component<{}, ApexChartState> {
+class quantityBooksChart extends React.Component<{}, ApexChartState> {
   constructor(props: {}) {
     super(props);
 
@@ -63,7 +63,7 @@ class ApexChart extends React.Component<{}, ApexChartState> {
   render() {
     return (
       <div>
-        <h2 style={{marginBottom:0}}> Số lượng sách theo thể loại </h2>
+        <h2 style={{marginBottom:0}}> Số lượng sách </h2>
         <div id="chart">
           <ReactApexChart 
             options={this.state.options} 
@@ -78,4 +78,4 @@ class ApexChart extends React.Component<{}, ApexChartState> {
   }
 }
 
-export default ApexChart;
+export default quantityBooksChart;

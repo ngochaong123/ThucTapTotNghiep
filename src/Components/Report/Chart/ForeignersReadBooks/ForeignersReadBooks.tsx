@@ -25,7 +25,7 @@ interface ApexChartState {
 }
 
 // Nếu bạn không truyền bất kỳ props nào, bạn có thể sử dụng một đối tượng rỗng cho props.
-class PieChart extends React.Component<{}, ApexChartState> {
+class ForeignersReadBooks extends React.Component<{}, ApexChartState> {
   constructor(props: {}) {
     super(props);
 
@@ -72,4 +72,4 @@ class PieChart extends React.Component<{}, ApexChartState> {
   }
 }
 
-export default PieChart;
+export default ForeignersReadBooks;

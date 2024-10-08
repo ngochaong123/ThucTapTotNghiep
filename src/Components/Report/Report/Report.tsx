@@ -2,11 +2,11 @@ import React from 'react';
 import './Report.css';
 
 // chart 
-import LineChart from '../Chart/LineChar/LineChart';
+import ReaderTrends from '../Chart/LineChar/LineChart';
 import Map from "../Chart/Map/Map";
-import PieChartPerson from "../Chart/PieChartPerson/PieChart";
-import Revenue from "../Chart/Revenue/Revenue";
-import LineChartSale from '../Chart/LineChartSale/LineChartSale';
+import ForeignersReadBooks from "../Chart/ForeignersReadBooks/ForeignersReadBooks";
+import QuantityBooksChart from "../Chart/quantityBooksChart/quantityBooksChart";
+import RevenueChart from '../Chart/revenueChart/revenueChart';
 
 // icon
 import filterIcon from "../../../images/icon/filter-white.png";
@@ -109,23 +109,23 @@ const Report: React.FC = () => {
 
       {/* Charts */}
       <div className='ContanerChartReport'>
-        <div className='LineChartReport1'>
-          <LineChartSale />
+        <div className='ChartRevenue'>
+          <RevenueChart />
         </div>
-        <div className='PieChartReport1'>
-          <Revenue />
+        <div className='quantityBooks'>
+          <QuantityBooksChart />
         </div>
       </div>
 
-      <div className='ContanerChartReport1'>
-        <div className='PieChartReport2'>
-          <PieChartPerson />
+      <div className='ContanerChartReport'>
+        <div className='ForeignersReadBooks'>
+          <ForeignersReadBooks />
         </div>
-        <div className='MapReport2'>
+        <div className='WorldMap'>
           <Map />
         </div>
-        <div className='Barchart2'>
-          <LineChart />
+        <div className='ReaderTrends'>
+          <ReaderTrends />
         </div>
       </div>
     </div>
