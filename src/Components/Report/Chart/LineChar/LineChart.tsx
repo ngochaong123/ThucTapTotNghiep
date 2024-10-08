@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import './LineChart.css'
 import ReactApexChart from "react-apexcharts"; // Correct import
 
-class ApexChart extends Component<{}, { options: any, series: any[] }> {
+class LineChart extends Component<{}, { options: any, series: any[] }> {
   constructor(props: {}) {
     super(props);
 
@@ -10,11 +10,11 @@ class ApexChart extends Component<{}, { options: any, series: any[] }> {
       series: [
         {
           name: "Thành viên đọc sách",
-          data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+          data: [10, 41, 35, 51, 49, 62, 69, 91, 148,55,46,78]
         },
         {
-          name: "Số lượng người đọc", // New line for Laptops
-          data: [23, 34, 44, 55, 43, 52, 68, 80, 120]
+          name: "Mượn sách về nhà", // New line for Laptops
+          data: [23, 34, 44, 55, 43, 52, 68, 80, 120, 51, 49, 62]
         }
       ],
       options: {
@@ -31,10 +31,6 @@ class ApexChart extends Component<{}, { options: any, series: any[] }> {
         stroke: {
           curve: 'straight'
         },
-        title: {
-          text: 'Xu hướng thành viên',
-          align: 'left'
-        },
         grid: {
           row: {
             colors: ['#f3f3f3', 'transparent'],
@@ -42,7 +38,7 @@ class ApexChart extends Component<{}, { options: any, series: any[] }> {
           },
         },
         xaxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+          categories: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
         }
       },
     };
@@ -51,12 +47,13 @@ class ApexChart extends Component<{}, { options: any, series: any[] }> {
   render() {
     return (
       <div>
+        <h3 style={{ textAlign: 'center',marginBottom:'-10px'}}>Xu hướng người đọc</h3>
         <div id="chart">
           <ReactApexChart 
             options={this.state.options} 
             series={this.state.series} 
             type="line" 
-            width="710px"
+            width="400px"
             height="300px" 
           />
         </div>
@@ -66,4 +63,4 @@ class ApexChart extends Component<{}, { options: any, series: any[] }> {
   }
 }
 
-export default ApexChart;
+export default LineChart;

@@ -21,7 +21,7 @@ import BorrowBooks from "./Components/borrowBooks/borrowBooks/borrowBooks";
 import AddBorrowBooks from "./Components/borrowBooks/addBorrowBooks/addBorrowBooks";
 import ChangeBorrowBooks from "./Components/borrowBooks/changeBorrowBooks/changeBorrowBooks";
 // bao cao
-import Report from "./Components/Report/Report";
+import Report from "./Components/Report/Report/Report";
 // nguoi dung
 import User from "./Components/User/User";
 
