@@ -62,21 +62,38 @@ h2 {
 }
 
 /* Input group styling */
-.input-group {
+.input-group-login {
   display: flex;
   flex-direction: column;
   margin-bottom: 15px;
-  width: 300px;
+  width: 330px;
 }
 
-.input-group label {
+.input-group-login label {
   margin-bottom: 5px;
 }
 
-.input-group input {
+.input-group-login input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.input-with-icon-login {
+  position: relative;
+}
+
+.input-with-icon-login input {
+  width: 84%;
+  padding-right: 40px; /* Để chừa chỗ cho icon */
+}
+
+.password-icon-login {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-45%);
+  cursor: pointer;
 }
 
 /* Button styling */

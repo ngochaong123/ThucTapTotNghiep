@@ -15,6 +15,6 @@ CREATE TABLE users (
 
 -- Thêm tài khoản người dùng (users)
 INSERT INTO users (username, password, email) VALUES 
-('admin1', '123456', 'admin1@library.com'), 
+('admin1', 'Tien%123', 'admin1@library.com'), 
 ('librarian1', '123456', 'librarian1@library.com'), 
 ('member1', '123456', 'member1@library.com');

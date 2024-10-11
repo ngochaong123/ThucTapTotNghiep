@@ -1,62 +1,72 @@
 import React, { useState } from 'react';
-import './Login.css';  // Importing your CSS
+import axios from 'axios'; // Import axios để gọi API
+import './Login.css';  // Import CSS
 import Logo from '../../images/logo.jpg';
-import { Outlet, useNavigate } from "react-router-dom"; // Import useNavigate for redirection
-import axios from 'axios'; // Import axios for making HTTP requests
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import icon từ react-icons
+import { useNavigate } from "react-router-dom"; // Import useNavigate để điều hướng
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [rememberMe, setRememberMe] = useState<boolean>(false); // State for "Remember Me"
-  const [error, setError] = useState<string>(''); // State for error messages
-  const navigate = useNavigate(); // Hook for navigation
+  const [rememberMe, setRememberMe] = useState<boolean>(false); // State cho "Remember Me"
+  const [error, setError] = useState<string>(''); // State để lưu lỗi
+  const [showPassword, setShowPassword] = useState<boolean>(false); // State để quản lý hiển thị mật khẩu
+  const navigate = useNavigate(); // Khai báo useNavigate để điều hướng
+
+  // Hàm kiểm tra tính hợp lệ của tên người dùng
+  const isValidUsername = (username: string) => {
+    const usernameRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])/;
+    return usernameRegex.test(username);
+  };
+
+  // Hàm kiểm tra tính hợp lệ của mật khẩu
+  const isValidPassword = (password: string) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Gửi yêu cầu đăng nhập đến server
+  
+    // Kiểm tra tính hợp lệ của tên người dùng và mật khẩu
+    if (!isValidUsername(username) || !isValidPassword(password)) {
+      alert("Tên người dùng hoặc mật khẩu không hợp lệ.");
+      return;
+    }
+  
     try {
       const response = await axios.post('http://localhost:5000/login', {
         username,
         password,
       });
-
-      // Nếu đăng nhập thành công
-      if (response.status === 200) {
-        console.log('Đăng nhập thành công:', response.data);
-        // Bạn có thể lưu thông tin người dùng vào localStorage hoặc sessionStorage nếu cần
-        if (rememberMe) {
-          localStorage.setItem('user', JSON.stringify(response.data.user)); // Lưu thông tin người dùng
-        }
-        // Chuyển hướng đến trang Menu
-        navigate('/Menu');
+  
+      if (response.data.success) {  // Kiểm tra nếu thuộc tính success tồn tại và là true
+        navigate('/menu');
+      } else {
+        console.log("Đăng nhập không thành công:", response.data);
+        alert("Tên đăng nhập hoặc mật khẩu không đúng.");
       }
     } catch (error: any) {
-      // Xử lý lỗi nếu đăng nhập không thành công
-      if (error.response && error.response.status === 401) {
-        setError('Tên đăng nhập hoặc mật khẩu không đúng.');
-      } else {
-        setError('Đã xảy ra lỗi. Vui lòng thử lại sau.');
-      }
-      console.error('Đăng nhập không thành công:', error);
+      console.log("API Error:", error);
+      alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
     }
   };
+  
 
   return (
     <div className="login-page">
-      {/* Logo */}
       <div className="logo-container">
-        <img src={Logo} className="logo"/>  {/* Logo image */}
-        <div className="NameLogoLogin">QUẢN LÝ THƯ VIỆN</div>  {/* Logo name */}
+        <img src={Logo} className="logo" alt="Logo"/>
+        <div className="NameLogoLogin">QUẢN LÝ THƯ VIỆN</div>
       </div>
 
       <div className="login-container">
         <form className="login-form" onSubmit={handleSubmit}>
           <h2 style={{ fontSize: "20px" }}>Đăng nhập tài khoản thư viện</h2>
-          
-          {error && <div className="error-message">{error}</div>} {/* Hiển thị thông báo lỗi */}
 
-          <div className="input-group">
+          {error && <p className="error-message">{error}</p>} {/* Hiển thị lỗi nếu có */}
+
+          <div className="input-group-login">
             <label htmlFor="username">Tài khoản</label>
             <input
               type="text"
@@ -67,40 +77,45 @@ const Login: React.FC = () => {
             />
           </div>
 
-          <div className="input-group">
+          <div className="input-group-login">
             <label htmlFor="password">Mật khẩu</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="input-with-icon-login">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <span
+                className="password-icon-login"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
           </div>
 
-          {/* Flex container for Remember Me and Forgot Password */}
           <div className="flex-container">
             <label>
               <input
                 type="checkbox"
                 checked={rememberMe}
-                onChange={() => setRememberMe(!rememberMe)} // Toggle state
+                onChange={() => setRememberMe(!rememberMe)}
               />
               Ghi nhớ tài khoản
             </label>
             <a href="/forgot-password" className="link">Quên mật khẩu?</a>
           </div>
 
-          <button type="submit">Đăng nhập</button> {/* Đưa nút Đăng nhập ra khỏi Link */}
+          <button type="submit">Đăng nhập</button>
 
-          {/* Link for Register */}
           <div className="links-container-Login">
-            <div> Bạn đã có tài khoản chưa?</div>
+            <div>Bạn đã có tài khoản chưa?</div>
             <a href="/register" className="link">Đăng ký tài khoản</a>
           </div>
         </form>
       </div>
-      <Outlet />
     </div>
   );
 };
