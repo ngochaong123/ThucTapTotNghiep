@@ -1,17 +1,45 @@
 import React, { useState } from 'react';
 import './Login.css';  // Importing your CSS
 import Logo from '../../images/logo.jpg';
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import axios from 'axios'; // Import axios for making HTTP requests
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [rememberMe, setRememberMe] = useState<boolean>(false); // State for "Remember Me"
+  const [error, setError] = useState<string>(''); // State for error messages
+  const navigate = useNavigate(); // Hook for navigation
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Logging in with', { username, password, rememberMe });
+    
+    // Gửi yêu cầu đăng nhập đến server
+    try {
+      const response = await axios.post('http://localhost:5000/login', {
+        username,
+        password,
+      });
+
+      // Nếu đăng nhập thành công
+      if (response.status === 200) {
+        console.log('Đăng nhập thành công:', response.data);
+        // Bạn có thể lưu thông tin người dùng vào localStorage hoặc sessionStorage nếu cần
+        if (rememberMe) {
+          localStorage.setItem('user', JSON.stringify(response.data.user)); // Lưu thông tin người dùng
+        }
+        // Chuyển hướng đến trang Menu
+        navigate('/Menu');
+      }
+    } catch (error: any) {
+      // Xử lý lỗi nếu đăng nhập không thành công
+      if (error.response && error.response.status === 401) {
+        setError('Tên đăng nhập hoặc mật khẩu không đúng.');
+      } else {
+        setError('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+      }
+      console.error('Đăng nhập không thành công:', error);
+    }
   };
 
   return (
@@ -24,10 +52,10 @@ const Login: React.FC = () => {
 
       <div className="login-container">
         <form className="login-form" onSubmit={handleSubmit}>
-          <h2 style={{
-            fontSize:"20px"
-          }}>Đăng nhập tài khoản thư viện</h2>
+          <h2 style={{ fontSize: "20px" }}>Đăng nhập tài khoản thư viện</h2>
           
+          {error && <div className="error-message">{error}</div>} {/* Hiển thị thông báo lỗi */}
+
           <div className="input-group">
             <label htmlFor="username">Tài khoản</label>
             <input
@@ -62,10 +90,8 @@ const Login: React.FC = () => {
             </label>
             <a href="/forgot-password" className="link">Quên mật khẩu?</a>
           </div>
-          <Link to="/Menu">
-            <button type="submit">Đăng nhập</button>
-          </Link>
-          
+
+          <button type="submit">Đăng nhập</button> {/* Đưa nút Đăng nhập ra khỏi Link */}
 
           {/* Link for Register */}
           <div className="links-container-Login">
