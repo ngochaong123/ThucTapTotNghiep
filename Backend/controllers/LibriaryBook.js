@@ -17,4 +17,27 @@ const getAllBooks = (req, res) => {
     });
 };
 
-module.exports = { getAllBooks };
+const searchBooks = (req, res) => {
+    const { keyword } = req.query; // Lấy từ khóa tìm kiếm từ query params
+
+    const sql = `
+        SELECT * 
+        FROM books 
+        WHERE book_name LIKE ? OR author LIKE ?
+    `;
+
+    const searchKeyword = `%${keyword}%`; // Tìm kiếm theo chuỗi chứa từ khóa
+
+    db.query(sql, [searchKeyword, searchKeyword], (err, results) => {
+        if (err) {
+            console.error('Error searching books: ', err);
+            return res.status(500).json({ error: 'Error searching books' });
+        }
+        results.forEach(book => {
+            book.image_link = `/Book/${book.image_link}`; // Điều chỉnh đường dẫn ảnh
+        });
+        res.json(results);
+    });
+};
+
+module.exports = { getAllBooks, searchBooks  };

@@ -22,7 +22,7 @@ interface Book {
   author: string;
   quantity: number;
   category: string;
-  publication_year: number;
+  language: string;
   location: string;
   received_date: string;
   image_link: string; // Field for book image URL
@@ -34,6 +34,7 @@ export default function LibraryBooks() {
   const [selectedBooks, setSelectedBooks] = useState<number[]>([]);
   const filterRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const [keyword, setKeyword] = useState(''); 
 
   // Fetch books data from API
   useEffect(() => {
@@ -86,6 +87,23 @@ export default function LibraryBooks() {
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
+
+  // Hàm tìm kiếm sách từ API
+  const searchBooks = async (keyword: string) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/search?keyword=${keyword}`);
+      setBooks(response.data); // Cập nhật danh sách sách
+    } catch (error) {
+      console.error('Error searching books:', error);
+    }
+  };
+
+  // Gọi API tìm kiếm khi từ khóa thay đổi
+  useEffect(() => {
+    if (keyword) {
+      searchBooks(keyword);
+    }
+  }, [keyword]);
 
   return (
     <div>
@@ -155,7 +173,13 @@ export default function LibraryBooks() {
                 <div className="LibrarysearchIcon">
                   <img src={Magnifier} alt="Search Icon" />
                 </div>
-                <input className="LibrarySearchInput" type="text" placeholder="Tìm kiếm sách..." />
+                <input
+                  className="LibrarySearchInput"
+                  type="text"
+                  placeholder="Tìm kiếm sách..."
+                  value={keyword} // Liên kết state với input
+                  onChange={(e) => setKeyword(e.target.value)} // Cập nhật từ khóa tìm kiếm
+                />
               </div>
             </div>
           </div>
@@ -188,7 +212,7 @@ export default function LibraryBooks() {
                   <th>Thể loại</th>
                   <th>Tác giả</th>
                   <th>Vị trí sách</th>
-                  <th>Năm xuất bản</th>
+                  <th>Ngôn ngữ</th>
                   <th>Ngày nhận sách</th>
                 </tr>
               </thead>
@@ -212,7 +236,7 @@ export default function LibraryBooks() {
                       <td>{book.category}</td>
                       <td>{book.author}</td>
                       <td>{book.location}</td>
-                      <td>{book.publication_year}</td>
+                      <td>{book.language}</td>
                       <td>{new Date(book.received_date).toISOString().split('T')[0]}</td>
                     </tr>
                   );
