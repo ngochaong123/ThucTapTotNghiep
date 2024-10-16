@@ -8,11 +8,13 @@ import Magnifier from '../../../images/icon/magnifier.png';
 import Filter from '../../../images/icon/filter.png';
 import ArrowDown from "../../../images/icon/ArrowDown.png";
 import Plus from "../../../images/icon/plus.png";
-import Math from "../../../images/icon/math-book.png";
-import literature from "../../../images/icon/literature.png";
-import Biology from "../../../images/icon/biology.png";
+
+import Teachnology from "../../../images/icon/informatics-book.png";
+import Biology from "../../../images/icon/biology-book.png";
+import Medicine from "../../../images/icon/health-book.png";
 import History from "../../../images/icon/history-book.png";
-import Science from "../../../images/icon/science-book.png";
+import Philosophy from "../../../images/icon/book-philosophy.png";
+import Adventure from "../../../images/icon/Adventure.png";
 
 // Define a book type
 interface Book {
@@ -105,6 +107,19 @@ export default function LibraryBooks() {
     }
   }, [keyword]);
 
+  const handleCategoryClick = (category : string) => {
+    // Gọi API để lấy danh sách sách theo thể loại
+    fetch(`http://localhost:5000/Book?category=${encodeURIComponent(category)}`)
+      .then(response => response.json())
+      .then(data => {
+        setBooks(data); // Cập nhật danh sách sách
+        setShowFilterMenu(false); // Đóng menu sau khi chọn
+      })
+      .catch(error => {
+        console.error('Error fetching books by category:', error);
+      });
+  };  
+
   return (
     <div>
       <div className='LibraryCurrentInformation'>
@@ -141,25 +156,29 @@ export default function LibraryBooks() {
 
                 {showFilterMenu && (
                   <div className='LibraryOptionFilter'>
-                    <ul>
-                      <img src={Math} alt="Math Icon" />
-                      <div>Toán</div>
+                    <ul onClick={() => handleCategoryClick('Công nghệ thông tin')}>
+                      <img src={Teachnology} alt="Teachnology Icon" />
+                      <div>Công nghệ thông tin</div>
                     </ul>
-                    <ul>
-                      <img src={literature} alt="Literature Icon" />
-                      <div>Văn học</div>
-                    </ul>
-                    <ul>
+                    <ul onClick={() => handleCategoryClick('Nông Lâm Ngư')}>
                       <img src={Biology} alt="Biology Icon" />
-                      <div>Sinh học</div>
+                      <div>Nông Lâm Ngư nghiệp</div>
                     </ul>
-                    <ul>
+                    <ul onClick={() => handleCategoryClick('Y Học - Sức Khỏe')}>
+                      <img src={Medicine} alt="Medicine Icon" />
+                      <div>Y Học - Sức Khỏe</div>
+                    </ul>
+                    <ul onClick={() => handleCategoryClick('Triết Học - Lý Luận')}>
+                      <img src={Philosophy} alt="Philosophy Icon" />
+                      <div>Triết Học - Lý Luận</div>
+                    </ul>
+                    <ul onClick={() => handleCategoryClick('Lịch Sử - Quân Sự')}>
                       <img src={History} alt="History Icon" />
-                      <div>Lịch sử</div>
+                      <div>Lịch Sử - Quân Sự</div>
                     </ul>
-                    <ul>
-                      <img src={Science} alt="Science Icon" />
-                      <div>Khoa học</div>
+                    <ul onClick={() => handleCategoryClick('Phiêu Lưu - Mạo Hiểm')}>
+                      <img src={Adventure} alt="Adventure Icon" />
+                      <div>Phiêu Lưu - Mạo Hiểm</div>
                     </ul>
                   </div>
                 )}
@@ -237,7 +256,7 @@ export default function LibraryBooks() {
                       <td>{book.author}</td>
                       <td>{book.location}</td>
                       <td>{book.language}</td>
-                      <td>{new Date(book.received_date).toISOString().split('T')[0]}</td>
+                      <td>{new Date(book.received_date).toLocaleDateString('vi-VN')}</td>
                     </tr>
                   );
                 })}

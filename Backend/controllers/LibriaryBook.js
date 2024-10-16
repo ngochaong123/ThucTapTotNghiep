@@ -2,16 +2,24 @@ const db = require('../Data/Database'); // Đảm bảo đường dẫn này đ�
 
 // Hàm lấy tất cả sách
 const getAllBooks = (req, res) => {
-    const sql = 'SELECT * FROM books';
+    const { category } = req.query;
+    let sql = 'SELECT * FROM books';
+    const params = [];
 
-    db.query(sql, (err, results) => {
+    // Nếu có tham số category, thêm điều kiện tìm kiếm
+    if (category) {
+        sql += ' WHERE category = ?';
+        params.push(category);
+    }
+
+    db.query(sql, params, (err, results) => {
         if (err) {
             console.error('Error fetching books data: ', err);
             return res.status(500).json({ error: 'Error fetching books data' });
         }
         // Điều chỉnh đường dẫn hình ảnh cho đúng
         results.forEach(book => {
-            book.image_link = `/Book/${book.image_link}`; // Sử dụng template string thay vì string thường
+            book.image_link = `/Book/${book.image_link}`;
         });
         res.json(results);
     });

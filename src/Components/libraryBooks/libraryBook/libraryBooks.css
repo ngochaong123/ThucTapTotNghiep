@@ -189,17 +189,31 @@
     opacity: 0.7;
 }
 
-.LibraryOptionFilter{
+.LibraryOptionFilter {
     border-radius: 10px;
     padding: 10px;
     width: 175px;
-    border-radius: 15px;
+    height: 170px;
     background-color: white;
     border: 2px solid #CBCBDC;
     position: absolute;
     margin: -1px 0px 0px 20px;
     color: black;
     z-index: 4;
+    overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+    overflow-y: auto;
+    scrollbar-width: thin; /* Thu nhỏ thanh cuộn trên Firefox */
+    scrollbar-color: #CBCBDC transparent; /* Màu thanh cuộn trên Firefox */
+}
+
+/* Tùy chỉnh thanh cuộn cho Chrome, Edge và Safari */
+.LibraryOptionFilter::-webkit-scrollbar {
+    width: 8px; /* Độ rộng thanh cuộn dọc */
+}
+
+.LibraryOptionFilter::-webkit-scrollbar-thumb {
+    background-color: #CBCBDC; /* Màu thanh cuộn */
+    border-radius: 10px; /* Bo tròn thanh cuộn */
 }
 
 .LibraryOptionFilter ul {
@@ -207,7 +221,7 @@
     list-style-type: none;
     padding: 8px 0;
     cursor: pointer;
-    width: 180px;
+    max-width: 155px; /* Giới hạn chiều rộng của danh sách */
     margin: 0 auto; /* Đảm bảo danh sách nằm giữa trong khung cha */
 }
 
