@@ -6,17 +6,17 @@
     border-radius: 10px;
 }
 
-.uploadAvatarBook{
+.uploadAvatarAddBook{
     padding: 30px 0px 30px 0px;
     margin-left: 20px;
 }
 
-.containeruploadAvatarBook{
+.containeruploadAvatarAddBook{
     display: flex;
 
     img{
         width: 250px;
-        height: 300px;
+        height: 350px;
         border-radius: 10px;
         margin-right: 30px;
     }
@@ -42,18 +42,18 @@
     }
 }
 
-.ButtonuploadImageBook{
+.ButtonuploadImageAddBook{
     width: 100px;
     margin: -25px 0px 10px 300px;
     background-color: #2864F6;
     position: absolute;
 }
 
-.ButtonuploadImageBook:hover{
+.ButtonuploadImageAddBook:hover{
     opacity: 0.9;
 }
 
-.ButtonuploadImageBook:active{
+.ButtonuploadImageAddBook:active{
     opacity: 0.8;
 }
 
@@ -66,27 +66,51 @@
 /* right and left */
 
 .containeraddBookRight,
-.containeraddBookleft{
+.containeraddBookLeft {
     display: flex;
     flex-direction: column;
     margin-left: 50px;
+}
 
-    input{
-        width: 300px;
-        border-radius: 10px;
-        padding: 10px;
-        background-color: white;
-        border: 2px solid #CBCBDC;
-       
-    }
+.containeraddBookLeft input,
+.containeraddBookRight input {
+    width: 300px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    border: 2px solid #CBCBDC;
+}
 
-    .inputInfoBook{
-        margin-bottom: 50px;
+.containeraddBookRight select {
+    width: 324px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    border: 2px solid #CBCBDC;
+}
 
-        div{
-            margin-bottom: 10px;
-        }
-    }
+.inputInfoAddBooklanguage select{
+    width: 324px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    border: 2px solid #CBCBDC;
+}
+
+inputInfoAddBooklanguage{
+    margin-bottom: 50px;
+}
+
+.inputInfoAddBooklanguage div {
+    margin-bottom: 10px;
+}
+
+.inputInfoAddBook {
+    margin-bottom: 50px;
+}
+
+.inputInfoAddBook div {
+    margin-bottom: 10px;
 }
 
 .MemberDatePickerAddBook{

@@ -87,37 +87,54 @@
     margin-bottom: -20px;
 }
 
-.LibraryFilter{
-    display: flex;
-    justify-content: space-between;
-    width: 200px;
-    border-radius: 15px;
-    padding: 7px 15px 5px 10px;
-    background-color: white;
-    margin: 0px 20px 0px 20px;
-    border: 2px solid #CBCBDC;
 
-    .LibraryiconFilter{
-        width: 15px;
-        height: 15px;
-        margin-top: 5px;
-        margin-left: 4px;
-    }
-    
-    .LibraryNameiconFilter{
-        margin: 5px 7px ;
-        color: #A0A0A9;
-    }
+.CategoryBook {
+    margin-bottom: 32px;
+    margin-left: 20px;
 }
 
-.LibraryFilter:hover {
-    background-color: white;
-    border-radius: 15px;
+.CategoryLabel {
+    margin-bottom: 10px; /* Khoảng cách giữa tiêu đề và phần chọn thể loại */
+    font-weight: bold; /* Để làm nổi bật tiêu đề "Thể loại" */
 }
 
-.LibraryFilter:active{
-    background-color: white;
-    opacity: 0.9;
+/* Wrapper cho phần chọn thể loại và icon */
+.LibraryCategoryWrapper {
+    position: relative; /* Đặt vị trí tương đối để icon có thể được đặt bên trong */
+    margin-top: -5px;
+}
+
+/* Đặt kiểu cho phần chọn thể loại */
+.LibraryCategorySelect {
+    width: 200px; /* Chiều rộng cố định cho select */
+    height: 40px;
+    border-radius: 15px; /* Bo góc */
+    padding: 10px; /* Khoảng cách bên trong */
+    padding-right: 40px; /* Để có khoảng cách cho icon */
+    background-color: white; /* Màu nền trắng */
+    border: 2px solid #CBCBDC; /* Đường viền */
+    appearance: none; /* Loại bỏ kiểu mặc định của trình duyệt */
+    background-image: url('../../../images/icon/ArrowDown.png'); /* Thêm biểu tượng mũi tên */
+    background-repeat: no-repeat; /* Không lặp lại biểu tượng */
+    background-position: right 10px center; /* Đặt vị trí biểu tượng mũi tên bên phải */
+    background-size: 20px; /* Kích thước biểu tượng mũi tên */
+}
+
+/* Kích thước và vị trí cho icon filter */
+.LibraryFilterIcon {
+    position: absolute; /* Đặt vị trí tuyệt đối */
+    top: 50%; /* Đặt giữa chiều cao */
+    left: 10px; /* Đặt cách trái 10px */
+    transform: translateY(-50%); /* Giúp căn giữa theo chiều dọc */
+    width: 20px; /* Kích thước chiều rộng của icon */
+    height: 20px; /* Kích thước chiều cao của icon */
+}
+
+
+/* Hiệu ứng focus cho phần chọn thể loại */
+.LibraryCategorySelect:focus {
+    outline: none; /* Bỏ đường viền khi focus */
+    border-color: #8C8C8C; /* Thay đổi màu đường viền khi focus */
 }
 
 .LibrarySearchBook{
@@ -168,7 +185,6 @@
     .LibraryiconFilter{
         width: 15px;
         height: 15px;
-        margin-top: 5px;
         margin-left: 4px;
     }
     
@@ -250,15 +266,8 @@
     background-color: #2864F6;
     margin: 20px 20px 50px 20px;
     border: 2px solid #2864F6;
-
-    .LibraryiconFilter{
-        width: 15px;
-        height: 15px;
-        margin-top: 5px;
-        margin-left: 4px;
-    }
     
-    .LibraryNameDelete{
+    .LibraryNameEdit{
         margin: 5px 14px ;
         color: white;
     }

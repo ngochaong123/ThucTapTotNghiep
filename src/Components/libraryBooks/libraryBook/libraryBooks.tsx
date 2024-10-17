@@ -5,16 +5,7 @@ import axios from 'axios';
 
 // icon imports
 import Magnifier from '../../../images/icon/magnifier.png';
-import Filter from '../../../images/icon/filter.png';
-import ArrowDown from "../../../images/icon/ArrowDown.png";
 import Plus from "../../../images/icon/plus.png";
-
-import Teachnology from "../../../images/icon/informatics-book.png";
-import Biology from "../../../images/icon/biology-book.png";
-import Medicine from "../../../images/icon/health-book.png";
-import History from "../../../images/icon/history-book.png";
-import Philosophy from "../../../images/icon/book-philosophy.png";
-import Adventure from "../../../images/icon/Adventure.png";
 
 // Define a book type
 interface Book {
@@ -37,13 +28,14 @@ export default function LibraryBooks() {
   const filterRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [keyword, setKeyword] = useState(''); 
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   // Fetch books data from API
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/Book'); // Call your API here
-        setBooks(response.data); // Update the books state with data from API
+        const response = await axios.get('http://localhost:5000/Book');
+        setBooks(response.data);
       } catch (error) {
         console.error('Error fetching books:', error);
       }
@@ -94,31 +86,43 @@ export default function LibraryBooks() {
   const searchBooks = async (keyword: string) => {
     try {
       const response = await axios.get(`http://localhost:5000/search?keyword=${keyword}`);
-      setBooks(response.data); // Cập nhật danh sách sách
+      setBooks(response.data);
     } catch (error) {
       console.error('Error searching books:', error);
     }
   };
 
-  // Gọi API tìm kiếm khi từ khóa thay đổi
   useEffect(() => {
     if (keyword) {
       searchBooks(keyword);
     }
   }, [keyword]);
 
-  const handleCategoryClick = (category : string) => {
-    // Gọi API để lấy danh sách sách theo thể loại
-    fetch(`http://localhost:5000/Book?category=${encodeURIComponent(category)}`)
-      .then(response => response.json())
-      .then(data => {
-        setBooks(data); // Cập nhật danh sách sách
-        setShowFilterMenu(false); // Đóng menu sau khi chọn
-      })
-      .catch(error => {
+  const handleCategoryChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const category = e.target.value;
+    setSelectedCategory(category);
+
+    if (category) {
+      try {
+        const response = await axios.get(`http://localhost:5000/Book?category=${encodeURIComponent(category)}`);
+        setBooks(response.data);
+      } catch (error) {
         console.error('Error fetching books by category:', error);
-      });
-  };  
+      }
+    } else {
+      const response = await axios.get('http://localhost:5000/Book');
+      setBooks(response.data);
+    }
+  };
+
+  const categories = [
+    'Công nghệ thông tin',
+    'Nông Lâm Ngư Nghiệp',
+    'Y Học - Sức Khỏe',
+    'Triết Học - Lý Luận',
+    'Lịch Sử - Quân Sự',
+    'Phiêu Lưu - Mạo Hiểm'
+  ];
 
   return (
     <div>
@@ -127,7 +131,7 @@ export default function LibraryBooks() {
           <h1 className='LibrarytileBook'> Sách thư viện </h1>
           <Link to='/Menu/AddBook' style={{ textDecoration: 'none' }}>
             <button className='LibraryAddLibrary'>
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 <img src={Plus} className='LibraryiconFilter' alt="Add Library Icon" />
                 <div className='LibraryNameiconFilter'> Thêm sách mới </div>
               </div>
@@ -137,55 +141,26 @@ export default function LibraryBooks() {
 
         {/* Flex container for options row */}
         <div className='LibraryOptionsRow'>
-          <div style={{ display: 'flex' }}>
-            {/* Filter option */}
-            <div className='ChooseBook'>
-              <div className='LibraryNameChooseBook'> Thể loại </div>
-              <div className='LibraryContanierFilter' ref={filterRef}>
-                <button
-                  className='LibraryFilter'
-                  onClick={toggleFilterMenu}
-                  ref={buttonRef}
+          <div style={{ display: 'flex'}}>
+            {/* Chọn thể loại */}
+            <div className='CategoryBook'>
+              <div className="CategoryLabel">Thể loại</div>
+              <div className="LibraryCategoryWrapper"> {/* Wrapper cho select */}
+                <select
+                  name="category"
+                  value={selectedCategory}
+                  onChange={handleCategoryChange}
+                  className="LibraryCategorySelect"
                 >
-                  <div style={{ display: 'flex' }}>
-                    <img src={Filter} className='LibraryiconFilter' alt="Filter Icon" />
-                    <div className='LibraryNameiconFilter'> Thể loại </div>
-                  </div>
-                  <img src={ArrowDown} className='LibraryiconFilter' alt="Arrow Down Icon" />
-                </button>
-
-                {showFilterMenu && (
-                  <div className='LibraryOptionFilter'>
-                    <ul onClick={() => handleCategoryClick('Công nghệ thông tin')}>
-                      <img src={Teachnology} alt="Teachnology Icon" />
-                      <div>Công nghệ thông tin</div>
-                    </ul>
-                    <ul onClick={() => handleCategoryClick('Nông Lâm Ngư')}>
-                      <img src={Biology} alt="Biology Icon" />
-                      <div>Nông Lâm Ngư nghiệp</div>
-                    </ul>
-                    <ul onClick={() => handleCategoryClick('Y Học - Sức Khỏe')}>
-                      <img src={Medicine} alt="Medicine Icon" />
-                      <div>Y Học - Sức Khỏe</div>
-                    </ul>
-                    <ul onClick={() => handleCategoryClick('Triết Học - Lý Luận')}>
-                      <img src={Philosophy} alt="Philosophy Icon" />
-                      <div>Triết Học - Lý Luận</div>
-                    </ul>
-                    <ul onClick={() => handleCategoryClick('Lịch Sử - Quân Sự')}>
-                      <img src={History} alt="History Icon" />
-                      <div>Lịch Sử - Quân Sự</div>
-                    </ul>
-                    <ul onClick={() => handleCategoryClick('Phiêu Lưu - Mạo Hiểm')}>
-                      <img src={Adventure} alt="Adventure Icon" />
-                      <div>Phiêu Lưu - Mạo Hiểm</div>
-                    </ul>
-                  </div>
-                )}
+                  <option value="" className='aaaa'>Chọn thể loại</option>
+                  {categories.map((cat, index) => (
+                    <option key={index} value={cat}>{cat}</option>
+                  ))}
+                </select>
               </div>
             </div>
 
-            {/* Search option */}
+            {/* Tìm kiếm */}
             <div>
               <div className='LibraryNameChooseBook'> Tìm kiếm </div>
               <div className="LibrarySearchBook">
@@ -196,17 +171,17 @@ export default function LibraryBooks() {
                   className="LibrarySearchInput"
                   type="text"
                   placeholder="Tìm kiếm sách..."
-                  value={keyword} // Liên kết state với input
-                  onChange={(e) => setKeyword(e.target.value)} // Cập nhật từ khóa tìm kiếm
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
                 />
               </div>
             </div>
           </div>
 
-          {/* Edit book  */}
+          {/* Chỉnh sửa sách */}
           <Link to='/Menu/changeBookInfor' style={{ textDecoration: 'none' }}>
             <button className='LibraryEditbrary'>
-              <div className='LibraryNameDelete'> Chỉnh sửa thông tin </div>
+              <div className='LibraryNameEdit'> Chỉnh sửa thông tin </div>
             </button>
           </Link>
         </div>
@@ -249,7 +224,7 @@ export default function LibraryBooks() {
                       <td>{book.book_code}</td>
                       <td>{book.book_name}</td>
                       <td>
-                        <img src={`http://localhost:5000${book.image_link}`} className='LibraryImageBook' />
+                        <img src={`http://localhost:5000${book.image_link}`} className='LibraryImageBook' alt={book.book_name} />
                       </td>
                       <td>{book.quantity}</td>
                       <td>{book.category}</td>
