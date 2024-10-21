@@ -19,22 +19,30 @@ const getAllBooks = (req, res) => {
     let sql = 'SELECT * FROM books';
     const params = [];
 
+    // Kiểm tra xem có category hay không
     if (category) {
         sql += ' WHERE category = ?';
         params.push(category);
     }
+
+    // Thêm điều kiện ORDER BY sau khi đã xác định điều kiện WHERE
+    sql += ' ORDER BY location';
 
     db.query(sql, params, (err, results) => {
         if (err) {
             console.error('Error fetching books data: ', err);
             return res.status(500).json({ error: 'Error fetching books data' });
         }
+        
+        // Cập nhật link hình ảnh cho từng sách
         results.forEach(book => {
             book.image_link = `/Book/${book.image_link}`;
         });
+
         res.json(results);
     });
 };
+
 
 // Hàm tìm kiếm sách
 const searchBooks = (req, res) => {
@@ -89,4 +97,25 @@ const addBook = (req, res) => {
     });
 };
 
-module.exports = { getAllBooks, searchBooks, addBook, upload };
+// Hàm cập nhật thông tin sách
+const updateBook = async (req, res) => {
+    const { book_code } = req.params;
+    const updatedData = req.body; // This will include the form data sent in the request
+
+    try {
+        // Your logic to find the book by book_code and update it
+        // For example:
+        const book = await Book.findOneAndUpdate({ code: book_code }, updatedData, { new: true });
+
+        if (!book) {
+            return res.status(404).json({ message: 'Book not found' });
+        }
+
+        return res.status(200).json({ message: 'Book updated successfully', book });
+    } catch (error) {
+        console.error('Error updating book:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+module.exports = { getAllBooks, searchBooks, addBook,updateBook ,upload };

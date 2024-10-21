@@ -1,4 +1,4 @@
-.FrameContanierChangeBook{
+.FrameContanieraddBook{
     background-color: white;
     margin-left: 10px;
     padding: 10px;
@@ -6,17 +6,17 @@
     border-radius: 10px;
 }
 
-.uploadAvatarBook{
+.uploadAvatarChangeBook{
     padding: 30px 0px 30px 0px;
     margin-left: 20px;
 }
 
-.containeruploadAvatarBook{
+.containeruploadAvatarChangeBook{
     display: flex;
 
     img{
         width: 250px;
-        height: 300px;
+        height: 350px;
         border-radius: 10px;
         margin-right: 30px;
     }
@@ -42,22 +42,22 @@
     }
 }
 
-.ButtonuploadImageBook{
+.ButtonuploadImageChangeBook{
     width: 100px;
     margin: -25px 0px 10px 300px;
     background-color: #2864F6;
     position: absolute;
 }
 
-.ButtonuploadImageBook:hover{
+.ButtonuploadImageChangeBook:hover{
     opacity: 0.9;
 }
 
-.ButtonuploadImageBook:active{
+.ButtonuploadImageChangeBook:active{
     opacity: 0.8;
 }
 
-.containerChangeBook{
+.containeraddBook{
     display: flex;
     margin-top: 30px;
     margin-left: 30px;
@@ -65,31 +65,56 @@
 
 /* right and left */
 
-.containerChangeBookRight,
-.containerChangeBookleft{
+.containeraddBookRight,
+.containeraddBookLeft {
     display: flex;
     flex-direction: column;
     margin-left: 50px;
-
-    input{
-        width: 300px;
-        border-radius: 10px;
-        padding: 10px;
-        background-color: white;
-        border: 2px solid #CBCBDC;
-       
-    }
-
-    .inputInfoBook{
-        margin-bottom: 50px;
-
-        div{
-            margin-bottom: 10px;
-        }
-    }
 }
 
-.MemberDatePickerAddBook{
+.containeraddBookLeft input,
+.containeraddBookRight input {
+    width: 300px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    border: 2px solid #CBCBDC;
+}
+
+.containeraddBookRight select,
+.containeraddBookLeft select {
+    width: 324px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    border: 2px solid #CBCBDC;
+}
+
+.inputInfoChangeBooklanguage select{
+    width: 324px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: white;
+    border: 2px solid #CBCBDC;
+}
+
+inputInfoChangeBooklanguage{
+    margin-bottom: 50px;
+}
+
+.inputInfoChangeBooklanguage div {
+    margin-bottom: 10px;
+}
+
+.inputInfoChangeBook {
+    margin-bottom: 50px;
+}
+
+.inputInfoChangeBook div {
+    margin-bottom: 10px;
+}
+
+.MemberDatePickerChangeBook{
     width: 323px;
     border-radius: 10px;
     padding: 10px;
@@ -98,7 +123,7 @@
 }
 
 
-.ButtonAddBook{
+.ButtonChangeBook{
     margin: 0px 0px 10px 80px;
 }
 

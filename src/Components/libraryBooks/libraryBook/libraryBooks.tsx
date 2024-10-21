@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './libraryBooks.css';
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link,useNavigate  } from "react-router-dom";
 import axios from 'axios';
 
 // icon imports
@@ -29,6 +29,7 @@ export default function LibraryBooks() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [keyword, setKeyword] = useState(''); 
   const [selectedCategory, setSelectedCategory] = useState('');
+  const navigate = useNavigate(); 
 
   // Fetch books data from API
   useEffect(() => {
@@ -124,6 +125,18 @@ export default function LibraryBooks() {
     'Phiêu Lưu - Mạo Hiểm'
   ];
 
+  const handleEditBook = () => {
+    if (selectedBooks.length === 1) {
+      const selectedBook = books.find((book) => book.id === selectedBooks[0]);
+      if (selectedBook) {
+        // Điều hướng đến trang chỉnh sửa với thông tin sách
+        navigate(`/Menu/changeBookInfor?id=${selectedBook.id}`, { state: selectedBook }); // Sử dụng navigate để điều hướng và truyền state
+      }
+    } else {
+      alert('Vui lòng chọn chính xác một sách để chỉnh sửa.');
+    }
+  };
+
   return (
     <div>
       <div className='LibraryCurrentInformation'>
@@ -152,7 +165,7 @@ export default function LibraryBooks() {
                   onChange={handleCategoryChange}
                   className="LibraryCategorySelect"
                 >
-                  <option value="" className='aaaa'>Chọn thể loại</option>
+                  <option value="" >Chọn thể loại</option>
                   {categories.map((cat, index) => (
                     <option key={index} value={cat}>{cat}</option>
                   ))}
@@ -179,11 +192,9 @@ export default function LibraryBooks() {
           </div>
 
           {/* Chỉnh sửa sách */}
-          <Link to='/Menu/changeBookInfor' style={{ textDecoration: 'none' }}>
-            <button className='LibraryEditbrary'>
-              <div className='LibraryNameEdit'> Chỉnh sửa thông tin </div>
-            </button>
-          </Link>
+          <button className='LibraryEditbrary' onClick={handleEditBook}>
+            <div className='LibraryNameEdit'> Chỉnh sửa thông tin </div>
+          </button>
         </div>
 
         {/* Library Selection Table */}
