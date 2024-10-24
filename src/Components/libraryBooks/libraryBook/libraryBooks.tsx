@@ -45,10 +45,6 @@ export default function LibraryBooks() {
     fetchBooks();
   }, []);
 
-  const toggleFilterMenu = () => {
-    setShowFilterMenu((prev) => !prev);
-  };
-
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       setSelectedBooks(books.map((book) => book.id));

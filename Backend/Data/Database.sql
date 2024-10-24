@@ -15,16 +15,17 @@ CREATE TABLE users (
 
 -- Tạo bảng books
 CREATE TABLE books (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    book_code VARCHAR(255) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    book_code VARCHAR(50) NOT NULL,
     book_name VARCHAR(255) NOT NULL,
-    image_link VARCHAR(255) NOT NULL, -- Đường dẫn đến hình ảnh
+    author VARCHAR(100) NOT NULL,
     quantity INT NOT NULL,
-    category VARCHAR(255) NOT NULL,
-    author VARCHAR(255) NOT NULL,
-    location VARCHAR(255) NOT NULL,
-    language VARCHAR(255) NOT NULL,
-    received_date DATE NOT NULL
+    category VARCHAR(100) NOT NULL,
+    language VARCHAR(50) NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    received_date DATE NOT NULL,
+    image_link VARCHAR(255),
+    PRIMARY KEY (id)
 );
 
 -- Thêm tài khoản người dùng (users)

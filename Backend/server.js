@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors'); 
 const path = require('path');
 const bodyParser = require('body-parser');
-const authRoutes = require('./routes/authRoutes');
+const authRoutes = require('./routes/authRoutes'); // Đường dẫn đến tệp routes của bạn
 
 const app = express();
 

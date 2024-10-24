@@ -50,42 +50,78 @@ export default function ChangeBook() {
     receiveDate: state?.received_date ? new Date(state.received_date) : null,
   });
 
-  useEffect(() => {
-    console.log("image: ", formValues.avatar);
-  }, [formValues.avatar]);
-  
+  const [isChanged, setIsChanged] = useState(false); 
+  const [imagePreview, setImagePreview] = useState<string>(`http://localhost:5000${formValues.avatar}`);
+
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value, type } = e.target;
-  
+
     if (type === 'file') {
-      const fileInput = e.target as HTMLInputElement;
-  
-      if (fileInput.files && fileInput.files.length > 0) { // Kiểm tra nếu files không null và có ít nhất một file
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-  
-        reader.onloadend = () => {
-          setFormValues((prevValues) => ({
-            ...prevValues,
-            avatar: reader.result as string,
-          }));
-        };
-        reader.readAsDataURL(file);
-      }
+        const fileInput = e.target as HTMLInputElement;
+
+        if (fileInput.files && fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+
+            // Kiểm tra kích thước tệp
+            if (file.size > 1 * 1024 * 1024) { // 1MB
+                toast.error("Ảnh phải nhỏ hơn 1MB.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const result = reader.result; // Lưu giá trị vào biến tạm
+
+                setFormValues((prevValues) => ({
+                    ...prevValues,
+                    avatar: result as string,
+                }));
+
+                // Kiểm tra nếu result không phải là null
+                if (typeof result === 'string') {
+                    setImagePreview(result); // Cập nhật ảnh preview
+                }
+                setIsChanged(true);
+            };
+            reader.readAsDataURL(file);
+        }
     } else {
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [name]: value,
-      }));
+        setFormValues((prevValues) => ({
+            ...prevValues,
+            [name]: value,
+        }));
+        setIsChanged(true);
     }
-  };  
+};
+
+
+  const handleDateChange = (date: Date | null) => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      receiveDate: date,
+    }));
+    setIsChanged(true);
+  };
 
   const triggerFileInput = () => {
     document.getElementById("avatarInput")?.click();
   };
 
+  const receiveDate = formValues.receiveDate;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Kiểm tra các trường dữ liệu cần thiết
+    if (!formValues.book_name || !formValues.book_code || !formValues.author) {
+      toast.error("Vui lòng điền tất cả các trường bắt buộc.");
+      return;
+    }
+
+    if (!isChanged) {
+      toast.info("Không có thay đổi nào để lưu.");
+      return;
+    }
 
     const formData = new FormData();
     formData.append('book_name', formValues.book_name);
@@ -95,12 +131,25 @@ export default function ChangeBook() {
     formData.append('quantity', formValues.quantity);
     formData.append('location', formValues.location);
     formData.append('language', formValues.language);
-    formData.append('received_date', formValues.receiveDate?.toISOString() || '');
+    
+    if (receiveDate) {
+      const newDate = new Date(receiveDate);
+      newDate.setDate(newDate.getDate() + 1);
+      formData.append('received_date', newDate.toISOString().split('T')[0]);
+    }
 
     const avatarInput = document.getElementById("avatarInput") as HTMLInputElement;
     if (avatarInput.files && avatarInput.files[0]) {
-      formData.append('avatar', avatarInput.files[0]);
+      const file = avatarInput.files[0];
+      
+      // Tạo tên ảnh mới dựa trên mã sách và thời gian hiện tại
+      const newFileName = `${formValues.book_code}_${Date.now()}_${file.name}`;
+      
+      // Thêm tên ảnh mới vào formData
+      formData.append('image_link', file, newFileName);
     }
+
+    console.log("data: ",formValues);
 
     try {
       const response = await axios.put(`http://localhost:5000/edit/${formValues.book_code}`, formData, {
@@ -109,11 +158,13 @@ export default function ChangeBook() {
         },
       });
       toast.success(response.data.message);
+      setIsChanged(false); 
     } catch (error) {
       console.error("Error updating book:", error);
       toast.error("Có lỗi xảy ra khi cập nhật thông tin sách.");
     }
-  };
+};
+
 
   const handleReset = () => {
     setFormValues({
@@ -127,6 +178,8 @@ export default function ChangeBook() {
       language: '',
       receiveDate: null,
     });
+    setImagePreview(DefaultAvatar); // Reset hình ảnh về mặc định
+    setIsChanged(false); 
   };
 
   return (
@@ -139,11 +192,12 @@ export default function ChangeBook() {
         <div className='uploadAvatarChangeBook'>
           <div className='containeruploadAvatarChangeBook'>
             <img 
-              src={`http://localhost:5000${formValues.avatar}`} 
+              src={imagePreview} 
               alt="Avatar Preview" 
               onError={(e) => {
                 e.currentTarget.src = DefaultAvatar;
               }}
+              
             />
             <div>
               <h2>Hình ảnh sách</h2>
@@ -208,17 +262,16 @@ export default function ChangeBook() {
                 <option value="Khu C">Khu C</option>
                 <option value="Khu D">Khu D</option>
                 <option value="Khu E">Khu E</option>
-                <option value="Khu F">Khu F</option>
               </select>
             </div>
             <div className='inputInfoChangeBook'>
-              <div>Thời gian nhận</div>
+              <div>Ngày tiếp nhận</div>
               <DatePicker
                 selected={formValues.receiveDate}
-                onChange={(date) => setFormValues({ ...formValues, receiveDate: date })}
+                onChange={handleDateChange}
                 dateFormat="dd/MM/yyyy"
-                className='MemberDatePickerChangeBook'
-                placeholderText='Thời gian'
+                placeholderText="Chọn ngày tiếp nhận"
+                className='custom-datepicker'
               />
             </div>
           </div>
@@ -229,7 +282,7 @@ export default function ChangeBook() {
             Lưu
           </button>
           <button type='button' className='ResetButtonBook' onClick={handleReset}>
-            Xóa sách
+            Xóa
           </button>
         </div>
       </form>
