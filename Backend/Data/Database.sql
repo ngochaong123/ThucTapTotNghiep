@@ -28,6 +28,19 @@ CREATE TABLE books (
     PRIMARY KEY (id)
 );
 
+-- Tạo bảng members
+CREATE TABLE members (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    member_code VARCHAR(10) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(15) NOT NULL,
+    registration_date DATE NOT NULL,
+    age INT NOT NULL,
+    avatar_link VARCHAR(255),
+    country VARCHAR(50) NOT NULL
+);
+
 -- Thêm tài khoản người dùng (users)
 INSERT INTO users (username, password, email) VALUES 
 ('admin1', 'Tien%123', 'admin1@library.com');
@@ -84,3 +97,14 @@ VALUES
 ('BK047', 'Tress of the Emerald Sea', '60531406.jpg', 10, 'Phiêu Lưu - Mạo Hiểm', 'Brandon Sanderson', 'Khu B', 'Tiếng anh', '2023-01-10'),
 ('BK048', 'SPY×FAMILY 1', '52961491.jpg', 3, 'Phiêu Lưu - Mạo Hiểm', 'Tatsuya Endo', 'Khu B', 'Tiếng anh', '2019-07-14');
 
+INSERT INTO members (member_code, name, email, phone, registration_date, age, avatar_link, country) VALUES
+('MEM001', 'John Doe', 'john@example.com', '1234567890', '2024-01-15', 25, 'avatar.jpeg', 'USA'),
+('MEM002', 'Jane Smith', 'jane@example.com', '0987654321', '2024-01-20', 30, 'user1.jpg', 'UK'),
+('MEM003', 'Alice Johnson', 'alice@example.com', '1122334455', '2024-01-25', 28, 'user2.jpg', 'Canada'),
+('MEM004', 'Bob Brown', 'bob@example.com', '2233445566', '2024-02-01', 35, 'user3.jpg', 'Australia'),
+('MEM005', 'Charlie White', 'charlie@example.com', '3344556677', '2024-02-05', 22, 'user4.jpg', 'France'),
+('MEM006', 'David Wilson', 'david@example.com', '4455667788', '2024-02-10', 29, 'user5.jpg', 'Germany'),
+('MEM007', 'Eva Green', 'eva@example.com', '5566778899', '2024-02-15', 32, 'user6.jpg', 'Italy'),
+('MEM008', 'Frank Harris', 'frank@example.com', '6677889900', '2024-02-20', 27, 'user7.jpg', 'Spain'),
+('MEM009', 'Grace Lee', 'grace@example.com', '7788990011', '2024-02-25', 31, 'user8.jpg', 'Japan'),
+('MEM010', 'Hank Miller', 'hank@example.com', '8899001122', '2024-03-01', 40, 'user9.jpg', 'South Korea');

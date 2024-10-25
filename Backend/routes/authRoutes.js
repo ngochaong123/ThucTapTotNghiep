@@ -1,6 +1,7 @@
 const express = require('express');
 const { login, register } = require('../controllers/authController');
-const { getAllBooks, searchBooks, addBook, editBook, upload } = require('../controllers/LibriaryBook'); // Đảm bảo rằng bạn đã sửa tên controller đúng cách
+const { getAllBooks, searchBooks, addBook, editBook, upload } = require('../controllers/LibriaryBook'); 
+const {getAllMembers,searchMembers} = require('../controllers/Member');
 
 const router = express.Router();
 
@@ -13,5 +14,9 @@ router.get('/Book', getAllBooks);
 router.get('/search', searchBooks); 
 router.post('/addBook', upload.single('image_link'), addBook); 
 router.put('/edit/:book_code', upload.single('image_link'), editBook); 
+
+//router cho thanh viên 
+router.get('/getAllMembers',getAllMembers);
+router.get('/searchMembers',searchMembers);
 
 module.exports = router;
