@@ -98,8 +98,8 @@ VALUES
 ('BK048', 'SPY×FAMILY 1', '52961491.jpg', 3, 'Phiêu Lưu - Mạo Hiểm', 'Tatsuya Endo', 'Khu B', 'Tiếng anh', '2019-07-14');
 
 INSERT INTO members (member_code, name, email, phone, registration_date, age, avatar_link, country) VALUES
-('MEM001', 'John Doe', 'john@example.com', '1234567890', '2024-01-15', 25, 'avatar.jpeg', 'USA'),
-('MEM002', 'Jane Smith', 'jane@example.com', '0987654321', '2024-01-20', 30, 'user1.jpg', 'UK'),
+('MEM001', 'John Doe', 'john@example.com', '1234567890', '2024-01-15', 25, 'avatar.jpeg', 'United States'),
+('MEM002', 'Jane Smith', 'jane@example.com', '0987654321', '2024-01-20', 30, 'user1.jpg', 'United Kingdom'),
 ('MEM003', 'Alice Johnson', 'alice@example.com', '1122334455', '2024-01-25', 28, 'user2.jpg', 'Canada'),
 ('MEM004', 'Bob Brown', 'bob@example.com', '2233445566', '2024-02-01', 35, 'user3.jpg', 'Australia'),
 ('MEM005', 'Charlie White', 'charlie@example.com', '3344556677', '2024-02-05', 22, 'user4.jpg', 'France'),

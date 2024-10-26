@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 });
 
 // Đảm bảo rằng trường 'image_link' tồn tại trong form gửi lên
-const upload = multer({ 
+const bookUpload = multer({ 
     storage: storage,
     fileFilter: (req, file, cb) => {
         if (file.fieldname === 'image_link') {
@@ -188,4 +188,4 @@ const editBook = (req, res) => {
 };
 
 // Xuất các hàm và middleware
-module.exports = { getAllBooks, searchBooks, addBook, editBook, upload };
+module.exports = { getAllBooks, searchBooks, addBook, editBook, bookUpload };

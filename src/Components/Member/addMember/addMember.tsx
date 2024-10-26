@@ -1,32 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import './addMember.css';
-
-// icon
 import DefaultAvatar from "../../../images/icon/avatar.jpg";
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddMember() {
   const [formValues, setFormValues] = useState({
+    member_code: '',
     name: '',
     phone: '',
     email: '',
-    memberCode: '',
-    avatar: '',
+    avatar_link: '',
     country: '',
-    age: '', // Changed from "language" to "age"
+    age: '',
   });
   
-  const [countries, setCountries] = useState<string[]>([]); // State for storing the countries
+  const [countries, setCountries] = useState<string[]>([]);
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
 
-  const isFormValid = formValues.name && formValues.phone && formValues.email && formValues.memberCode;
+  const isFormValid = formValues.name && formValues.phone && formValues.email && formValues.member_code;
 
   useEffect(() => {
-    // Fetch countries from the API when the component mounts
     fetch('https://restcountries.com/v3.1/all')
       .then((response) => response.json())
       .then((data) => {
         const countryNames = data.map((country: any) => country.name.common);
-        setCountries(countryNames); // Set the country names in state
+        setCountries(countryNames);
       })
       .catch((error) => console.error('Error fetching countries:', error));
   }, []);
@@ -41,13 +41,13 @@ export default function AddMember() {
 
   const handleReset = () => {
     setFormValues({
+      member_code: '',
       name: '',
       phone: '',
       email: '',
-      memberCode: '',
-      avatar: '',
+      avatar_link: '',
       country: '',
-      age: '', // Reset the age field as well
+      age: '',
     });
     setAvatarPreview(DefaultAvatar);
   };
@@ -62,10 +62,10 @@ export default function AddMember() {
       reader.readAsDataURL(file);
       setFormValues({
         ...formValues,
-        avatar: file.name,
+        avatar_link: file.name,
       });
     } else {
-      alert("Vui lòng chọn một ảnh nhỏ hơn 1MB!");
+      toast.error("Vui lòng chọn một ảnh nhỏ hơn 1MB!");
     }
   };
 
@@ -73,9 +73,50 @@ export default function AddMember() {
     document.getElementById("avatarInput")?.click();
   };
 
+  const handleSubmit = async () => {
+    const formData = new FormData();
+  
+    if (!isFormValid) {
+        toast.error('Vui lòng điền tất cả các trường bắt buộc!');
+        return;
+    }
+  
+    formData.append('member_code', formValues.member_code);
+    formData.append('name', formValues.name);
+    formData.append('phone', formValues.phone);
+    formData.append('email', formValues.email);
+    formData.append('country', formValues.country);
+    formData.append('age', formValues.age);
+  
+    const avatarInput = document.getElementById('avatarInput') as HTMLInputElement | null;
+  
+    try {
+        if (avatarInput && avatarInput.files && avatarInput.files.length > 0) {
+            formData.append('avatar_link', avatarInput.files[0]);
+        }
+
+        console.log("data: ",formValues);
+  
+        const response = await axios.post('http://localhost:5000/addMember', formData, {
+          
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        
+        console.log(response.data);
+        toast.success('Lưu thành viên thành công!');
+        handleReset();
+    } catch (error) {
+        console.error('Đã xảy ra lỗi khi lưu thành viên:', error);
+        toast.error('Đã xảy ra lỗi, vui lòng thử lại!');
+    }
+};
+
   return (
     <div className='FrameContanieraddMember'>
       <h1> Thêm thành viên mới </h1>
+      <ToastContainer /> {/* Thêm ToastContainer ở đây */}
 
       {/* Upload avatar */}
       <div className='uploadAvatarMember'>
@@ -104,10 +145,10 @@ export default function AddMember() {
             <div>Tên thành viên </div>
             <input name="name" value={formValues.name} onChange={handleChange} placeholder='Tên thành viên' />
           </div>
-          {/* Địa chỉ */}
+          {/* Mã thành viên */}
           <div className='inputInfoMember'>
             <div>Mã thành viên </div>
-            <input name="memberCode" value={formValues.memberCode} onChange={handleChange} style={{ marginBottom: 0 }} placeholder='Mã thành viên' />
+            <input name="member_code" value={formValues.member_code} onChange={handleChange} style={{ marginBottom: 0 }} placeholder='Mã thành viên' />
           </div>
           {/* Độ tuổi */}
           <div className='inputInfoMember'>
@@ -146,7 +187,8 @@ export default function AddMember() {
       <div className='ButtonAddMember'>
         <button 
           className='SaveButtonMember' 
-          disabled={!isFormValid} // Disable if form is invalid
+          disabled={!isFormValid} 
+          onClick={handleSubmit}
         > 
           Lưu 
         </button>
