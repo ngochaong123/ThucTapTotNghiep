@@ -11,7 +11,6 @@ import ArrowDown from "../../../images/icon/ArrowDown.png";
 import Plus from "../../../images/icon/plus.png";
 
 interface Member {
-  id: number;
   member_code: string;
   name: string;
   email: string;
@@ -26,13 +25,12 @@ export default function LibraryMembers() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
-  const [selectedMembers, setSelectedMembers] = useState<number[]>([]);
+  const [selectedMember, setSelectedMember] = useState<string | null>(null); // Chỉ lưu một member duy nhất
   const filterRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [searchKeyword, setSearchKeyword] = useState('');
   const navigate = useNavigate();
 
-  // Fetch members data from API
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -45,19 +43,11 @@ export default function LibraryMembers() {
     fetchMembers();
   }, []);
 
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectMember = (e: React.ChangeEvent<HTMLInputElement>, member_code: string) => {
     if (e.target.checked) {
-      setSelectedMembers(members.map((member) => member.id));
+      setSelectedMember(member_code); // Chọn member
     } else {
-      setSelectedMembers([]);
-    }
-  };
-
-  const handleSelectMember = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
-    if (e.target.checked) {
-      setSelectedMembers([...selectedMembers, id]);
-    } else {
-      setSelectedMembers(selectedMembers.filter((memberId) => memberId !== id));
+      setSelectedMember(null); // Bỏ chọn
     }
   };
 
@@ -102,14 +92,12 @@ export default function LibraryMembers() {
   };
 
   const handleEditMember = () => {
-    if (selectedMembers.length === 0) {
-      alert('Vui lòng chọn ít nhất một thành viên trước khi chỉnh sửa!');
+    if (!selectedMember) {
+      alert('Vui lòng chọn một thành viên trước khi chỉnh sửa!');
     } else {
-      // Lấy thông tin thành viên đầu tiên trong danh sách đã chọn
-      const selectedMember = members.find(member => member.id === selectedMembers[0]);
-      if (selectedMember) {
-        // Điều hướng tới trang chỉnh sửa với thông tin thành viên
-        navigate(`/Menu/changeMemberInfor?id=${selectedMember.id}`, { state: selectedMember });
+      const selectedMemberData = members.find(member => member.member_code === selectedMember);
+      if (selectedMemberData) {
+        navigate(`/Menu/changeMemberInfor?member_code=${selectedMemberData.member_code}`, { state: selectedMemberData });
       }
     }
   };
@@ -186,13 +174,7 @@ export default function LibraryMembers() {
             <table className="memberTable">
               <thead>
                 <tr>
-                  <th>
-                    <input
-                      type="checkbox"
-                      onChange={handleSelectAll}
-                      checked={selectedMembers.length === members.length && members.length > 0}
-                    />
-                  </th>
+                  <th></th>
                   <th>Mã thành viên</th>
                   <th>Tên thành viên</th>
                   <th>Tuổi</th>
@@ -204,12 +186,12 @@ export default function LibraryMembers() {
               </thead>
               <tbody>
                 {members.map((member) => (
-                  <tr key={member.id}>
+                  <tr key={member.member_code}>
                     <td>
                       <input
                         type="checkbox"
-                        checked={selectedMembers.includes(member.id)}
-                        onChange={(e) => handleSelectMember(e, member.id)}
+                        checked={selectedMember === member.member_code}
+                        onChange={(e) => handleSelectMember(e, member.member_code)}
                       />
                     </td>
                     <td>{member.member_code}</td>

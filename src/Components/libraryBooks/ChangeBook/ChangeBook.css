@@ -132,7 +132,7 @@ inputInfoChangeBooklanguage{
 }
 
 .SaveButtonBook,
-.ResetButtonBook{
+.DeleteButtonBook{
     width: 100px;
 }
 
@@ -140,7 +140,7 @@ inputInfoChangeBooklanguage{
     background-color: #2864F6;
 }
 
-.ResetButtonBook{
+.DeleteButtonBook{
     background-color: red;
 }
 
@@ -148,7 +148,7 @@ inputInfoChangeBooklanguage{
     opacity: 0.7;
 }
 
-.ResetButtonBook:hover{
+.DeleteButtonBook:hover{
     background-color: red;
     opacity: 0.7;
 }
@@ -157,7 +157,7 @@ inputInfoChangeBooklanguage{
     opacity: 0.6;
 }
 
-.ResetButtonBook:active{
+.DeleteButtonBook:active{
     background-color: red;
     opacity: 0.6;
 }

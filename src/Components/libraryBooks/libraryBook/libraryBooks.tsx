@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './libraryBooks.css';
-import { Outlet, Link,useNavigate  } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
-
-// icon imports
 import Magnifier from '../../../images/icon/magnifier.png';
-import Plus from "../../../images/icon/plus.png";
+import Plus from '../../../images/icon/plus.png';
 
-// Define a book type
 interface Book {
-  id: number;
   book_code: string;
   book_name: string;
   author: string;
@@ -18,20 +14,19 @@ interface Book {
   language: string;
   location: string;
   received_date: string;
-  image_link: string; // Field for book image URL
+  image_link: string;
 }
 
 export default function LibraryBooks() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
-  const [selectedBooks, setSelectedBooks] = useState<number[]>([]);
+  const [selectedBook, setSelectedBook] = useState<string | null>(null);
   const filterRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [keyword, setKeyword] = useState(''); 
   const [selectedCategory, setSelectedCategory] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  // Fetch books data from API
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -41,24 +36,19 @@ export default function LibraryBooks() {
         console.error('Error fetching books:', error);
       }
     };
-
     fetchBooks();
   }, []);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedBooks(books.map((book) => book.id));
+      setSelectedBook(books[0]?.book_code || null); // Chọn sách đầu tiên khi checkbox chọn tất cả được nhấn
     } else {
-      setSelectedBooks([]);
+      setSelectedBook(null);
     }
   };
 
-  const handleSelectBook = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
-    if (e.target.checked) {
-      setSelectedBooks([...selectedBooks, id]);
-    } else {
-      setSelectedBooks(selectedBooks.filter((bookId) => bookId !== id));
-    }
+  const handleSelectBook = (bookCode: string) => {
+    setSelectedBook(selectedBook === bookCode ? null : bookCode); // Chỉ chọn một sách
   };
 
   useEffect(() => {
@@ -79,7 +69,6 @@ export default function LibraryBooks() {
     };
   }, []);
 
-  // Hàm tìm kiếm sách từ API
   const searchBooks = async (keyword: string) => {
     try {
       const response = await axios.get(`http://localhost:5000/search?keyword=${keyword}`);
@@ -122,14 +111,13 @@ export default function LibraryBooks() {
   ];
 
   const handleEditBook = () => {
-    if (selectedBooks.length === 1) {
-      const selectedBook = books.find((book) => book.id === selectedBooks[0]);
-      if (selectedBook) {
-        // Điều hướng đến trang chỉnh sửa với thông tin sách
-        navigate(`/menu/changeBookInfor?id=${selectedBook.id}`, { state: selectedBook });
+    if (selectedBook) {
+      const bookToEdit = books.find((book) => book.book_code === selectedBook);
+      if (bookToEdit) {
+        navigate(`/menu/changeBookInfor?book_code=${bookToEdit.book_code}`, { state: bookToEdit });
       }
     } else {
-      alert('Vui lòng chọn chính xác một sách để chỉnh sửa.');
+      alert('Vui lòng chọn một sách để chỉnh sửa.');
     }
   };
 
@@ -148,13 +136,11 @@ export default function LibraryBooks() {
           </Link>
         </div>
 
-        {/* Flex container for options row */}
         <div className='LibraryOptionsRow'>
           <div style={{ display: 'flex'}}>
-            {/* Chọn thể loại */}
             <div className='CategoryBook'>
               <div className="CategoryLabel">Thể loại</div>
-              <div className="LibraryCategoryWrapper"> {/* Wrapper cho select */}
+              <div className="LibraryCategoryWrapper">
                 <select
                   name="category"
                   value={selectedCategory}
@@ -169,7 +155,6 @@ export default function LibraryBooks() {
               </div>
             </div>
 
-            {/* Tìm kiếm */}
             <div>
               <div className='LibraryNameChooseBook'> Tìm kiếm </div>
               <div className="LibrarySearchBook">
@@ -187,25 +172,17 @@ export default function LibraryBooks() {
             </div>
           </div>
 
-          {/* Chỉnh sửa sách */}
           <button className='LibraryEditbrary' onClick={handleEditBook}>
             <div className='LibraryNameEdit'> Chỉnh sửa thông tin </div>
           </button>
         </div>
 
-        {/* Library Selection Table */}
         <div className='FrameLibrarytableContainer'>
           <div className="LibrarytableContainer">
             <table className="memberTable">
               <thead>
                 <tr>
-                  <th>
-                    <input
-                      type="checkbox"
-                      onChange={handleSelectAll}
-                      checked={selectedBooks.length === books.length}
-                    />
-                  </th>
+                  <th></th>
                   <th>Mã sách</th>
                   <th>Tên sách</th>
                   <th>Hình ảnh</th>
@@ -220,12 +197,12 @@ export default function LibraryBooks() {
               <tbody>
                 {books.map((book) => {
                   return (
-                    <tr key={book.id}>
+                    <tr key={book.book_code}>
                       <td>
                         <input
                           type="checkbox"
-                          checked={selectedBooks.includes(book.id)}
-                          onChange={(e) => handleSelectBook(e, book.id)}
+                          checked={selectedBook === book.book_code}
+                          onChange={() => handleSelectBook(book.book_code)}
                         />
                       </td>
                       <td>{book.book_code}</td>

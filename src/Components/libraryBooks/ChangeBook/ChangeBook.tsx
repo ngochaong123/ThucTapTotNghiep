@@ -7,6 +7,8 @@ import { useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DefaultAvatar from '../../../images/icon/avatar.jpg';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const categories = [
   'Công nghệ thông tin',
@@ -108,75 +110,126 @@ export default function ChangeBook() {
 
   const receiveDate = formValues.receiveDate;
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     // Kiểm tra các trường dữ liệu cần thiết
     if (!formValues.book_name || !formValues.book_code || !formValues.author) {
       toast.error("Vui lòng điền tất cả các trường bắt buộc.");
       return;
     }
-
+  
     if (!isChanged) {
       toast.info("Không có thay đổi nào để lưu.");
       return;
     }
-
-    const formData = new FormData();
-    formData.append('book_name', formValues.book_name);
-    formData.append('book_code', formValues.book_code);
-    formData.append('author', formValues.author);
-    formData.append('category', formValues.category);
-    formData.append('quantity', formValues.quantity);
-    formData.append('location', formValues.location);
-    formData.append('language', formValues.language);
-    
-    if (receiveDate) {
-      const newDate = new Date(receiveDate);
-      newDate.setDate(newDate.getDate() + 1);
-      formData.append('received_date', newDate.toISOString().split('T')[0]);
-    }
-
-    const avatarInput = document.getElementById("avatarInput") as HTMLInputElement;
-    if (avatarInput.files && avatarInput.files[0]) {
-      const file = avatarInput.files[0];
-      
-      // Tạo tên ảnh mới dựa trên mã sách và thời gian hiện tại
-      const newFileName = `${formValues.book_code}_${Date.now()}_${file.name}`;
-      
-      // Thêm tên ảnh mới vào formData
-      formData.append('image_link', file, newFileName);
-    }
-
-    try {
-      const response = await axios.put(`http://localhost:5000/editBook/${formValues.book_code}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
+  
+    // Hiển thị hộp thoại xác nhận
+    confirmAlert({
+      title: 'Xác nhận cập nhật sách',
+      message: 'Bạn có chắc chắn muốn cập nhật thông tin sách này không?',
+      buttons: [
+        {
+          label: 'Hủy',
+          onClick: () => {
+            console.log("Cập nhật sách đã bị hủy.");
+          }
         },
-      });
-      toast.success(response.data.message);
-      setIsChanged(false); 
-    } catch (error) {
-      console.error("Error updating book:", error);
-      toast.error("Có lỗi xảy ra khi cập nhật thông tin sách.");
-    }
-};
-
-  const handleReset = () => {
-    setFormValues({
-      book_name: '',
-      book_code: '',
-      author: '',
-      category: '',
-      quantity: '',
-      location: '',
-      avatar: '',
-      language: '',
-      receiveDate: null,
+        {
+          label: 'Xác nhận',
+          onClick: async () => {
+            const formData = new FormData();
+            formData.append('book_name', formValues.book_name);
+            formData.append('book_code', formValues.book_code);
+            formData.append('author', formValues.author);
+            formData.append('category', formValues.category);
+            formData.append('quantity', formValues.quantity);
+            formData.append('location', formValues.location);
+            formData.append('language', formValues.language);
+            
+            if (receiveDate) {
+              const newDate = new Date(receiveDate);
+              newDate.setDate(newDate.getDate() + 1);
+              formData.append('received_date', newDate.toISOString().split('T')[0]);
+            }
+  
+            const avatarInput = document.getElementById("avatarInput") as HTMLInputElement;
+            if (avatarInput.files && avatarInput.files[0]) {
+              const file = avatarInput.files[0];
+              
+              // Tạo tên ảnh mới dựa trên mã sách và thời gian hiện tại
+              const newFileName = `${formValues.book_code}_${Date.now()}_${file.name}`;
+              
+              // Thêm tên ảnh mới vào formData
+              formData.append('image_link', file, newFileName);
+            }
+  
+            try {
+              const response = await axios.put(`http://localhost:5000/editBook/${formValues.book_code}`, formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              });
+              toast.success(response.data.message);
+              setIsChanged(false);
+            } catch (error) {
+              console.error("Error updating book:", error);
+              toast.error("Có lỗi xảy ra khi cập nhật thông tin sách.");
+            }
+          }
+        }
+      ]
     });
-    setImagePreview(DefaultAvatar);
-    setIsChanged(false); 
   };
+
+const DeleteBook = async () => {
+  if (!formValues.book_code) {
+    toast.error("Vui lòng chọn sách để xóa.");
+    return;
+  }
+
+  // Hiển thị hộp thoại xác nhận
+  confirmAlert({
+    title: 'Xác nhận xóa sách',
+    message: 'Bạn có chắc chắn muốn xóa sách này không?',
+    buttons: [
+      {
+        label: 'Hủy',
+        onClick: () => {
+          console.log("Xóa sách đã bị hủy.");
+        }
+      },
+      {
+        label: 'Xác nhận',
+        onClick: async () => {
+          try {
+            const response = await axios.delete(`http://localhost:5000/deleteBook/${formValues.book_code}`);
+            toast.success(response.data.message);
+
+            // Đặt lại các giá trị form và ảnh xem trước
+            setFormValues({
+              book_name: '',
+              book_code: '',
+              author: '',
+              category: '',
+              quantity: '',
+              location: '',
+              avatar: '',
+              language: '',
+              receiveDate: null,
+            });
+            setImagePreview(DefaultAvatar);
+            setIsChanged(false);
+          } catch (error) {
+            console.error("Error deleting book:", error);
+            toast.error("Có lỗi xảy ra khi xóa sách.");
+          }
+        }
+      }
+    ]
+  });
+};
 
   return (
     <div className='FrameContanieraddBook'>
@@ -274,12 +327,8 @@ export default function ChangeBook() {
         </div>
 
         <div className='ButtonChangeBook'>
-          <button type='submit' className='SaveButtonBook'>
-            Lưu
-          </button>
-          <button type='button' className='ResetButtonBook' onClick={handleReset}>
-            Xóa
-          </button>
+          <button type='submit' className='SaveButtonBook'>Lưu</button>
+          <button type='button' className='DeleteButtonBook' onClick={DeleteBook}>Hủy sách</button>
         </div>
       </form>
     </div>

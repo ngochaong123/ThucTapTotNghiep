@@ -4,6 +4,8 @@ import DefaultAvatar from "../../../images/icon/avatar.jpg";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default function AddMember() {
   const [formValues, setFormValues] = useState({
@@ -40,16 +42,36 @@ export default function AddMember() {
   };
 
   const handleReset = () => {
-    setFormValues({
-      member_code: '',
-      name: '',
-      phone: '',
-      email: '',
-      avatar_link: '',
-      country: '',
-      age: '',
+    // Hiển thị hộp thoại xác nhận trước khi thực hiện hành động
+    confirmAlert({
+      title: 'Xác nhận đặt lại',
+      message: 'Bạn có chắc chắn muốn đặt lại tất cả các trường không?',
+      buttons: [
+        {
+          label: 'Hủy',
+          onClick: () => {
+            console.log("Đặt lại đã bị hủy.");
+          }
+        },
+        {
+          label: 'Xác nhận',
+          onClick: () => {
+            // Đặt lại các giá trị form và ảnh xem trước
+            setFormValues({
+              member_code: '',
+              name: '',
+              phone: '',
+              email: '',
+              avatar_link: '',
+              country: '',
+              age: '',
+            });
+            setAvatarPreview(DefaultAvatar);
+            console.log("Form đã được đặt lại.");
+          }
+        }
+      ]
     });
-    setAvatarPreview(DefaultAvatar);
   };
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,8 +99,8 @@ export default function AddMember() {
     const formData = new FormData();
   
     if (!isFormValid) {
-        toast.error('Vui lòng điền tất cả các trường bắt buộc!');
-        return;
+      toast.error('Vui lòng điền tất cả các trường bắt buộc!');
+      return;
     }
   
     formData.append('member_code', formValues.member_code);
@@ -90,28 +112,45 @@ export default function AddMember() {
   
     const avatarInput = document.getElementById('avatarInput') as HTMLInputElement | null;
   
-    try {
-        if (avatarInput && avatarInput.files && avatarInput.files.length > 0) {
-            formData.append('avatar_link', avatarInput.files[0]);
-        }
-
-        console.log("data: ",formValues);
+    // Hiển thị hộp thoại xác nhận
+    confirmAlert({
+      title: 'Xác nhận thêm thành viên',
+      message: 'Bạn có chắc chắn muốn thêm thành viên này không?',
+      buttons: [
+        {
+          label: 'Hủy',
+          onClick: () => {
+            console.log("Thêm thành viên đã bị hủy.");
+          }
+        },
+        {
+          label: 'Xác nhận',
+          onClick: async () => {
+            try {
+              if (avatarInput && avatarInput.files && avatarInput.files.length > 0) {
+                formData.append('avatar_link', avatarInput.files[0]);
+              }
   
-        const response = await axios.post('http://localhost:5000/addMember', formData, {
-          
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-        
-        console.log(response.data);
-        toast.success('Lưu thành viên thành công!');
-        handleReset();
-    } catch (error) {
-        console.error('Đã xảy ra lỗi khi lưu thành viên:', error);
-        toast.error('Đã xảy ra lỗi, vui lòng thử lại!');
-    }
-};
+              console.log("data: ", formValues);
+  
+              const response = await axios.post('http://localhost:5000/addMember', formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              });
+  
+              console.log(response.data);
+              toast.success('Lưu thành viên thành công!');
+              handleReset();
+            } catch (error) {
+              console.error('Đã xảy ra lỗi khi lưu thành viên:', error);
+              toast.error('Đã xảy ra lỗi, vui lòng thử lại!');
+            }
+          }
+        }
+      ]
+    });
+  };
 
   return (
     <div className='FrameContanieraddMember'>

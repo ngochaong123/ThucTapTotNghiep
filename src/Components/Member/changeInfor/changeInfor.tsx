@@ -5,6 +5,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DefaultAvatar from "../../../images/icon/avatar.jpg";
 import { useLocation } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default function AddMember() {
   const location = useLocation();
@@ -73,18 +75,50 @@ export default function AddMember() {
     }
   };
 
-  const handleReset = () => {
-    setFormValues({
-      member_code: '',
-      name: '',
-      phone: '',
-      email: '',
-      avatar_link: '',
-      country: '',
-      age: '',
+  const DeleteMember = async () => {
+    if (!formValues.member_code) {
+      toast.error("Vui lòng chọn thành viên để xóa.");
+      return;
+    }
+  
+    // Hiển thị hộp thoại xác nhận với react-confirm-alert
+    confirmAlert({
+      title: 'Xác nhận xóa thành viên',
+      message: 'Bạn có chắc chắn muốn xóa thành viên này không?',
+      buttons: [
+        {
+          label: 'Hủy',
+          onClick: () => {
+            console.log("Xóa thành viên đã bị hủy.");
+          }
+        },
+        {
+          label: 'Xác nhận',
+          onClick: async () => {
+            try {
+              const response = await axios.delete(`http://localhost:5000/deleteMember/${formValues.member_code}`);
+              toast.success(response.data.message);
+  
+              // Đặt lại các giá trị form và ảnh xem trước
+              setFormValues({
+                member_code: '',
+                name: '',
+                phone: '',
+                email: '',
+                avatar_link: '',
+                country: '',
+                age: '',
+              });
+              setImagePreview(DefaultAvatar);
+              setIsChanged(false); 
+            } catch (error) {
+              console.error("Error deleting member:", error);
+              toast.error("Có lỗi xảy ra khi xóa thành viên.");
+            }
+          }
+        }
+      ]
     });
-    setImagePreview(DefaultAvatar);
-    setIsChanged(false);
   };
 
   const triggerFileInput = () => {
@@ -93,47 +127,64 @@ export default function AddMember() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!formValues.name || !formValues.phone || !formValues.email || !formValues.member_code) {
       toast.error("Vui lòng điền tất cả các trường bắt buộc.");
       return;
     }
-
+  
     if (!isChanged) {
       toast.info("Không có thay đổi nào để lưu.");
       return;
     }
-
-    const formData = new FormData();
-    formData.append('name', formValues.name);
-    formData.append('member_code', formValues.member_code);
-    formData.append('phone', formValues.phone);
-    formData.append('email', formValues.email);
-    formData.append('country', formValues.country);
-    formData.append('age', formValues.age);
-
-    const avatarInput = document.getElementById("avatarInput") as HTMLInputElement;
-    if (avatarInput.files && avatarInput.files[0]) {
-      const file = avatarInput.files[0];
-      const newFileName = `${formValues.member_code}_${Date.now()}_${file.name}`;
-      formData.append('avatar_link', file, newFileName);
-    }
-
-    console.log("Form Data:", formValues);
-
-    try {
-      const response = await axios.put(`http://localhost:5000/editMember/${formValues.member_code}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
+  
+    // Hiển thị hộp thoại xác nhận với react-confirm-alert
+    confirmAlert({
+      title: 'Xác nhận lưu thay đổi',
+      message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
+      buttons: [
+        {
+          label: 'Hủy',
+          onClick: () => {
+            console.log("Lưu thay đổi đã bị hủy.");
+          }
         },
-      });
-      toast.success(response.data.message);
-      setIsChanged(false);
-      handleReset();
-    } catch (error) {
-      console.error("Error adding member:", error);
-      toast.error("Có lỗi xảy ra khi thêm thành viên.");
-    }
+        {
+          label: 'Xác nhận',
+          onClick: async () => {
+            const formData = new FormData();
+            formData.append('name', formValues.name);
+            formData.append('member_code', formValues.member_code);
+            formData.append('phone', formValues.phone);
+            formData.append('email', formValues.email);
+            formData.append('country', formValues.country);
+            formData.append('age', formValues.age);
+  
+            const avatarInput = document.getElementById("avatarInput") as HTMLInputElement;
+            if (avatarInput.files && avatarInput.files[0]) {
+              const file = avatarInput.files[0];
+              const newFileName = `${formValues.member_code}_${Date.now()}_${file.name}`;
+              formData.append('avatar_link', file, newFileName);
+            }
+  
+            console.log("Form Data:", formValues);
+  
+            try {
+              const response = await axios.put(`http://localhost:5000/editMember/${formValues.member_code}`, formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              });
+              toast.success(response.data.message);
+              setIsChanged(false);
+            } catch (error) {
+              console.error("Error adding member:", error);
+              toast.error("Có lỗi xảy ra khi thêm thành viên.");
+            }
+          }
+        }
+      ]
+    });
   };
 
   return (
@@ -203,8 +254,8 @@ export default function AddMember() {
       </div>
 
       <div className='ButtonAddMember'>
-        <button className='SaveButtonMember' onClick={handleSubmit} > Lưu </button>
-        <button className='ResetButtonChangeMember' onClick={handleReset}> Đặt lại </button>
+        <button className='SaveButtonMember' onClick={handleSubmit}> Lưu </button>
+        <button className='DeleteButtonChangeMember' onClick={DeleteMember}> Xóa thành viên </button>
       </div>
 
       <ToastContainer />

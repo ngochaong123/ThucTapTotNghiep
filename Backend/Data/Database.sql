@@ -15,8 +15,7 @@ CREATE TABLE users (
 
 -- Tạo bảng books
 CREATE TABLE books (
-    id INT NOT NULL AUTO_INCREMENT,
-    book_code VARCHAR(50) NOT NULL,
+    book_code VARCHAR(50) PRIMARY KEY,
     book_name VARCHAR(255) NOT NULL,
     author VARCHAR(100) NOT NULL,
     quantity INT NOT NULL,
@@ -24,14 +23,12 @@ CREATE TABLE books (
     language VARCHAR(50) NOT NULL,
     location VARCHAR(100) NOT NULL,
     received_date DATE NOT NULL,
-    image_link VARCHAR(255),
-    PRIMARY KEY (id)
+    image_link VARCHAR(255)
 );
 
 -- Tạo bảng members
 CREATE TABLE members (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    member_code VARCHAR(10) NOT NULL,
+    member_code VARCHAR(10) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     phone VARCHAR(15) NOT NULL,

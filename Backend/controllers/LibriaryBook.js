@@ -109,16 +109,56 @@ const addBook = (req, res) => {
     });
 };
 
+const DeleteBook = async (req, res) => {
+  const { book_code } = req.params;
+
+  try {
+    if (!book_code) {
+      return res.status(400).json({ message: "Mã sách không hợp lệ." });
+    }
+
+    const [rows] = await db.promise().query('SELECT image_link FROM books WHERE book_code = ?', [book_code]);
+    
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy sách với mã này." });
+    }
+
+    const imageLink = rows[0].image_link;
+    const imagePath = path.join(__dirname, '../Public/Book', path.basename(imageLink));
+
+    // Kiểm tra sự tồn tại của file trước khi xóa
+    if (fs.existsSync(imagePath)) {
+      fs.unlink(imagePath, (err) => {
+        if (err) {
+          console.error("Lỗi khi xóa ảnh:", err);
+          return res.status(500).json({ message: "Có lỗi xảy ra khi xóa ảnh." });
+        }
+        console.log("Ảnh đã được xóa thành công.");
+      });
+    } else {
+      console.log("File ảnh không tồn tại, bỏ qua bước xóa ảnh.");
+    }
+
+    // Xóa sách khỏi database
+    const result = await db.promise().query('DELETE FROM books WHERE book_code = ?', [book_code]);
+
+    if (result[0].affectedRows === 0) {
+      return res.status(404).json({ message: "Không tìm thấy sách với mã này." });
+    }
+
+    res.status(200).json({ message: "Đã xóa sách và ảnh thành công." });
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    res.status(500).json({ message: "Có lỗi xảy ra khi xóa sách và ảnh." });
+  }
+};
+
+
 // Hàm chỉnh sửa sách
 const editBook = (req, res) => {
     const { book_code } = req.params;
     const { book_name, author, category, quantity, location, language, received_date } = req.body;
     const new_image_link = req.file ? req.file.filename : null;
-
-    // Log kiểm tra giá trị của req.file
-    console.log("book code: ", req.params);
-    console.log("image: ", req.body);
-    console.log("data: ", new_image_link);
 
     if (!book_code || !book_name || !author) {
         return res.status(400).json({ message: "Thiếu dữ liệu" });
@@ -188,4 +228,4 @@ const editBook = (req, res) => {
 };
 
 // Xuất các hàm và middleware
-module.exports = { getAllBooks, searchBooks, addBook, editBook, bookUpload };
+module.exports = { getAllBooks, searchBooks, addBook, editBook, DeleteBook, bookUpload };

@@ -6,6 +6,9 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DefaultAvatar from '../../../images/icon/avatar.jpg';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
 
 const categories = [
   'Công nghệ thông tin',
@@ -60,18 +63,38 @@ export default function AddBook() {
   };
 
   const handleReset = () => {
-    setFormValues({
-      book_name: '',
-      book_code: '',
-      author: '',
-      category: '',
-      quantity: '',
-      location: '',
-      avatar: '',
-      language: '',
-      receiveDate: null,
+    // Hiển thị hộp thoại xác nhận trước khi thực hiện hành động
+    confirmAlert({
+      title: 'Xác nhận đặt lại',
+      message: 'Bạn có chắc chắn muốn đặt lại tất cả các trường không?',
+      buttons: [
+        {
+          label: 'Hủy',
+          onClick: () => {
+            console.log("Đặt lại đã bị hủy.");
+          }
+        },
+        {
+          label: 'Xác nhận',
+          onClick: () => {
+            // Đặt lại các giá trị form và ảnh xem trước
+            setFormValues({
+              book_name: '',
+              book_code: '',
+              author: '',
+              category: '',
+              quantity: '',
+              location: '',
+              avatar: '',
+              language: '',
+              receiveDate: null,
+            });
+            setAvatarPreview(DefaultAvatar);
+            console.log("Form đã được đặt lại.");
+          }
+        }
+      ]
     });
-    setAvatarPreview(DefaultAvatar);
   };
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,45 +121,63 @@ export default function AddBook() {
   };
 
   const handleSubmit = async () => {
-    const formData = new FormData();
-  
-    // Kiểm tra tính hợp lệ của form
-    if (!isFormValid) {
-      toast.error('Vui lòng điền tất cả các trường bắt buộc!');
-      return; // Không thực hiện tiếp nếu form không hợp lệ
-    }
-  
-    formData.append('book_name', formValues.book_name);
-    formData.append('book_code', formValues.book_code);
-    formData.append('author', formValues.author);
-    formData.append('category', formValues.category);
-    formData.append('quantity', formValues.quantity);
-    formData.append('location', formValues.location);
-    formData.append('language', formValues.language);
-    formData.append('received_date', formValues.receiveDate?.toISOString().split('T')[0] || '');
-  
-    const avatarInput = document.getElementById('avatarInput') as HTMLInputElement | null;
-  
-    try {
-      // Chỉ thêm ảnh vào FormData nếu đã có ảnh được tải lên
-      if (avatarInput && avatarInput.files && avatarInput.files.length > 0) {
-        formData.append('image_link', avatarInput.files[0]);
-      }
-  
-      const response = await axios.post('http://localhost:5000/addBook', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
+    // Hiển thị hộp thoại xác nhận trước khi thực hiện hành động
+    confirmAlert({
+      title: 'Xác nhận thêm sách',
+      message: 'Bạn có chắc chắn muốn thêm sách này không?',
+      buttons: [
+        {
+          label: 'Hủy',
+          onClick: () => {
+            console.log("Thêm sách đã bị hủy.");
+          }
         },
-      });
-      
-      console.log(response.data);
-      toast.success('Lưu sách thành công!');
-      handleReset(); // Đặt lại form nếu lưu thành công
-    } catch (error) {
-      console.error('Đã xảy ra lỗi khi lưu sách:', error);
-      toast.error('Đã xảy ra lỗi, vui lòng thử lại!'); // Thông báo lỗi
-    }
-  };  
+        {
+          label: 'Xác nhận',
+          onClick: async () => {
+            const formData = new FormData();
+          
+            // Kiểm tra tính hợp lệ của form
+            if (!isFormValid) {
+              toast.error('Vui lòng điền tất cả các trường bắt buộc!');
+              return; // Không thực hiện tiếp nếu form không hợp lệ
+            }
+          
+            formData.append('book_name', formValues.book_name);
+            formData.append('book_code', formValues.book_code);
+            formData.append('author', formValues.author);
+            formData.append('category', formValues.category);
+            formData.append('quantity', formValues.quantity);
+            formData.append('location', formValues.location);
+            formData.append('language', formValues.language);
+            formData.append('received_date', formValues.receiveDate?.toISOString().split('T')[0] || '');
+          
+            const avatarInput = document.getElementById('avatarInput') as HTMLInputElement | null;
+          
+            try {
+              // Chỉ thêm ảnh vào FormData nếu đã có ảnh được tải lên
+              if (avatarInput && avatarInput.files && avatarInput.files.length > 0) {
+                formData.append('image_link', avatarInput.files[0]);
+              }
+          
+              const response = await axios.post('http://localhost:5000/addBook', formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              });
+              
+              console.log(response.data);
+              toast.success('Lưu sách thành công!');
+              handleReset(); // Đặt lại form nếu lưu thành công
+            } catch (error) {
+              console.error('Đã xảy ra lỗi khi lưu sách:', error);
+              toast.error('Đã xảy ra lỗi, vui lòng thử lại!'); // Thông báo lỗi
+            }
+          }
+        }
+      ]
+    });
+  };
   
   return (
     <div className='FrameContanieraddBook'>
@@ -180,8 +221,8 @@ export default function AddBook() {
             <div>Ngôn ngữ</div>
             <select name="language" value={formValues.language} onChange={handleChange}>
               <option value="">Chọn ngôn ngữ</option>
-              <option value="Tiếng Anh">Tiếng Anh</option>
-              <option value="Tiếng Việt">Tiếng Việt</option>
+              <option value="Tiếng anh">Tiếng Anh</option>
+              <option value="Tiếng việt">Tiếng Việt</option>
             </select>
           </div>
         </div>

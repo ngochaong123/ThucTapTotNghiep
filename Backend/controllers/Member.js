@@ -122,6 +122,50 @@ const addMember = (req, res) => {
     });
 };
 
+const DeleteMember = async (req, res) => {
+    const { member_code } = req.params;
+  
+    try {
+      if (!member_code) {
+        return res.status(400).json({ message: "Mã thành viên không hợp lệ." });
+      }
+  
+      // Lấy avatar_link từ cơ sở dữ liệu
+      const [rows] = await db.promise().query('SELECT avatar_link FROM members WHERE member_code = ?', [member_code]);
+      
+      if (rows.length === 0) {
+        return res.status(404).json({ message: "Không tìm thấy thành viên với mã này." });
+      }
+  
+      const avatarLink = rows[0].avatar_link;
+      const avatarPath = path.join(__dirname, '../Public/Members', path.basename(avatarLink)); 
+      // Kiểm tra sự tồn tại của file trước khi xóa
+      if (fs.existsSync(avatarPath)) {
+        fs.unlink(avatarPath, (err) => {
+          if (err) {
+            console.error("Lỗi khi xóa ảnh:", err);
+            return res.status(500).json({ message: "Có lỗi xảy ra khi xóa ảnh." });
+          }
+          console.log("Ảnh đại diện đã được xóa thành công.");
+        });
+      } else {
+        console.log("File ảnh đại diện không tồn tại, bỏ qua bước xóa ảnh.");
+      }
+  
+      // Xóa thành viên khỏi database
+      const result = await db.promise().query('DELETE FROM members WHERE member_code = ?', [member_code]);
+  
+      if (result[0].affectedRows === 0) {
+        return res.status(404).json({ message: "Không tìm thấy thành viên với mã này." });
+      }
+  
+      res.status(200).json({ message: "Đã xóa thành viên và ảnh đại diện thành công." });
+    } catch (error) {
+      console.error("Error deleting member:", error);
+      res.status(500).json({ message: "Có lỗi xảy ra khi xóa thành viên và ảnh đại diện." });
+    }
+};  
+
 const editMember = (req, res) => {
     const { member_code } = req.params;
     const { name, age, country, email, phone } = req.body;
@@ -189,5 +233,5 @@ const editMember = (req, res) => {
 };
 
 // Export hàm xử lý
-module.exports = { getAllMembers, searchMembers, addMember, editMember, memberUpload };
+module.exports = { getAllMembers, searchMembers, addMember, editMember, DeleteMember, memberUpload };
 
