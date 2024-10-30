@@ -126,7 +126,7 @@ export default function LibraryBooks() {
       const selectedBook = books.find((book) => book.id === selectedBooks[0]);
       if (selectedBook) {
         // Điều hướng đến trang chỉnh sửa với thông tin sách
-        navigate(`/Menu/changeBookInfor?id=${selectedBook.id}`, { state: selectedBook }); // Sử dụng navigate để điều hướng và truyền state
+        navigate(`/menu/changeBookInfor?id=${selectedBook.id}`, { state: selectedBook });
       }
     } else {
       alert('Vui lòng chọn chính xác một sách để chỉnh sửa.');

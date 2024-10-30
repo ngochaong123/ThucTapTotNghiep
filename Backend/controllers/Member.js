@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require('uuid'); // Thư viện để tạo UUID
 // Thiết lập thư mục lưu trữ avatar và multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '..', 'Public', 'Avatar')); // Đường dẫn lưu file
+        cb(null, path.join(__dirname, '..', 'Public', 'Members')); // Đường dẫn lưu file
     },
     filename: (req, file, cb) => {
         cb(null, `${uuidv4()}-${file.originalname}`); // Tạo tên file duy nhất
@@ -60,7 +60,7 @@ const getAllMembers = (req, res) => {
         }
 
         results.forEach(member => {
-            member.avatar_link = `/Avatar/${member.avatar_link}`; // Thiết lập đường dẫn cho ảnh đại diện
+            member.avatar_link = `/Members/${member.avatar_link}`; // Thiết lập đường dẫn cho ảnh đại diện
         });
 
         res.json(results);
@@ -80,7 +80,7 @@ const searchMembers = (req, res) => {
         }
 
         results.forEach(member => {
-            member.avatar_link = `/Avatar/${member.avatar_link}`; // Thiết lập đường dẫn cho ảnh đại diện
+            member.avatar_link = `/Members/${member.avatar_link}`; // Thiết lập đường dẫn cho ảnh đại diện
         });
 
         res.json(results);
@@ -110,7 +110,7 @@ const addMember = (req, res) => {
 
             // Nếu có lỗi, xóa file ảnh đã upload nếu có
             if (req.file) {
-                const filePath = path.join(__dirname, '..', 'Public', 'Avatar', req.file.filename);
+                const filePath = path.join(__dirname, '..', 'Public', 'Members', req.file.filename);
                 fs.unlink(filePath, (unlinkErr) => {
                     if (unlinkErr) console.error('Error deleting uploaded file:', unlinkErr);
                 });
@@ -122,5 +122,72 @@ const addMember = (req, res) => {
     });
 };
 
-// Exports các hàm xử lý
-module.exports = { getAllMembers, searchMembers, addMember, memberUpload };
+const editMember = (req, res) => {
+    const { member_code } = req.params;
+    const { name, age, country, email, phone } = req.body;
+    const new_avatar_link = req.file ? req.file.filename : null;
+
+    // Kiểm tra các trường cần thiết
+    if (!member_code || !name || !age || !country || !email || !phone) {
+        return res.status(400).json({ message: "Thiếu dữ liệu" });
+    }
+
+    // Kiểm tra dữ liệu đầu vào
+    if (!validateMemberData(req.body)) {
+        return res.status(400).json({ message: 'Tất cả các trường là bắt buộc!' });
+    }
+
+    const sql = `SELECT avatar_link FROM members WHERE member_code = ?`;
+
+    db.query(sql, [member_code], (err, results) => {
+        if (err) {
+            console.error('Error finding member:', err);
+            return res.status(500).json({ error: 'Error finding member' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Không tìm thấy thành viên với mã này.' });
+        }
+
+        const old_avatar_link = results[0].avatar_link;
+
+        const updateSql = `
+            UPDATE members 
+            SET 
+                name = ?, 
+                age = ?, 
+                country = ?, 
+                email = ?, 
+                phone = ?, 
+                avatar_link = COALESCE(?, avatar_link) 
+            WHERE 
+                member_code = ?`;
+
+        const values = [name, age, country, email, phone, new_avatar_link, member_code];
+
+        db.query(updateSql, values, (err, result) => {
+            if (err) {
+                console.error('Error updating member:', err);
+                return res.status(500).json({ error: 'Error updating member' });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Không tìm thấy thành viên với mã này.' });
+            }
+
+            // Xóa ảnh cũ nếu có ảnh mới
+            if (new_avatar_link) {
+                const oldAvatarPath = path.join(__dirname, '..', 'Public', 'Members', old_avatar_link);
+                fs.unlink(oldAvatarPath, (unlinkErr) => {
+                    if (unlinkErr) console.error('Error deleting old avatar:', unlinkErr);
+                });
+            }
+
+            res.status(200).json({ message: 'Thành viên đã được cập nhật thành công' });
+        });
+    });
+};
+
+// Export hàm xử lý
+module.exports = { getAllMembers, searchMembers, addMember, editMember, memberUpload };
+

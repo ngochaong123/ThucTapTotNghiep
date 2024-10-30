@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Phục vụ tệp tĩnh cho ảnh sách
 app.use('/Book', express.static(path.join(__dirname, 'Public', 'Book')));
-app.use('/Avatar', express.static(path.join(__dirname, 'Public', 'Avatar')));
+app.use('/Members', express.static(path.join(__dirname, 'Public', 'Members')));
 
 // Sử dụng routes
 app.use('/', authRoutes);

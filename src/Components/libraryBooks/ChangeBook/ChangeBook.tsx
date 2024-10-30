@@ -94,7 +94,6 @@ export default function ChangeBook() {
     }
 };
 
-
   const handleDateChange = (date: Date | null) => {
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -149,10 +148,8 @@ export default function ChangeBook() {
       formData.append('image_link', file, newFileName);
     }
 
-    console.log("data: ",formValues);
-
     try {
-      const response = await axios.put(`http://localhost:5000/edit/${formValues.book_code}`, formData, {
+      const response = await axios.put(`http://localhost:5000/editBook/${formValues.book_code}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -164,7 +161,6 @@ export default function ChangeBook() {
       toast.error("Có lỗi xảy ra khi cập nhật thông tin sách.");
     }
 };
-
 
   const handleReset = () => {
     setFormValues({
@@ -178,7 +174,7 @@ export default function ChangeBook() {
       language: '',
       receiveDate: null,
     });
-    setImagePreview(DefaultAvatar); // Reset hình ảnh về mặc định
+    setImagePreview(DefaultAvatar);
     setIsChanged(false); 
   };
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Member.css';
-import { Outlet, Link } from "react-router-dom";
-import DatePicker from 'react-datepicker'; 
-import 'react-datepicker/dist/react-datepicker.css'; 
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 import Magnifier from '../../../images/icon/magnifier.png';
 import Calendar from '../../../images/icon/calendar.png';
@@ -15,13 +16,13 @@ interface Member {
   name: string;
   email: string;
   phone: string;
-  avatar_link: string; 
+  avatar_link: string;
   registration_date: string;
   age: number;
   country: string;
 }
 
-export default function LibraryBooks() {
+export default function LibraryMembers() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
@@ -29,24 +30,20 @@ export default function LibraryBooks() {
   const filterRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const navigate = useNavigate();
 
+  // Fetch members data from API
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const response = await fetch('http://localhost:5000/getAllMembers'); // Ensure your API URL is correct
-        const data = await response.json();
-        setMembers(data);
+        const response = await axios.get('http://localhost:5000/Members');
+        setMembers(response.data);
       } catch (error) {
         console.error('Error fetching members:', error);
       }
     };
-
     fetchMembers();
   }, []);
-
-  const toggleFilterMenu = () => {
-    setShowFilterMenu((prev) => !prev);
-  };
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -64,6 +61,10 @@ export default function LibraryBooks() {
     }
   };
 
+  const toggleFilterMenu = () => {
+    setShowFilterMenu((prev) => !prev);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -75,7 +76,6 @@ export default function LibraryBooks() {
         setShowFilterMenu(false);
       }
     };
-
     document.addEventListener('click', handleClickOutside);
     return () => {
       document.removeEventListener('click', handleClickOutside);
@@ -84,25 +84,35 @@ export default function LibraryBooks() {
 
   const fetchMembersByDate = async (date: Date) => {
     try {
-      const formattedDate = date.toISOString().split('T')[0]; // Định dạng lại ngày thành YYYY-MM-DD
-      console.log("day: ",formattedDate);
-      const response = await fetch(`http://localhost:5000/getAllMembers?registrationDate=${formattedDate}`);
-      const data = await response.json();
-      setMembers(data); // Cập nhật danh sách thành viên với dữ liệu đã lọc
+      const formattedDate = date.toISOString().split('T')[0];
+      const response = await axios.get(`http://localhost:5000/Members?registrationDate=${formattedDate}`);
+      setMembers(response.data);
     } catch (error) {
       console.error('Error fetching members by date:', error);
     }
-  };  
+  };
 
   const fetchMembersByKeyword = async (keyword: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/searchMembers?keyword=${keyword}`);
-      const data = await response.json();
-      setMembers(data); // Cập nhật danh sách thành viên với kết quả tìm kiếm
+      const response = await axios.get(`http://localhost:5000/searchMembers?keyword=${keyword}`);
+      setMembers(response.data);
     } catch (error) {
       console.error('Error fetching members by keyword:', error);
     }
-  };  
+  };
+
+  const handleEditMember = () => {
+    if (selectedMembers.length === 0) {
+      alert('Vui lòng chọn ít nhất một thành viên trước khi chỉnh sửa!');
+    } else {
+      // Lấy thông tin thành viên đầu tiên trong danh sách đã chọn
+      const selectedMember = members.find(member => member.id === selectedMembers[0]);
+      if (selectedMember) {
+        // Điều hướng tới trang chỉnh sửa với thông tin thành viên
+        navigate(`/Menu/changeMemberInfor?id=${selectedMember.id}`, { state: selectedMember });
+      }
+    }
+  };
 
   return (
     <div>
@@ -127,12 +137,12 @@ export default function LibraryBooks() {
                 <div style={{ display: 'flex' }}>
                   <img src={Calendar} className='MembericonCalender' alt="Filter Icon" />
                   <div className='CalenderMember'>
-                   <DatePicker
+                    <DatePicker
                       selected={selectedDate}
                       onChange={(date: Date | null) => {
-                        setSelectedDate(date); // Cập nhật state với ngày đã chọn
+                        setSelectedDate(date);
                         if (date) {
-                          fetchMembersByDate(date); // Gọi hàm lọc dữ liệu theo ngày
+                          fetchMembersByDate(date);
                         }
                       }}
                       dateFormat="dd/MM/yyyy"
@@ -140,7 +150,7 @@ export default function LibraryBooks() {
                       placeholderText='Thời gian'
                       onFocus={(e) => e.target.blur()}
                     />
-                  </div>                     
+                  </div>
                 </div>
                 <img src={ArrowDown} className='MembericonPlus' alt="Arrow Down Icon" />
               </button>
@@ -158,19 +168,17 @@ export default function LibraryBooks() {
                   placeholder="Tìm kiếm thành viên..."
                   value={searchKeyword}
                   onChange={(e) => {
-                    setSearchKeyword(e.target.value); // Cập nhật state với từ khóa tìm kiếm
-                    fetchMembersByKeyword(e.target.value); // Gọi hàm tìm kiếm thành viên
+                    setSearchKeyword(e.target.value);
+                    fetchMembersByKeyword(e.target.value);
                   }}
                 />
               </div>
             </div>
           </div>
 
-          <Link to='/Menu/changeMemberInfor' style={{ textDecoration: 'none' }}>
-            <button className='MemberEditMember'>
-              <div className='MemberNameEdit'> Chỉnh sửa thông tin </div>
-            </button>
-          </Link>
+          <button className='MemberEditMember' onClick={handleEditMember}>
+            <div className='MemberNameEdit'> Chỉnh sửa thông tin </div>
+          </button>
         </div>
 
         <div className='FrameMembertableContainer'>
@@ -182,7 +190,7 @@ export default function LibraryBooks() {
                     <input
                       type="checkbox"
                       onChange={handleSelectAll}
-                      checked={selectedMembers.length === members.length}
+                      checked={selectedMembers.length === members.length && members.length > 0}
                     />
                   </th>
                   <th>Mã thành viên</th>
@@ -206,7 +214,7 @@ export default function LibraryBooks() {
                     </td>
                     <td>{member.member_code}</td>
                     <td>
-                      <div style={{display:'flex'}}>
+                      <div style={{ display: 'flex' }}>
                         <img src={`http://localhost:5000${member.avatar_link}`} className='avatarAddmember' alt="Avatar" />
                         <div className='nameAvatarAddmember'>{member.name}</div>
                       </div>
