@@ -103,11 +103,11 @@ export default function LibraryBooks() {
 
   const categories = [
     'Công nghệ thông tin',
-    'Nông Lâm Ngư Nghiệp',
-    'Y Học - Sức Khỏe',
-    'Triết Học - Lý Luận',
-    'Lịch Sử - Quân Sự',
-    'Phiêu Lưu - Mạo Hiểm'
+    'Nông lâm ngư nghiệp',
+    'Y Học - sức khỏe',
+    'Triết học - lý luận',
+    'Lịch sử - quân sự',
+    'Phiêu mưu - mạo hiểm'
   ];
 
   const handleEditBook = () => {

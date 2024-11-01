@@ -12,11 +12,11 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const categories = [
   'Công nghệ thông tin',
-  'Nông Lâm Ngư nghiệp',
-  'Y Học - Sức Khỏe',
-  'Triết Học - Lý Luận',
-  'Lịch Sử - Quân Sự',
-  'Phiêu Lưu - Mạo Hiểm'
+  'Nông lâm ngư nghiệp',
+  'Y học - sức khỏe',
+  'Triết học - lý luận',
+  'Lịch sử - quân sự',
+  'Phiêu mưu - mạo hiểm'
 ];
 
 interface FormValues {

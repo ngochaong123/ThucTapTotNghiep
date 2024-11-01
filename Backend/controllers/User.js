@@ -47,9 +47,6 @@ const getUser = (req, res) => {
 };
 
 const editUser = (req, res) => {
-  console.log(req.file); // Kiểm tra xem tệp có được tải lên không
-  console.log(req.body); // Kiểm tra xem tất cả dữ liệu đầu vào
-
   const { user_code, username, full_name, password, email, age, phone_number, country, avatar_user } = req.body;
   const new_avatar_link = req.file ? req.file.filename : null;
 
