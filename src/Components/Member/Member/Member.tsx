@@ -93,7 +93,7 @@ export default function LibraryMembers() {
 
   const handleEditMember = () => {
     if (!selectedMember) {
-      alert('Vui lòng chọn một thành viên trước khi chỉnh sửa!');
+      alert('Vui lòng chọn một thành viên trước khi chỉnh thông tin!');
     } else {
       const selectedMemberData = members.find(member => member.member_code === selectedMember);
       if (selectedMemberData) {

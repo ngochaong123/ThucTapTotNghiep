@@ -117,7 +117,7 @@ export default function LibraryBooks() {
         navigate(`/menu/changeBookInfor?book_code=${bookToEdit.book_code}`, { state: bookToEdit });
       }
     } else {
-      alert('Vui lòng chọn một sách để chỉnh sửa.');
+      alert('Vui lòng chọn một quốn sách để chỉnh sửa thông tin.');
     }
   };
 

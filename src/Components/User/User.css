@@ -131,3 +131,22 @@
     background-color: red;
     opacity: 0.6;
 }
+
+.inputPasswordUser {
+    position: relative;
+    width: 100%;
+}
+
+.inputPasswordUser input {
+    padding-right: 10px; /* Khoảng cách bên phải để có chỗ cho biểu tượng */
+}
+
+.icon-password {
+    position: absolute;
+    right: 15px; /* Vị trí bên phải của biểu tượng */
+    top: 52%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #000000;
+}
+  

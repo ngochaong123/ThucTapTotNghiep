@@ -287,7 +287,7 @@ MembersearchIcon img {
 /* Member table container with scrolling */
 .MembertableContainer {
   margin-top: 20px; /* Space above the table */
-  max-height: 440px; /* Set a max height for the container */
+  max-height: 440px;
   overflow-y: scroll; /* Enable vertical scrolling */
   border: 1px solid #ccc; /* Optional: Add a border around the container */
   border-radius: 5px; /* Optional: Round the corners of the container */

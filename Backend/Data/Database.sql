@@ -6,11 +6,16 @@ USE library_management;
 
 -- Tạo bảng users (tài khoản người dùng)
 CREATE TABLE users (
-    user_id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL, -- Nên được mã hóa
+    user_code VARCHAR(20) PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,   
+    full_name VARCHAR(100) NOT NULL,         
+    password VARCHAR(255) NOT NULL,          
     email VARCHAR(100) NOT NULL UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    age INT,                                 
+    phone_number VARCHAR(15),                
+    country VARCHAR(50),                     
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    avatar_user VARCHAR(255) NOT NULL
 );
 
 -- Tạo bảng books
@@ -39,8 +44,8 @@ CREATE TABLE members (
 );
 
 -- Thêm tài khoản người dùng (users)
-INSERT INTO users (username, password, email) VALUES 
-('admin1', 'Tien%123', 'admin1@library.com');
+INSERT INTO users (user_code, username, full_name, password, email, age, phone_number, country, avatar_user) VALUES 
+('MEM001', 'admin1', 'Admin One', 'Tien%123', 'admin1@library.com', 30, '0123456789', 'Vietnam', '328bf51c-2ac5-492b-aaab-f826f700db33.avif');
 
 -- Thêm dữ liệu sách (books)
 INSERT INTO books (book_code, book_name, image_link, quantity, category, author, location, language, received_date)
