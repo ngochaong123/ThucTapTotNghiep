@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import './Menu.css';
 import LogoMenu from '../../images/logo.jpg';
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 // Icons
 import Book from "../../images/icon/book.png";
@@ -13,6 +15,28 @@ import borrowBooks from "../../images/icon/borrow-book.png";
 
 export default function Menu() {
   const [activeMenu, setActiveMenu] = useState("LibraryBook");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    confirmAlert({
+      title: 'Xác nhận đăng xuất',
+      message: 'Bạn có chắc chắn muốn đăng xuất không?',
+      buttons: [
+        {
+          label: 'Có',
+          onClick: () => {
+            // Thực hiện các hành động cần thiết khi đăng xuất, ví dụ xóa token hoặc thông tin người dùng
+            // Sau đó điều hướng về trang đăng nhập
+            navigate('/Login');
+          }
+        },
+        {
+          label: 'Không',
+          onClick: () => {}
+        }
+      ]
+    });
+  };
 
   return (
     <div className='containerMenu'>
@@ -72,15 +96,14 @@ export default function Menu() {
           <div className='NameOptionIcon'>Người dùng</div>
         </Link>
 
-        <Link
-          to="/Login"
-          className={`ButtonloginOut ${activeMenu === "Login" ? "activeMenu" : ""}`}
-          onClick={() => setActiveMenu("Login")}
+        <div
+          className={`ButtonloginOut`}
+          onClick={handleLogout}  // Gọi hàm handleLogout khi nhấn
         >
           <div className="vertical-bar"></div>
           <img src={loginOut} alt="Logout Icon" className='IconOption' />
           <div className='NameOptionIcon'>Đăng xuất</div>
-        </Link>
+        </div>
       </div>
 
       <div className='OptionSidebar'>
