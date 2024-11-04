@@ -78,7 +78,7 @@ borrowBookssearchIcon img {
 .borrowBooksNameChoose{
     display: flex;
     font-weight: bold;
-    margin: 0px 10px 5px 15px;
+    margin: 0px 10px 5px 20px;
 }
 
 .borrowBooksheader{
@@ -127,9 +127,9 @@ borrowBookssearchIcon img {
     opacity: 0.9;
 }
 
-.CalenderborrowBooks{
-    z-index: 4;
-    margin: 4px 0px 6px 0px;
+.CategoryborrowBooks{
+    margin-top: 5px;
+    margin-left: 20px;
 }
 
 .borrowBooksNameSearch{
@@ -150,6 +150,18 @@ borrowBookssearchIcon img {
     width: 300px;
     height: 28px;
     
+}
+
+.LibraryCategorySelect {
+    height: 40px;
+    border-radius: 15px; /* Bo góc */
+    padding: 10px; /* Khoảng cách bên trong */
+    padding-right: 40px; /* Để có khoảng cách cho icon */
+    background-color: white; /* Màu nền trắng */
+    border: 2px solid #CBCBDC; /* Đường viền */
+    background-repeat: no-repeat; /* Không lặp lại biểu tượng */
+    background-position: right 10px center; /* Đặt vị trí biểu tượng mũi tên bên phải */
+    background-size: 20px; /* Kích thước biểu tượng mũi tên */
 }
 
 .borrowBooksNameiconFilter{
@@ -332,7 +344,7 @@ borrowBookssearchIcon img {
 }
 
 /* change image */
-.avatarAddmember{
+.avatarborrowBooks{
     width: 30px;
     height: 30px;
     border-radius: 50px;

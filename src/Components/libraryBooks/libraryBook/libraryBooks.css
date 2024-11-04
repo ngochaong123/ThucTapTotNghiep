@@ -100,7 +100,6 @@
 
 /* Wrapper cho phần chọn thể loại và icon */
 .LibraryCategoryWrapper {
-    position: relative; /* Đặt vị trí tương đối để icon có thể được đặt bên trong */
     margin-top: -5px;
 }
 

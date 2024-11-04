@@ -39,16 +39,8 @@ export default function LibraryBooks() {
     fetchBooks();
   }, []);
 
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setSelectedBook(books[0]?.book_code || null); // Chọn sách đầu tiên khi checkbox chọn tất cả được nhấn
-    } else {
-      setSelectedBook(null);
-    }
-  };
-
   const handleSelectBook = (bookCode: string) => {
-    setSelectedBook(selectedBook === bookCode ? null : bookCode); // Chỉ chọn một sách
+    setSelectedBook(selectedBook === bookCode ? null : bookCode);
   };
 
   useEffect(() => {
@@ -101,14 +93,14 @@ export default function LibraryBooks() {
     }
   };
 
-  const categories = [
+ const categories = [
     'Công nghệ thông tin',
     'Nông lâm ngư nghiệp',
     'Y Học - sức khỏe',
     'Triết học - lý luận',
     'Lịch sử - quân sự',
     'Phiêu mưu - mạo hiểm'
-  ];
+  ]; 
 
   const handleEditBook = () => {
     if (selectedBook) {
