@@ -189,7 +189,7 @@ export default function AddBook() {
         <div className='containeruploadAvatarAddBook'>
           <img src={avatarPreview} alt="Avatar Preview" />
           <div>
-            <h2>Tải lên ảnh bìa</h2>
+            <h2>Ảnh cuốn sách</h2>
             <div>Chấp nhận ảnh nhỏ hơn 1MB</div>
           </div>
         </div>

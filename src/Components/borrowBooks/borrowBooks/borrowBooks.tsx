@@ -48,7 +48,7 @@ export default function LibraryBooks() {
 
   const fetchBorrowedBooks = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/BorrowdBooks', {
+      const response = await axios.get('http://localhost:5000/BorrowBooks', {
         params: { category: selectedCategory },
       });
       setBorrowBooks(response.data);
@@ -135,7 +135,7 @@ export default function LibraryBooks() {
                   <th>Tên thành viên</th>
                   <th>Tên sách</th>
                   <th>Hình ảnh</th>
-                  <th>Loại sách</th>
+                  <th>Thể loại</th>
                   <th>Số lượng</th>
                   <th>Ngày mượn sách</th>
                   <th>Ngày trả sách</th>

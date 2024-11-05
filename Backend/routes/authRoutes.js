@@ -2,7 +2,7 @@ const express = require('express');
 const { login, register } = require('../controllers/authController');
 const { getAllBooks, searchBooks, addBook, editBook, DeleteBook, bookUpload } = require('../controllers/LibriaryBook');
 const { getAllMembers, searchMembers, addMember, editMember, DeleteMember, memberUpload } = require('../controllers/Member');
-const {getAllBorrowBooks} = require('../controllers/BorrowdBooks');
+const { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook} = require('../controllers/BorrowdBooks');
 const { getUser, editUser, uploadUser } = require('../controllers/User');
 
 const router = express.Router();
@@ -26,7 +26,10 @@ router.delete('/deleteMember/:member_code', DeleteMember);
 router.put('/editMember/:member_code', memberUpload.single('avatar_link'), editMember); 
 
 //Route cho mượn sách
-router.get('/BorrowdBooks',getAllBorrowBooks);
+router.get('/BorrowBooks',getAllBorrowBooks);
+router.get('/getMemberByCode/:member_code',getMemberByCode);
+router.get('/getBookByCode/:book_code',getBookByCode);
+router.post('/addborrowBook',addborrowBook);
 
 // Route cho quản lý tài khoản cá nhân
 router.get('/getUser', getUser);

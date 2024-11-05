@@ -45,11 +45,11 @@ CREATE TABLE members (
 
 -- Tạo bảng borrowBooks
 CREATE TABLE borrowBooks (
-    member_code VARCHAR(20),
-    book_code VARCHAR(20),
-    quantity INT NOT NULL,
-    borrowDate DATE,
-    returnDate DATE,
+    member_code VARCHAR(20),                 -- Mã thành viên
+    book_code VARCHAR(20),                   -- Mã sách
+    quantity INT NOT NULL,                   -- Số lượng mượn
+    borrowDate DATE,                         -- Ngày mượn
+    returnDate DATE,                         -- Ngày trả
     FOREIGN KEY (member_code) REFERENCES members(member_code),
     FOREIGN KEY (book_code) REFERENCES books(book_code)
 );
@@ -122,16 +122,13 @@ INSERT INTO members (member_code, name, email, phone, registration_date, age, av
 ('MEM009', 'Grace Lee', 'grace@example.com', '7788990011', '2024-02-25', 31, 'user8.jpg', 'Japan'),
 ('MEM010', 'Hank Miller', 'hank@example.com', '8899001122', '2024-03-01', 40, 'user9.jpg', 'South Korea');
 
-
 INSERT INTO borrowBooks (member_code, book_code, quantity, borrowDate, returnDate) VALUES
 ('MEM001', 'BK039', 1, '2024-11-01', '2024-11-15'),
 ('MEM002', 'BK044', 2, '2024-11-02', '2024-11-16'),
 ('MEM003', 'BK046', 1, '2024-12-03', '2024-11-17'),
 ('MEM004', 'BK048', 3, '2024-11-03', '2024-11-17'),
-('MEM005', 'BK043', 4, '2024-5-03', '2024-11-17'),
-('MEM006', 'BK034', 8, '2024-7-03', '2024-11-17'),
-('MEM008', 'BK011', 7, '2024-6-03', '2024-11-17'),
-('MEM010', 'BK011', 6, '2024-3-08', '2024-11-17'),
-('MEM009', 'BK020', 2, '2024-11-03', '2024-11-17');
-
+('MEM005', 'BK043', 4, '2024-05-03', '2024-11-17'),
+('MEM006', 'BK034', 8, '2024-07-03', '2024-11-17'),
+('MEM008', 'BK011', 7, '2024-06-03', '2024-11-17'),
+('MEM010', 'BK011', 6, '2024-03-08', '2024-11-17');
 

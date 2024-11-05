@@ -15,17 +15,18 @@
     display: flex;
 
     img{
-        width: 100px;
-        height: 100px;
-        border-radius: 100px;
+        width: 250px;
+        height: 350px;
+        border-radius: 10px;
         margin-right: 30px;
     }
 
     div h2{
-        font-size: 20px;
+        font-size: 40px;
         text-align: start;
+        margin: 0;
         margin-left: 0;
-        margin-top: 15px;
+        margin-top: 16px;
     }
 
     div div{
@@ -36,6 +37,20 @@
         color: #CDCDD0;
         font-weight: bold;
     }
+}
+
+.infoDisplay {
+    display: inline-block; /* Cho phép width có tác dụng */
+    width: 400px;
+    max-width: 305px; /* Đảm bảo không vượt quá 400px */
+    border-radius: 10px;
+    padding: 7px 5px 10px 10px;
+    background-color: white;
+    border: 2px solid #CBCBDC;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 14px;
+    text-overflow: ellipsis;
 }
 
 .containeraddMemeber{
