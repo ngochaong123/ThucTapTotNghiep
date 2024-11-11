@@ -9,7 +9,6 @@ import DefaultAvatar from '../../../images/icon/avatar.jpg';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-
 const categories = [
   'Công nghệ thông tin',
   'Nông lâm ngư nghiệp',
@@ -56,14 +55,18 @@ export default function AddBook() {
   };
 
   const handleDateChange = (date: Date | null) => {
-    setFormValues({
-      ...formValues,
-      receiveDate: date,
-    });
+    const currentDate = new Date();
+    if (date && date >= currentDate) {
+      setFormValues({
+        ...formValues,
+        receiveDate: date,
+      });
+    } else {
+      toast.error("Ngày nhận sách phải lớn hơn hoặc bằng ngày hiện tại!");
+    }
   };
 
   const handleReset = () => {
-    // Hiển thị hộp thoại xác nhận trước khi thực hiện hành động
     confirmAlert({
       title: 'Xác nhận đặt lại',
       message: 'Bạn có chắc chắn muốn đặt lại tất cả các trường không?',
@@ -77,7 +80,6 @@ export default function AddBook() {
         {
           label: 'Xác nhận',
           onClick: () => {
-            // Đặt lại các giá trị form và ảnh xem trước
             setFormValues({
               book_name: '',
               book_code: '',
@@ -121,7 +123,6 @@ export default function AddBook() {
   };
 
   const handleSubmit = async () => {
-    // Hiển thị hộp thoại xác nhận trước khi thực hiện hành động
     confirmAlert({
       title: 'Xác nhận thêm sách',
       message: 'Bạn có chắc chắn muốn thêm sách này không?',
@@ -137,10 +138,9 @@ export default function AddBook() {
           onClick: async () => {
             const formData = new FormData();
           
-            // Kiểm tra tính hợp lệ của form
             if (!isFormValid) {
               toast.error('Vui lòng điền tất cả các trường bắt buộc!');
-              return; // Không thực hiện tiếp nếu form không hợp lệ
+              return;
             }
           
             formData.append('book_name', formValues.book_name);
@@ -155,7 +155,6 @@ export default function AddBook() {
             const avatarInput = document.getElementById('avatarInput') as HTMLInputElement | null;
           
             try {
-              // Chỉ thêm ảnh vào FormData nếu đã có ảnh được tải lên
               if (avatarInput && avatarInput.files && avatarInput.files.length > 0) {
                 formData.append('image_link', avatarInput.files[0]);
               }
@@ -168,17 +167,17 @@ export default function AddBook() {
               
               console.log(response.data);
               toast.success('Lưu sách thành công!');
-              handleReset(); // Đặt lại form nếu lưu thành công
+              handleReset();
             } catch (error) {
               console.error('Đã xảy ra lỗi khi lưu sách:', error);
-              toast.error('Đã xảy ra lỗi, vui lòng thử lại!'); // Thông báo lỗi
+              toast.error('Đã xảy ra lỗi, vui lòng thử lại!');
             }
           }
         }
       ]
     });
   };
-  
+
   return (
     <div className='FrameContanieraddBook'>
       <h1>Thêm Sách mới vào thư viện</h1>
@@ -261,6 +260,7 @@ export default function AddBook() {
               dateFormat="dd/MM/yyyy"
               className='MemberDatePickerAddBook'
               placeholderText='Thời gian'
+              minDate={new Date()}  // Chỉ cho phép chọn ngày từ hôm nay trở đi
             />
           </div>
         </div>

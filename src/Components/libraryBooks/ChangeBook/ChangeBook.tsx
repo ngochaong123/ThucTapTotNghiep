@@ -320,6 +320,7 @@ export default function ChangeBook() {
                 dateFormat="dd/MM/yyyy"
                 placeholderText="Chọn ngày tiếp nhận"
                 className='custom-datepicker'
+                minDate={new Date()}
               />
             </div>
           </div>
