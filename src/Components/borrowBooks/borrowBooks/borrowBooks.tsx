@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './borrowBooks.css';
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 import Magnifier from '../../../images/icon/magnifier.png';
 import Plus from "../../../images/icon/plus.png";
 
 interface BorrowBook {
+  id : string;
   member_code: string;
   name: string;
+  book_code:string;
   category: string;
   book_name: string;
   quantity: number;
@@ -23,7 +25,23 @@ export default function LibraryBooks() {
   const [selectedCategory, setSelectedCategory] = useState<string>(''); 
   const [searchTerm, setSearchTerm] = useState('');
   const [borrowBooks, setBorrowBooks] = useState<BorrowBook[]>([]);
-  const [selectedBorrowBook, setSelectedBorrowBook] = useState<string | null>(null);
+  const [selectedBorrowBookId, setSelectedBorrowBookId] = useState<string | null>(null); 
+
+  const navigate = useNavigate();
+
+  const handleEditBook = () => {
+    if (selectedBorrowBookId) {
+      const bookToEdit = borrowBooks.find((book) => book.id === selectedBorrowBookId);
+  
+      if (bookToEdit) {
+        navigate(`/Menu/ChangeBorrowBooks?id=${bookToEdit.id}`, { state: { bookData: bookToEdit } });
+      } else {
+        alert('Không tìm thấy sách với ID đã chọn.');
+      }
+    } else {
+      alert('Vui lòng chọn một cuốn sách để chỉnh sửa thông tin.');
+    }
+  };   
 
   const categories = [
     'Công nghệ thông tin',
@@ -42,8 +60,9 @@ export default function LibraryBooks() {
     setSelectedCategory(e.target.value);
   };
 
-  const handleSelectBorrowBook = (memberCode: string) => {
-    setSelectedBorrowBook(prevSelected => (prevSelected === memberCode ? null : memberCode));
+  const handleSelectBorrowBook = (id: string) => {
+    // Đảm bảo chỉ có thể chọn một ô checkbox duy nhất
+    setSelectedBorrowBookId(prevSelected => prevSelected === id ? null : id);  // Nếu đã chọn, bỏ chọn, nếu chưa chọn, chọn id mới
   };
 
   const fetchBorrowedBooks = async () => {
@@ -118,11 +137,12 @@ export default function LibraryBooks() {
             </div>
           </div>
 
-          <Link to='/Menu/ChangeBorrowBooks' style={{ textDecoration: 'none' }}>
-            <button className='borrowBooksEditborrowBooks'>
-              <div className='borrowBooksNameEdit'>Chỉnh sửa thông tin</div>
-            </button>
-          </Link>
+          <button
+            className='borrowBooksEditborrowBooks'
+            onClick={handleEditBook}
+          >
+            <div className='borrowBooksNameEdit'>Chỉnh sửa thông tin</div>
+          </button>
         </div>
 
         <div className='FrameborrowBookstableContainer'>
@@ -143,12 +163,12 @@ export default function LibraryBooks() {
               </thead>
               <tbody>
                 {filteredBorrowBooks.map(borrowBook => (
-                  <tr key={borrowBook.member_code}>
+                  <tr key={borrowBook.id}>
                     <td>
                       <input
                         type="checkbox"
-                        checked={selectedBorrowBook === borrowBook.member_code}
-                        onChange={() => handleSelectBorrowBook(borrowBook.member_code)}
+                        checked={selectedBorrowBookId === borrowBook.id} // Chỉ checkbox có id trùng mới được chọn
+                        onChange={() => handleSelectBorrowBook(borrowBook.id)}  // Cập nhật lại id được chọn
                       />
                     </td>
                     <td>{borrowBook.member_code}</td>

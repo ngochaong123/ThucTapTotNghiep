@@ -183,53 +183,53 @@ export default function ChangeBook() {
     });
   };
 
-const DeleteBook = async () => {
-  if (!formValues.book_code) {
-    toast.error("Vui lòng chọn sách để xóa.");
-    return;
-  }
+  const DeleteBook = async () => {
+    if (!formValues.book_code) {
+      toast.error("Vui lòng chọn sách để xóa.");
+      return;
+    }
 
-  // Hiển thị hộp thoại xác nhận
-  confirmAlert({
-    title: 'Xác nhận xóa sách',
-    message: 'Bạn có chắc chắn muốn xóa sách này không?',
-    buttons: [
-      {
-        label: 'Hủy',
-        onClick: () => {
-          console.log("Xóa sách đã bị hủy.");
-        }
-      },
-      {
-        label: 'Xác nhận',
-        onClick: async () => {
-          try {
-            const response = await axios.delete(`http://localhost:5000/deleteBook/${formValues.book_code}`);
-            toast.success(response.data.message);
+    // Hiển thị hộp thoại xác nhận
+    confirmAlert({
+      title: 'Xác nhận xóa sách',
+      message: 'Bạn có chắc chắn muốn xóa sách này không?',
+      buttons: [
+        {
+          label: 'Hủy',
+          onClick: () => {
+            console.log("Xóa sách đã bị hủy.");
+          }
+        },
+        {
+          label: 'Xác nhận',
+          onClick: async () => {
+            try {
+              const response = await axios.delete(`http://localhost:5000/deleteBook/${formValues.book_code}`);
+              toast.success(response.data.message);
 
-            // Đặt lại các giá trị form và ảnh xem trước
-            setFormValues({
-              book_name: '',
-              book_code: '',
-              author: '',
-              category: '',
-              quantity: '',
-              location: '',
-              avatar: '',
-              language: '',
-              receiveDate: null,
-            });
-            setImagePreview(DefaultAvatar);
-            setIsChanged(false);
-          } catch (error) {
-            console.error("Error deleting book:", error);
-            toast.error("Có lỗi xảy ra khi xóa sách.");
+              // Đặt lại các giá trị form và ảnh xem trước
+              setFormValues({
+                book_name: '',
+                book_code: '',
+                author: '',
+                category: '',
+                quantity: '',
+                location: '',
+                avatar: '',
+                language: '',
+                receiveDate: null,
+              });
+              setImagePreview(DefaultAvatar);
+              setIsChanged(false);
+            } catch (error) {
+              console.error("Error deleting book:", error);
+              toast.error("Có lỗi xảy ra khi xóa sách.");
+            }
           }
         }
-      }
-    ]
-  });
-};
+      ]
+    });
+  };
 
   return (
     <div className='FrameContanieraddBook'>
@@ -246,7 +246,6 @@ const DeleteBook = async () => {
               onError={(e) => {
                 e.currentTarget.src = DefaultAvatar;
               }}
-              
             />
             <div>
               <h2>Hình ảnh sách</h2>

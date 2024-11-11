@@ -1,39 +1,103 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './changeBorrowBooks.css';
-import DatePicker from 'react-datepicker'; // Importing the DatePicker component
-import 'react-datepicker/dist/react-datepicker.css'; // Importing DatePicker styles
-
-// icon
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useLocation } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import DefaultAvatar from "../../../images/icon/avatar.jpg";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import axios from 'axios';
 
 export default function AddBorrowBooks() {
-  const categories = [
-    'Công nghệ thông tin',
-    'Nông lâm ngư nghiệp',
-    'Y học - sức khỏe',
-    'Triết học - lý luận',
-    'Lịch sử - quân sự',
-    'Phiêu mưu - mạo hiểm'
-  ];
+  const location = useLocation();
+  const { bookData } = location.state;
 
   const [formValues, setFormValues] = useState({
+    id: '',
     name: '',
-    book_code: '',
-    quantity: '',
-    memberCode: '',
-    avatar: '',
-    country: '',
-    borrowDate: '', 
-    returnDate: '',
     book_name: '',
-    bookType: ''
+    image_link: '',
+    borrowDate: '',
+    returnDate: '',
+    quantity: '',
+    category: '',
+    member_code: '',
+    book_code: '',
   });
 
+  const [originalValues, setOriginalValues] = useState({});
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
   const [selectedBorrowDate, setSelectedBorrowDate] = useState<Date | null>(null);
   const [selectedReturnDate, setSelectedReturnDate] = useState<Date | null>(null);
 
-  const isFormValid = formValues.name && formValues.book_code && formValues.quantity && formValues.memberCode && formValues.book_name && selectedBorrowDate && selectedReturnDate && (selectedReturnDate > selectedBorrowDate);
+  useEffect(() => {
+    if (bookData) {
+      const initialData = {
+        id: bookData.id || '',
+        name: bookData.name || '',
+        member_code: bookData.member_code || '',
+        image_link: bookData.image_link || '',
+        book_code: bookData.book_code || '',
+        quantity: bookData.quantity || '',
+        category: bookData.category || '',
+        book_name: bookData.book_name || '',
+        borrowDate: bookData.borrowDate || '',
+        returnDate: bookData.returnDate || '',
+      };
+
+      setFormValues(initialData);
+      setOriginalValues(initialData);
+
+      if (bookData.image_link) {
+        setAvatarPreview(`http://localhost:5000${bookData.image_link}`);
+      }
+
+      if (bookData.borrowDate) {
+        setSelectedBorrowDate(new Date(bookData.borrowDate));
+      }
+      if (bookData.returnDate) {
+        setSelectedReturnDate(new Date(bookData.returnDate));
+      }
+    }
+  }, [bookData]);
+
+  // Hàm lấy thông tin thành viên
+  const handleMemberCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const member_code = e.target.value;
+    setFormValues((prev) => ({ ...prev, member_code }));
+    if (member_code) {
+      try {
+        const response = await axios.get(`http://localhost:5000/getMemberByCode/${member_code}`);
+        setFormValues((prev) => ({ ...prev, name: response.data.name }));
+      } catch (error) {
+        console.error("Không tìm thấy thành viên", error);
+      }
+    }
+  };
+
+  // Hàm lấy thông tin sách và cập nhật ảnh khi thay đổi mã sách
+  const handleBookCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const book_code = e.target.value;
+    setFormValues((prev) => ({ ...prev, book_code }));
+    if (book_code) {
+      try {
+        const response = await axios.get(`http://localhost:5000/getBookByCode/${book_code}`);
+        setFormValues((prev) => ({
+          ...prev,
+          book_name: response.data.book_name,
+          category: response.data.category,
+          image_link: response.data.image_link,
+        }));
+        if (response.data.image_link) {
+          setAvatarPreview(`http://localhost:5000${response.data.image_link}`);
+        }
+      } catch (error) {
+        console.error("Không tìm thấy sách", error);
+      }
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -43,53 +107,138 @@ export default function AddBorrowBooks() {
     });
   };
 
-  const handleReset = () => {
-    setFormValues({
-      name: '',
-      book_code: '',
-      quantity: '',
-      memberCode: '',
-      avatar: '',
-      country: '',
-      borrowDate: '', 
-      returnDate: '',
-      book_name: '',
-      bookType: ''
-    });
-    setAvatarPreview(DefaultAvatar);
-    setSelectedBorrowDate(null);
-    setSelectedReturnDate(null);
+  const hasChanges = () => {
+    return JSON.stringify(formValues) !== JSON.stringify(originalValues) ||
+      (selectedBorrowDate && selectedBorrowDate.toISOString() !== (originalValues as any).borrowDate) ||
+      (selectedReturnDate && selectedReturnDate.toISOString() !== (originalValues as any).returnDate);
   };
 
-  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.size < 1024 * 1024) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatarPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-      setFormValues({
-        ...formValues,
-        avatar: file.name,
-      });
-    } else {
-      alert("Vui lòng chọn một ảnh nhỏ hơn 1MB!");
+  const SaveWith = () => {
+    // Kiểm tra nếu không có thay đổi
+    if (!hasChanges()) {
+      toast.info("Không có thông tin thay đổi.");
+      return;
     }
-  };
+  
+    // Xác nhận trước khi lưu
+    confirmAlert({
+      title: 'Xác nhận lưu',
+      message: 'Bạn có chắc chắn muốn lưu thông tin này?',
+      buttons: [
+        {
+          label: 'Xác nhận',
+          onClick: async () => {
+            // Kiểm tra các trường dữ liệu cần thiết
+            if (!formValues.id || !formValues.member_code || !formValues.book_code || !formValues.quantity || !selectedBorrowDate || !selectedReturnDate) {
+              toast.error("Vui lòng điền đầy đủ thông tin.");
+              return;
+            }
+  
+            // Kiểm tra ngày trả sách phải lớn hơn ngày mượn
+            if (selectedReturnDate <= selectedBorrowDate) {
+              toast.error("Ngày trả sách phải lớn hơn ngày mượn.");
+              return;
+            }
+  
+            // Chuẩn bị dữ liệu gửi lên API
+            const borrowBookData = {
+              id: formValues.id,
+              member_code: formValues.member_code,
+              book_code: formValues.book_code,
+              quantity: formValues.quantity,
+              borrowDate: selectedBorrowDate?.toISOString().split('T')[0],
+              returnDate: selectedReturnDate?.toISOString().split('T')[0],
+            };
 
-  const triggerFileInput = () => {
-    document.getElementById("avatarInput")?.click();
+            try {
+              const response = await axios.post('http://localhost:5000/ChangeBorrowBook', borrowBookData);
+              if (response.status >= 200 && response.status < 300) {
+                toast.success("Lưu thông tin mượn sách thành công!");
+                setOriginalValues(formValues);
+              } else {
+                toast.error("Đã xảy ra lỗi khi lưu thông tin.");
+              }
+            } catch (error) {
+              console.error("Lỗi khi gửi yêu cầu:", error);
+  
+              const errorMessage = axios.isAxiosError(error) && error.response?.data?.error 
+                ? error.response.data.error 
+                : "Không thể lưu thông tin mượn sách.";
+              toast.error(errorMessage);
+            }
+          }
+        },
+        {
+          label: 'Hủy',
+          onClick: () => toast.info("Hành động lưu đã bị hủy.")
+        }
+      ]
+    });
+  };  
+
+  const handleDelete = async () => {
+    // Kiểm tra nếu không có mã sách
+    if (!formValues.id) {
+      toast.error("Vui lòng chọn sách để xóa.");
+      return;
+    }
+  
+    // Hiển thị hộp thoại xác nhận
+    confirmAlert({
+      title: 'Xác nhận xóa sách',
+      message: 'Bạn có chắc chắn muốn xóa sách này không?',
+      buttons: [
+        {
+          label: 'Hủy',
+          onClick: () => {
+            console.log("Xóa sách đã bị hủy.");
+          }
+        },
+        {
+          label: 'Xác nhận',
+          onClick: async () => {
+            try {
+              const response = await axios.delete(`http://localhost:5000/deleteBorrowBook/${formValues.id}`);
+              toast.success(response.data.message);
+  
+              // Đặt lại các giá trị form và ảnh xem trước
+              setFormValues({
+                id: '',
+                name: '',
+                member_code: '',
+                image_link: '',
+                book_code: '',
+                quantity: '',
+                category: '',
+                book_name: '',
+                borrowDate: '',
+                returnDate: '',
+              });
+              setAvatarPreview(DefaultAvatar);
+            } catch (error) {
+              console.error("Error deleting book:", error);
+              toast.error("Có lỗi xảy ra khi xóa sách.");
+            }
+          }
+        }
+      ]
+    });
   };
+  
 
   return (
     <div className='FrameContanierchangeBorrowBooks'>
       <h1> Chỉnh sửa thông tin mượn sách </h1>
 
-      {/* Upload avatar */}
       <div className='uploadAvatarchangeBorrowBooks'>
         <div className='containeruploadAvatarchangeBorrowBooks'>
-          <img src={avatarPreview} alt="Avatar Preview" />
+          <img 
+            src={avatarPreview} 
+            alt="Avatar Preview" 
+            onError={(e) => {
+              e.currentTarget.src = DefaultAvatar;
+            }}
+          />
           <div>
             <h2> Ảnh cuốn sách </h2>
             <div> Chấp nhận ảnh nhỏ hơn 1Mb </div>
@@ -97,61 +246,20 @@ export default function AddBorrowBooks() {
         </div>
       </div>
 
-      {/* Info member */}
       <div className='containeraddMemeber'>
         <div className='containeraddMemeberRight'> 
-          {/* Mã thành viên */}
           <div className='inputInfochangeBorrowBooks'>
             <div>Mã thành viên </div>
-            <input name="memberCode" value={formValues.memberCode} onChange={handleChange} style={{ marginBottom: 0 }} placeholder='Mã thành viên' />
+            <input name="member_code" value={formValues.member_code} onChange={handleMemberCodeChange} placeholder='Mã thành viên' />
           </div>
-          {/* Mã sách */}
           <div className='inputInfochangeBorrowBooks'>
             <div>Mã sách </div>
-            <input name="book_code" value={formValues.book_code} onChange={handleChange} placeholder='Mã sách' />
+            <input name="book_code" value={formValues.book_code} onChange={handleBookCodeChange} placeholder='Mã sách' />
           </div>
-          {/* Email */}
           <div className='inputInfochangeBorrowBooks'>
             <div>Số lượng </div>
             <input name="quantity" value={formValues.quantity} onChange={handleChange} placeholder='Số lượng' />
           </div>
-          {/* Ngày trả sách */}
-          <div className='inputInfochangeBorrowBooks'>
-            <div>Ngày trả sách </div>
-            <DatePicker
-              selected={selectedReturnDate}
-              onChange={(date: Date | null) => setSelectedReturnDate(date)}
-              dateFormat="dd/MM/yyyy"
-              className='MemberDatePickerAddBorrowBooks'
-              placeholderText='Ngày trả sách'
-            />
-          </div>
-        </div>
-        
-        <div className='containeraddMemeberleft'>
-          {/* Tên thành viên */}
-          <div className='inputInfochangeBorrowBooks'>
-            <div>Tên thành viên</div>
-            <span className="infoDisplay">{formValues.name || 'Tên thành viên'}</span>
-          </div>
-          {/* Tên sách */}
-          <div className='inputInfochangeBorrowBooks'>
-            <div>Tên sách</div>
-            <span className="infoDisplay" style={{marginTop:'-4px', marginBottom:'-3px'}}>{formValues.book_name || 'Tên sách'}</span>
-          </div>
-          {/* Loại sách */}
-          <div className='inputInfochangeBorrowBooks'>
-            <div>Loại sách</div>
-            <select name="bookType" value={formValues.bookType} onChange={handleChange} className="LibraryCategorySelect">
-              <option value="">Chọn thể loại</option>
-              {categories.map((category, index) => (
-                <option key={index} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </div>
-          {/* Ngày mượn sách */}
           <div className='inputInfochangeBorrowBooks'>
             <div>Ngày mượn sách </div>
             <DatePicker
@@ -160,21 +268,49 @@ export default function AddBorrowBooks() {
               dateFormat="dd/MM/yyyy"
               className='MemberDatePickerAddBorrowBooks'
               placeholderText='Ngày mượn sách'
+              minDate={new Date()}
+            />
+          </div>
+        </div>
+        
+        <div className='containeraddMemeberleft'>
+          <div className='inputInfochangeBorrowBooks'>
+            <div>Tên thành viên</div>
+            <span className="infoDisplay">{formValues.name}</span>
+          </div>
+          <div className='inputInfochangeBorrowBooks'>
+            <div>Tên sách</div>
+            <span className="infoDisplay" style={{marginTop:'-4px', marginBottom:'1px'}}>{formValues.book_name}</span>
+          </div>
+          <div className='inputInfochangeBorrowBooks'>
+            <div>Thể loại</div>
+            <span className="infoDisplay" style={{marginTop:'-4px', marginBottom:'-3px'}}>{formValues.category}</span>
+          </div>
+          <div className='inputInfochangeBorrowBooks'>
+            <div>Ngày trả sách </div>
+            <DatePicker
+              selected={selectedReturnDate}
+              onChange={(date: Date | null) => setSelectedReturnDate(date)}
+              dateFormat="dd/MM/yyyy"
+              className='MemberDatePickerAddBorrowBooks'
+              placeholderText='Ngày trả sách'
+              minDate={selectedBorrowDate || new Date()}
             />
           </div>
         </div>
       </div>
 
-      {/* Buttons */}
       <div className='ButtonAddchangeBorrowBooks'>
         <button 
           className='SaveButtonchangeBorrowBooks' 
-          disabled={!isFormValid} // Disable if form is invalid
+          onClick={SaveWith}
         > 
           Lưu 
         </button>
-        <button className='ResetButtonchangeBorrowBooks' onClick={handleReset}> Xóa </button>
+        <button className='ResetButtonchangeBorrowBooks' onClick={handleDelete}> Xóa </button>
       </div>
+
+      <ToastContainer />
     </div>
   );
 }

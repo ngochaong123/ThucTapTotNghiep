@@ -19,17 +19,8 @@ export default function AddBorrowBooks() {
     borrowDate: '', 
     returnDate: '',
     book_name: '',
-    bookType: '', 
+    category: '', 
   });
-
-  const categories = [
-    'Công nghệ thông tin',
-    'Nông lâm ngư nghiệp',
-    'Y học - sức khỏe',
-    'Triết học - lý luận',
-    'Lịch sử - quân sự',
-    'Phiêu mưu - mạo hiểm'
-  ];
 
   const [imagePreview, setImagePreview] = useState<string>(DefaultAvatar); 
   const [selectedBorrowDate, setSelectedBorrowDate] = useState<Date | null>(null);
@@ -37,11 +28,7 @@ export default function AddBorrowBooks() {
 
   // Cập nhật ảnh xem trước khi có image_link
   useEffect(() => {
-    if (formValues.image_link) {
-      setImagePreview(`http://localhost:5000${formValues.image_link}`);
-    } else {
-      setImagePreview(DefaultAvatar); 
-    }
+    setImagePreview(formValues.image_link ? `http://localhost:5000${formValues.image_link}` : DefaultAvatar);
   }, [formValues.image_link]);
 
   // Kiểm tra tính hợp lệ của form
@@ -49,10 +36,7 @@ export default function AddBorrowBooks() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormValues({
-      ...formValues,
-      [name]: value,
-    });
+    setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
   // Lấy thông tin thành viên từ mã thành viên
@@ -61,8 +45,8 @@ export default function AddBorrowBooks() {
     setFormValues((prev) => ({ ...prev, member_code }));
     if (member_code) {
       try {
-        const response = await axios.get(`http://localhost:5000/getMemberByCode/${member_code}`);
-        setFormValues((prev) => ({ ...prev, name: response.data.name }));
+        const { data } = await axios.get(`http://localhost:5000/getMemberByCode/${member_code}`);
+        setFormValues((prev) => ({ ...prev, name: data.name }));
       } catch (error) {
         console.error("Không tìm thấy thành viên", error);
       }
@@ -75,12 +59,12 @@ export default function AddBorrowBooks() {
     setFormValues((prev) => ({ ...prev, book_code }));
     if (book_code) {
       try {
-        const response = await axios.get(`http://localhost:5000/getBookByCode/${book_code}`);
+        const { data } = await axios.get(`http://localhost:5000/getBookByCode/${book_code}`);
         setFormValues((prev) => ({
           ...prev,
-          book_name: response.data.book_name,
-          bookType: response.data.category,
-          image_link: response.data.image_link,
+          book_name: data.book_name,
+          category: data.category,
+          image_link: data.image_link,
         }));
       } catch (error) {
         console.error("Không tìm thấy sách", error);
@@ -105,7 +89,7 @@ export default function AddBorrowBooks() {
               borrowDate: '', 
               returnDate: '',
               book_name: '',
-              bookType: '', 
+              category: '', 
             });
             setImagePreview(DefaultAvatar); 
             setSelectedBorrowDate(null);
@@ -120,32 +104,55 @@ export default function AddBorrowBooks() {
   };
 
   // Lưu thông tin mượn sách
-  const handleSave = async () => {
+  const handleSave = () => {
+    // Kiểm tra nếu không có thay đổi
+    if (!selectedBorrowDate || !selectedReturnDate || !formValues.member_code || !formValues.book_code || !formValues.quantity) {
+      toast.error("Vui lòng điền đầy đủ thông tin.");
+      return;
+    }
+  
+    // Xác nhận trước khi lưu
     confirmAlert({
       title: 'Xác nhận lưu',
       message: 'Bạn có chắc chắn muốn lưu thông tin này?',
       buttons: [
         {
-          label: 'Có',
+          label: 'Xác nhận',
           onClick: async () => {
+            // Kiểm tra ngày trả sách phải lớn hơn ngày mượn
+            if (selectedReturnDate <= selectedBorrowDate) {
+              toast.error("Ngày trả sách phải lớn hơn ngày mượn.");
+              return;
+            }
+  
+            // Chuẩn bị dữ liệu gửi lên API
+            const borrowData = {
+              member_code: formValues.member_code,
+              book_code: formValues.book_code,
+              quantity: formValues.quantity,
+              borrowDate: selectedBorrowDate?.toISOString().split('T')[0],
+              returnDate: selectedReturnDate?.toISOString().split('T')[0]
+            };
+  
             try {
-              // Gửi dữ liệu tới server
-              await axios.post('http://localhost:5000/addborrowBook', {
-                member_code: formValues.member_code,
-                book_code: formValues.book_code,
-                quantity: formValues.quantity,
-                borrowDate: selectedBorrowDate?.toISOString().split('T')[0], // Chuyển đổi ngày sang định dạng YYYY-MM-DD
-                returnDate: selectedReturnDate?.toISOString().split('T')[0] // Chuyển đổi ngày sang định dạng YYYY-MM-DD
-              });
-              toast.success('Lưu thông tin mượn sách thành công');
+              const response = await axios.post('http://localhost:5000/addborrowBook', borrowData);
+              if (response.status >= 200 && response.status < 300) {
+                toast.success("Lưu thông tin mượn sách thành công");
+              } else {
+                toast.error("Đã xảy ra lỗi khi lưu thông tin.");
+              }
             } catch (error) {
-              console.error("Lỗi khi lưu thông tin mượn sách", error);
-              toast.error('Lỗi khi lưu thông tin mượn sách');
+              console.error("Lỗi khi gửi yêu cầu:", error);
+              const errorMessage = axios.isAxiosError(error) && error.response?.data?.error
+                ? error.response.data.error
+                : "Không thể lưu thông tin mượn sách.";
+              toast.error(errorMessage);
             }
           }
         },
         {
-          label: 'Không'
+          label: 'Hủy',
+          onClick: () => toast.info("Hành động lưu đã bị hủy.")
         }
       ]
     });
@@ -191,12 +198,12 @@ export default function AddBorrowBooks() {
             <input name="quantity" value={formValues.quantity} onChange={handleChange} placeholder='Số lượng' />
           </div>
           <div className='inputInfoaddBorrowBooks'>
-            <div>Ngày trả sách </div>
+            <div>Ngày mượn sách </div>
             <DatePicker
-              selected={selectedReturnDate}
-              onChange={(date) => setSelectedReturnDate(date)}
+              selected={selectedBorrowDate}
+              onChange={(date) => setSelectedBorrowDate(date)}
               dateFormat="dd/MM/yyyy"
-              placeholderText='Ngày trả sách'
+              placeholderText='Ngày mượn sách'
             />
           </div>
         </div>
@@ -208,26 +215,19 @@ export default function AddBorrowBooks() {
           </div>
           <div className='inputInfoaddBorrowBooks'>
             <div>Tên sách</div>
-            <span className="infoDisplay" style={{marginTop:'-4px', marginBottom:'-3px'}}>{formValues.book_name || 'Tên sách'}</span>
+            <span className="infoDisplay" style={{marginTop:'-4px', marginBottom:'1px'}}>{formValues.book_name || 'Tên sách'}</span>
           </div>
           <div className='inputInfoaddBorrowBooks'>
-            <div>Loại sách</div>
-            <select name="bookType" value={formValues.bookType} onChange={handleChange}>
-              <option value="">Chọn thể loại</option>
-              {categories.map((category, index) => (
-                <option key={index} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
+            <div>Thể loại</div>
+            <span className="infoDisplay" style={{marginTop:'-4px', marginBottom:'-3px'}}>{formValues.category || 'Thể loại'}</span>
           </div>
           <div className='inputInfoaddBorrowBooks'>
-            <div>Ngày mượn sách </div>
+            <div>Ngày trả sách </div>
             <DatePicker
-              selected={selectedBorrowDate}
-              onChange={(date) => setSelectedBorrowDate(date)}
+              selected={selectedReturnDate}
+              onChange={(date) => setSelectedReturnDate(date)}
               dateFormat="dd/MM/yyyy"
-              placeholderText='Ngày mượn sách'
+              placeholderText='Ngày trả sách'
             />
           </div>
         </div>
