@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Menu.css';
 import LogoMenu from '../../images/logo.jpg';
 import { Outlet, Link, useNavigate } from "react-router-dom";
@@ -14,9 +14,24 @@ import loginOut from "../../images/icon/loginOut.png";
 import borrowBooks from "../../images/icon/borrow-book.png";
 
 export default function Menu() {
-  const [activeMenu, setActiveMenu] = useState("LibraryBook");
+  const [activeMenu, setActiveMenu] = useState<string>("LibraryBook"); // Explicit type for activeMenu
   const navigate = useNavigate();
 
+  // Load active menu from localStorage when the component mounts
+  useEffect(() => {
+    const savedMenu = localStorage.getItem('activeMenu');
+    if (savedMenu) {
+      setActiveMenu(savedMenu);
+    }
+  }, []);
+
+  // Handle menu click
+  const handleMenuClick = (menu: string) => {
+    setActiveMenu(menu);
+    localStorage.setItem('activeMenu', menu); // Save the menu state to localStorage
+  };
+
+  // Handle logout action
   const handleLogout = () => {
     confirmAlert({
       title: 'Xác nhận đăng xuất',
@@ -25,8 +40,7 @@ export default function Menu() {
         {
           label: 'Có',
           onClick: () => {
-            // Thực hiện các hành động cần thiết khi đăng xuất, ví dụ xóa token hoặc thông tin người dùng
-            // Sau đó điều hướng về trang đăng nhập
+            // Perform necessary logout actions, like removing token or user info
             navigate('/Login');
           }
         },
@@ -49,7 +63,7 @@ export default function Menu() {
         <Link
           to="LibraryBook"
           className={`ButtonMenu ${activeMenu === "LibraryBook" ? "activeMenu" : ""}`}
-          onClick={() => setActiveMenu("LibraryBook")}
+          onClick={() => handleMenuClick("LibraryBook")}
         >
           <div className="vertical-bar"></div>
           <img src={Book} alt="Book Icon" className='IconOption' />
@@ -59,7 +73,7 @@ export default function Menu() {
         <Link
           to="Member"
           className={`ButtonMenu ${activeMenu === "Member" ? "activeMenu" : ""}`}
-          onClick={() => setActiveMenu("Member")}
+          onClick={() => handleMenuClick("Member")}
         >
           <div className="vertical-bar"></div>
           <img src={Group} alt="Group Icon" className='IconOption' />
@@ -69,7 +83,7 @@ export default function Menu() {
         <Link
           to="borrowBooks"
           className={`ButtonMenu ${activeMenu === "borrowBooks" ? "activeMenu" : ""}`}
-          onClick={() => setActiveMenu("borrowBooks")}
+          onClick={() => handleMenuClick("borrowBooks")}
         >
           <div className="vertical-bar"></div>
           <img src={borrowBooks} alt="Borrow Books Icon" className='IconOption' />
@@ -79,7 +93,7 @@ export default function Menu() {
         <Link
           to="Report"
           className={`ButtonMenu ${activeMenu === "Report" ? "activeMenu" : ""}`}
-          onClick={() => setActiveMenu("Report")}
+          onClick={() => handleMenuClick("Report")}
         >
           <div className="vertical-bar"></div>
           <img src={Report} alt="Report Icon" className='IconOption' />
@@ -89,7 +103,7 @@ export default function Menu() {
         <Link
           to="User"
           className={`ButtonMenu ${activeMenu === "User" ? "activeMenu" : ""}`}
-          onClick={() => setActiveMenu("User")}
+          onClick={() => handleMenuClick("User")}
         >
           <div className="vertical-bar"></div>
           <img src={User} alt="User Icon" className='IconOption' />
@@ -98,7 +112,7 @@ export default function Menu() {
 
         <div
           className={`ButtonloginOut`}
-          onClick={handleLogout}  // Gọi hàm handleLogout khi nhấn
+          onClick={handleLogout}  // Call handleLogout when clicked
         >
           <div className="vertical-bar"></div>
           <img src={loginOut} alt="Logout Icon" className='IconOption' />
