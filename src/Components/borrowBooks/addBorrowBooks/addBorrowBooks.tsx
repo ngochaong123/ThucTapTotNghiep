@@ -75,10 +75,13 @@ export default function AddBorrowBooks() {
   const handleReset = () => {
     confirmAlert({
       title: 'Xác nhận',
-      message: 'Bạn có chắc chắn muốn đặt lại?',
+      message: 'Bạn có chắc chắn muốn đặt lại thông tin mượn sách?',
       buttons: [
         {
-          label: 'Có',
+          label: 'Hủy'
+        },
+        {
+          label: 'Xác nhận',
           onClick: () => {
             setFormValues({
               name: '',
@@ -95,9 +98,6 @@ export default function AddBorrowBooks() {
             setSelectedBorrowDate(null);
             setSelectedReturnDate(null);
           }
-        },
-        {
-          label: 'Không'
         }
       ]
     });
@@ -116,6 +116,10 @@ export default function AddBorrowBooks() {
       title: 'Xác nhận lưu',
       message: 'Bạn có chắc chắn muốn lưu thông tin này?',
       buttons: [
+        {
+          label: 'Hủy',
+          onClick: () => toast.info("Hành động lưu đã bị hủy.")
+        },
         {
           label: 'Xác nhận',
           onClick: async () => {
@@ -149,10 +153,6 @@ export default function AddBorrowBooks() {
               toast.error(errorMessage);
             }
           }
-        },
-        {
-          label: 'Hủy',
-          onClick: () => toast.info("Hành động lưu đã bị hủy.")
         }
       ]
     });

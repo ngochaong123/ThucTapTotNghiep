@@ -174,7 +174,7 @@ export default function ChangeBook() {
               toast.success(response.data.message);
               setIsChanged(false);
             } catch (error) {
-              console.error("Error updating book:", error);
+              console.error("Lỗi cập nhật sách:", error);
               toast.error("Có lỗi xảy ra khi cập nhật thông tin sách.");
             }
           }

@@ -167,7 +167,6 @@ export default function AddBook() {
               
               console.log(response.data);
               toast.success('Lưu sách thành công!');
-              handleReset();
             } catch (error) {
               console.error('Đã xảy ra lỗi khi lưu sách:', error);
               toast.error('Đã xảy ra lỗi, vui lòng thử lại!');

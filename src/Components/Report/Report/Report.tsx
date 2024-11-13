@@ -1,20 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Report.css';
 
-// chart 
-import ReaderTrends from '../Chart/LineChar/LineChart';
-import Map from "../Chart/Map/Map";
-import ForeignersReadBooks from "../Chart/ForeignersReadBooks/ForeignersReadBooks";
+// Chart imports
+import RegisteredMember from '../Chart/RegisteredMember/RegisteredMember';
+import BorrowedBooksByCategory from "../Chart/BorrowedBooksByCategory/BorrowedBooksByCategory";
+import ForeignMember from "../Chart/foreignMember/foreignMember";
 import QuantityBooksChart from "../Chart/quantityBooksChart/quantityBooksChart";
 import RevenueChart from '../Chart/revenueChart/revenueChart';
 
-// icon
-import filterIcon from "../../../images/icon/filter-white.png";
+// Icon imports
 import downloadIcon from "../../../images/icon/download.png";
 import SortDown from "../../../images/icon/sort-down.png";
 import SortUp from "../../../images/icon/sort-up.png";
 
-// Define the type for the icons (for better TypeScript type checking)
+// Image component for better type checking and reuse
 interface ImageProps {
   src: string;
   alt: string;
@@ -26,17 +26,81 @@ const Image: React.FC<ImageProps> = ({ src, alt, className }) => (
 );
 
 const Report: React.FC = () => {
+  const [revenue, setRevenue] = useState<number>(0);
+  const [growthRevenue, setGrowthRevenue] = useState<number>(0);
+  const [memberCount, setMemberCount] = useState<number>(0);
+  const [growthMember, setGrowthMember] = useState<number>(0);
+  const [newBooks, setNewBooks] = useState<number>(0);
+  const [previousBooks, setPreviousBooks] = useState<number>(0);
+  const [growthNewBooks, setGrowthNewBooks] = useState<number>(0);
+  const [borrowedBooks, setBorrowedBooks] = useState<number>(0);
+  const [growth, setGrowth] = useState<number>(0);
+
+  // Fetch data functions
+  const fetchRevenue = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/revenueGrowth');
+      setRevenue(response.data.revenue);
+      setGrowthRevenue(parseFloat(response.data.growth) || 0);
+    } catch (error) {
+      console.error('Error fetching revenue data:', error);
+    }
+  };
+
+  const fetchMemberCount = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/memberRegistrationGrowth');
+      setMemberCount(response.data.registrations);
+      setGrowthMember(parseFloat(response.data.growth) || 0);
+    } catch (error) {
+      console.error('Error fetching member data:', error);
+    }
+  };
+
+  const fetchNewBooks = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/bookCountByMonth');
+      setNewBooks(response.data.currentMonthBooks);
+      setPreviousBooks(response.data.previousMonthBooks || 0);
+    } catch (error) {
+      console.error('Error fetching new books data:', error);
+    }
+  };
+
+  const fetchBorrowedBooks = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/memberBorrowGrowth');
+      setBorrowedBooks(response.data.membersThisMonth);
+      setGrowth(parseFloat(response.data.growth) || 0);
+    } catch (error) {
+      console.error('Error fetching borrowed books growth data:', error);
+    }
+  };
+
+  // UseEffect for fetching data
+  useEffect(() => {
+    fetchRevenue();
+    fetchMemberCount();
+    fetchNewBooks();
+    fetchBorrowedBooks();
+  }, []);
+
+  // Calculate growth percentage for new books
+  useEffect(() => {
+    if (previousBooks > 0) {
+      const growth = ((newBooks - previousBooks) / previousBooks) * 100;
+      setGrowthNewBooks(growth);
+    } else {
+      setGrowthNewBooks(0);
+    }
+  }, [newBooks, previousBooks]);
+
   return (
     <div style={{ marginBottom: '15px' }}>
       {/* Header */}
       <div className='headerReport'>
         <h1>Biểu đồ phân tích</h1>
         <div style={{ display: 'flex' }}>
-          <button className='ButtonHeaderReport'>
-            <Image src={filterIcon} alt="Filter" />
-            <div>Bộ lọc</div>
-          </button>
-
           <button className='ButtonHeaderReport'>
             <Image src={downloadIcon} alt="Download" />
             <div>Tải dữ liệu</div>
@@ -46,65 +110,90 @@ const Report: React.FC = () => {
 
       {/* Growth figures */}
       <div className='ContaniergrowthFigures'>
-        {/* Doanh thu */}
+        {/* Revenue */}
         <div className='growthFigures'>
-          <div className='NamegrowthFigures'>Doanh thu</div>
+        <div className='NamegrowthFigures'>Doanh thu</div>
           <div className='growthFiguresData'>
-            <h1>12345</h1>
-            <div className='growthFiguresSort'>
-              <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
-              <div className='SortUp'>10%</div>
-            </div>
+              <h1>{revenue.toLocaleString()}</h1>
+              <div className='growthFiguresSort'>
+                  {growthRevenue >= 0 ? (
+                      <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
+                  ) : (
+                      <Image src={SortDown} alt="Sort Down" className='ImgSortDown' />
+                  )}
+                  <div className={growthRevenue >= 0 ? 'SortUp' : 'SortDown'}>
+                      {growthRevenue >= 0 ? `${growthRevenue}%` : `-${Math.abs(growthRevenue)}%`}
+                  </div>
+              </div>
           </div>
         </div>
 
-        {/* Thành viên đăng ký */}
+        {/* Lợi nhuận */}
+        <div className='growthFigures'>
+        <div className='NamegrowthFigures'>Lợi nhuận</div>
+            <div className='growthFiguresData'>
+                <h1>{borrowedBooks}</h1>
+                <div className='growthFiguresSort'>
+                    <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
+                    <div className='SortUp'>{growth}%</div>
+                </div>
+            </div>
+        </div>
+
+        {/* Registered Members */}
         <div className='growthFigures'>
           <div className='NamegrowthFigures'>Thành viên đăng ký</div>
           <div className='growthFiguresData'>
-            <h1>12345</h1>
+            <h1>{memberCount}</h1>
             <div className='growthFiguresSort'>
-              <Image src={SortDown} alt="Sort Down" className='ImgSortDown' />
-              <div className='SortDown'>10%</div>
+              {growthMember >= 0 ? (
+                <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
+              ) : (
+                <Image src={SortDown} alt="Sort Down" className='ImgSortDown' />
+              )}
+              <div className={growthMember >= 0 ? 'SortUp' : 'SortDown'}>
+                {growthMember >= 0 ? `${growthMember}%` : `-${Math.abs(growthMember)}%`}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Thành viên đọc sách */}
-        <div className='growthFigures'>
-          <div className='NamegrowthFigures'>Thành viên đọc sách</div>
-          <div className='growthFiguresData'>
-            <h1>12345</h1>
-            <div className='growthFiguresSort'>
-              <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
-              <div className='SortUp'>10%</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Số lượng sách mới */}
+        {/* New Books */}
         <div className='growthFigures'>
           <div className='NamegrowthFigures'>Số lượng sách mới</div>
           <div className='growthFiguresData'>
-            <h1>12345</h1>
+            <h1>{newBooks}</h1>
             <div className='growthFiguresSort'>
-              <Image src={SortDown} alt="Sort Down" className='ImgSortDown' />
-              <div className='SortDown'>10%</div>
+              {growthNewBooks >= 0 ? (
+                <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
+              ) : (
+                <Image src={SortDown} alt="Sort Down" className='ImgSortDown' />
+              )}
+              <div className={growthNewBooks >= 0 ? 'SortUp' : 'SortDown'}>
+                {growthNewBooks >= 0 ? `${growthNewBooks.toFixed(2)}%` : `-${Math.abs(growthNewBooks).toFixed(2)}%`}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Thành viên mượn sách */}
+        {/* Borrowed Books */}
         <div className='growthFigures' style={{ marginRight: 0 }}>
-          <div className='NamegrowthFigures'>Mượn sách về nhà</div>
+          <div className='NamegrowthFigures'>Thành viên mượn sách</div>
           <div className='growthFiguresData'>
-            <h1>12345</h1>
+            <h1>{borrowedBooks}</h1>
             <div className='growthFiguresSort'>
-              <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
-              <div className='SortUp'>10%</div>
+              {growth >= 0 ? (
+                <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
+              ) : (
+                <Image src={SortDown} alt="Sort Down" className='ImgSortDown' />
+              )}
+              <div className={growth >= 0 ? 'SortUp' : 'SortDown'}>
+                {growth >= 0 ? `${growth}%` : `-${Math.abs(growth)}%`}
+              </div>
             </div>
           </div>
         </div>
+
       </div>
 
       {/* Charts */}
@@ -119,17 +208,17 @@ const Report: React.FC = () => {
 
       <div className='ContanerChartReport'>
         <div className='ForeignersReadBooks'>
-          <ForeignersReadBooks />
-        </div>
-        <div className='WorldMap'>
-          <Map />
+          <ForeignMember />
         </div>
         <div className='ReaderTrends'>
-          <ReaderTrends />
+          <RegisteredMember />
+        </div>
+        <div className='BorrowedBooksByCategory'>
+          <BorrowedBooksByCategory />
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Report;

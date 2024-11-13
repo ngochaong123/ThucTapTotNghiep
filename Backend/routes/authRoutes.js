@@ -4,12 +4,23 @@ const { getAllBooks, searchBooks, addBook, editBook, DeleteBook, bookUpload } = 
 const { getAllMembers, searchMembers, addMember, editMember, DeleteMember, memberUpload } = require('../controllers/Member');
 const { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook, deleteBorrowBook } = require('../controllers/BorrowdBooks');
 const { getUser, editUser, uploadUser } = require('../controllers/User');
+const { 
+    revenueChart, 
+    quantityBooksChart, 
+    foreignMemberChart, 
+    borrowedBooksByCategory, 
+    registrationTrends,
+    revenueGrowth,
+    memberRegistrationGrowth,
+    bookCountByMonth,
+    memberBorrowGrowth
+} = require('../controllers/chart');
 
 const router = express.Router();
 
 // Route cho quản lý tài khoản
 router.post('/login', login);
-router.post('/register', register);
+router.post('/register', register); 
 
 // Route cho quản lý sách
 router.get('/Book', getAllBooks); 
@@ -33,7 +44,20 @@ router.post('/addborrowBook',addborrowBook);
 router.post('/ChangeBorrowBook',ChangeBorrowBook);
 router.delete('/deleteBorrowBook/:id',deleteBorrowBook);
 
-// Route cho quản lý tài khoản cá nhân
+//Router chart
+router.get('/revenueChart',revenueChart);
+router.get('/quantityBooksChart',quantityBooksChart);
+router.get('/foreignMemberChart',foreignMemberChart);
+router.get('/borrowedBooksByCategory',borrowedBooksByCategory);
+router.get('/registrationTrends',registrationTrends);
+
+// Router cho dữ liệu so sánh tháng cũ và tháng mới
+router.get('/revenueGrowth',revenueGrowth);
+router.get('/memberRegistrationGrowth',memberRegistrationGrowth);
+router.get('/bookCountByMonth',bookCountByMonth);
+router.get('/memberBorrowGrowth',memberBorrowGrowth);
+
+// Route cho quản lý tài khoản cá nhân 
 router.get('/getUser', getUser);
 router.put('/editUser', uploadUser.single('avatar_user'), editUser);
 

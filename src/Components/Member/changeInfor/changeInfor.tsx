@@ -112,7 +112,7 @@ export default function AddMember() {
               setImagePreview(DefaultAvatar);
               setIsChanged(false); 
             } catch (error) {
-              console.error("Error deleting member:", error);
+              console.error("lỗi xóa thành viên", error);
               toast.error("Có lỗi xảy ra khi xóa thành viên.");
             }
           }
@@ -178,7 +178,7 @@ export default function AddMember() {
               toast.success(response.data.message);
               setIsChanged(false);
             } catch (error) {
-              console.error("Error adding member:", error);
+              console.error("Lỗi cập nhật thành viên:", error);
               toast.error("Có lỗi xảy ra khi thêm thành viên.");
             }
           }

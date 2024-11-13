@@ -60,6 +60,7 @@ const editUser = (req, res) => {
       UPDATE users 
       SET 
           username = ?, 
+          user_code = ?,
           full_name = ?, 
           password = ?, 
           email = ?, 

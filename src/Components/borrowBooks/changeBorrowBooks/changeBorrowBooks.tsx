@@ -126,6 +126,10 @@ export default function AddBorrowBooks() {
       message: 'Bạn có chắc chắn muốn lưu thông tin này?',
       buttons: [
         {
+          label: 'Hủy',
+          onClick: () => toast.info("Hành động lưu đã bị hủy.")
+        },
+        {
           label: 'Xác nhận',
           onClick: async () => {
             // Kiểm tra các trường dữ liệu cần thiết
@@ -167,10 +171,6 @@ export default function AddBorrowBooks() {
               toast.error(errorMessage);
             }
           }
-        },
-        {
-          label: 'Hủy',
-          onClick: () => toast.info("Hành động lưu đã bị hủy.")
         }
       ]
     });
@@ -216,7 +216,7 @@ export default function AddBorrowBooks() {
               });
               setAvatarPreview(DefaultAvatar);
             } catch (error) {
-              console.error("Error deleting book:", error);
+              console.error("Lỗi hủy sách:", error);
               toast.error("Có lỗi xảy ra khi xóa sách.");
             }
           }
