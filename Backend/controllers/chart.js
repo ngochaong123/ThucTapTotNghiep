@@ -128,6 +128,43 @@ const revenueGrowth = (req, res) => {
     });
 };
  
+const profitGrowth = (req, res) => {
+    const query = `
+        SELECT 
+            a.profit AS latest_profit,  
+            ((a.profit - b.profit) / b.profit) * 100 AS growth_percentage
+        FROM revenue_expenses a
+        JOIN revenue_expenses b
+            ON MONTH(a.Time) = MONTH(b.Time) + 1
+            AND YEAR(a.Time) = YEAR(b.Time)  -- Đảm bảo chỉ tính tháng liền kề trong cùng năm
+        ORDER BY a.Time DESC
+        LIMIT 1;  -- Lấy tháng mới nhất và tháng trước đó
+    `;
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).send('Error fetching data');
+        }
+
+        if (results.length === 0) {
+            return res.json({ profit: 0, growth: 0 });
+        }
+
+        const { latest_profit, growth_percentage } = results[0];
+
+        // Ép kiểu growth_percentage sang số và kiểm tra giá trị
+        const growth = growth_percentage != null && !isNaN(growth_percentage)
+            ? Number(growth_percentage).toFixed(2)
+            : "0.00";
+
+        res.json({
+            profit: latest_profit,
+            growth: growth
+        });
+    });
+}; 
+ 
 // Hàm lấy số lượng thành viên đăng ký trong tháng lớn nhất và tỷ lệ thay đổi so với tháng trước
 const memberRegistrationGrowth = (req, res) => {
     const query = `
@@ -249,5 +286,6 @@ module.exports = {
     revenueGrowth,
     memberRegistrationGrowth,
     bookCountByMonth,
-    memberBorrowGrowth 
+    memberBorrowGrowth,
+    profitGrowth 
 };

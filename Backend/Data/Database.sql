@@ -59,7 +59,8 @@ CREATE TABLE revenue_expenses (
   id INT AUTO_INCREMENT PRIMARY KEY,
   Time DATE NOT NULL,
   revenue INT NOT NULL,
-  expenses INT NOT NULL
+  expenses INT NOT NULL,
+  profit INT GENERATED ALWAYS AS (revenue - expenses) STORED
 );
 
 -- Thêm tài khoản người dùng (users)
@@ -153,6 +154,4 @@ INSERT INTO revenue_expenses (Time, revenue, expenses) VALUES
 ('2024-09-01', 23660000, 23940000),
 ('2024-10-01', 24870000, 28740000),
 ('2024-11-01', 21550000, 22400000),
-('2024-12-01', 25620000, 27600000);
-
-
+('2024-12-01', 30620000, 27600000);

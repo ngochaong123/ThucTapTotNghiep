@@ -14,7 +14,6 @@ import downloadIcon from "../../../images/icon/download.png";
 import SortDown from "../../../images/icon/sort-down.png";
 import SortUp from "../../../images/icon/sort-up.png";
 
-// Image component for better type checking and reuse
 interface ImageProps {
   src: string;
   alt: string;
@@ -33,10 +32,11 @@ const Report: React.FC = () => {
   const [newBooks, setNewBooks] = useState<number>(0);
   const [previousBooks, setPreviousBooks] = useState<number>(0);
   const [growthNewBooks, setGrowthNewBooks] = useState<number>(0);
+  const [profit, setProfit] = useState<number>(0);
+  const [growthProfit, setGrowthProfit] = useState<number>(0);
   const [borrowedBooks, setBorrowedBooks] = useState<number>(0);
   const [growth, setGrowth] = useState<number>(0);
 
-  // Fetch data functions
   const fetchRevenue = async () => {
     try {
       const response = await axios.get('http://localhost:5000/revenueGrowth');
@@ -77,15 +77,24 @@ const Report: React.FC = () => {
     }
   };
 
-  // UseEffect for fetching data
+  const fetchProfit = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/profitGrowth');
+      setProfit(response.data.profit);
+      setGrowthProfit(parseFloat(response.data.growth) || 0);
+    } catch (error) {
+      console.error('Error fetching profit data:', error);
+    }
+  };
+
   useEffect(() => {
     fetchRevenue();
     fetchMemberCount();
     fetchNewBooks();
     fetchBorrowedBooks();
+    fetchProfit();
   }, []);
 
-  // Calculate growth percentage for new books
   useEffect(() => {
     if (previousBooks > 0) {
       const growth = ((newBooks - previousBooks) / previousBooks) * 100;
@@ -97,7 +106,6 @@ const Report: React.FC = () => {
 
   return (
     <div style={{ marginBottom: '15px' }}>
-      {/* Header */}
       <div className='headerReport'>
         <h1>Biểu đồ phân tích</h1>
         <div style={{ display: 'flex' }}>
@@ -108,95 +116,98 @@ const Report: React.FC = () => {
         </div>
       </div>
 
-      {/* Growth figures */}
       <div className='ContaniergrowthFigures'>
-        {/* Revenue */}
+        {/* Doanh thu */}
         <div className='growthFigures'>
-        <div className='NamegrowthFigures'>Doanh thu</div>
+          <div className='NamegrowthFigures'>Doanh thu</div>
           <div className='growthFiguresData'>
-              <h1>{revenue.toLocaleString()}</h1>
-              <div className='growthFiguresSort'>
-                  {growthRevenue >= 0 ? (
-                      <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
-                  ) : (
-                      <Image src={SortDown} alt="Sort Down" className='ImgSortDown' />
-                  )}
-                  <div className={growthRevenue >= 0 ? 'SortUp' : 'SortDown'}>
-                      {growthRevenue >= 0 ? `${growthRevenue}%` : `-${Math.abs(growthRevenue)}%`}
-                  </div>
+            <h1>{revenue.toLocaleString()}</h1>
+            <div className='growthFiguresSort' style={{ marginLeft: '-5px' }}>
+              {growthRevenue >= 0 ? (
+                <Image src={SortUp} alt="Sort Up" className='ImgSortUp'/>
+              ) : (
+                <Image src={SortDown} alt="Sort Down" className='ImgSortDown'/>
+              )}
+              <div className={growthRevenue >= 0 ? 'SortUp' : 'SortDown'}>
+                {Math.abs(growthRevenue).toFixed(2)}% {/* Lấy giá trị tuyệt đối và làm tròn 2 chữ số */}
               </div>
+            </div>
           </div>
         </div>
 
         {/* Lợi nhuận */}
         <div className='growthFigures'>
-        <div className='NamegrowthFigures'>Lợi nhuận</div>
-            <div className='growthFiguresData'>
-                <h1>{borrowedBooks}</h1>
-                <div className='growthFiguresSort'>
-                    <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
-                    <div className='SortUp'>{growth}%</div>
-                </div>
+          <div className='NamegrowthFigures'>Lợi nhuận</div>
+          <div className='growthFiguresData'>
+            <h1>{profit.toLocaleString()}</h1>
+            <div className='growthFiguresSort' style={{ marginLeft: '-5px' }}>
+              {profit >= 0 ? (
+                <Image src={SortUp} alt="Sort Up" className='ImgSortUp'/>
+              ) : (
+                <Image src={SortDown} alt="Sort Down" className='ImgSortDown'/>
+              )}
+              <div className={profit >= 0 ? 'SortUp' : 'SortDown'}>
+                {Math.abs(growthProfit).toFixed(2)}% {/* Lấy giá trị tuyệt đối và làm tròn 2 chữ số */}
+              </div>
             </div>
+          </div>
         </div>
 
-        {/* Registered Members */}
+        {/* Thành viên đăng ký */}
         <div className='growthFigures'>
           <div className='NamegrowthFigures'>Thành viên đăng ký</div>
           <div className='growthFiguresData'>
             <h1>{memberCount}</h1>
             <div className='growthFiguresSort'>
               {growthMember >= 0 ? (
-                <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
+                <Image src={SortUp} alt="Sort Up" className='ImgSortUp'/>
               ) : (
-                <Image src={SortDown} alt="Sort Down" className='ImgSortDown' />
+                <Image src={SortDown} alt="Sort Down" className='ImgSortDown'/>
               )}
               <div className={growthMember >= 0 ? 'SortUp' : 'SortDown'}>
-                {growthMember >= 0 ? `${growthMember}%` : `-${Math.abs(growthMember)}%`}
+                {Math.abs(growthMember).toFixed(2)}% {/* Lấy giá trị tuyệt đối và làm tròn 2 chữ số */}
               </div>
             </div>
           </div>
         </div>
 
-        {/* New Books */}
+        {/* Số lượng sách mới */}
         <div className='growthFigures'>
           <div className='NamegrowthFigures'>Số lượng sách mới</div>
           <div className='growthFiguresData'>
             <h1>{newBooks}</h1>
             <div className='growthFiguresSort'>
               {growthNewBooks >= 0 ? (
-                <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
+                <Image src={SortUp} alt="Sort Up" className='ImgSortUp'/>
               ) : (
-                <Image src={SortDown} alt="Sort Down" className='ImgSortDown' />
+                <Image src={SortDown} alt="Sort Down" className='ImgSortDown'/>
               )}
               <div className={growthNewBooks >= 0 ? 'SortUp' : 'SortDown'}>
-                {growthNewBooks >= 0 ? `${growthNewBooks.toFixed(2)}%` : `-${Math.abs(growthNewBooks).toFixed(2)}%`}
+                {Math.abs(growthNewBooks).toFixed(2)}% {/* Lấy giá trị tuyệt đối và làm tròn 2 chữ số */}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Borrowed Books */}
+        {/* Thành viên mượn sách */}
         <div className='growthFigures' style={{ marginRight: 0 }}>
           <div className='NamegrowthFigures'>Thành viên mượn sách</div>
           <div className='growthFiguresData'>
             <h1>{borrowedBooks}</h1>
             <div className='growthFiguresSort'>
               {growth >= 0 ? (
-                <Image src={SortUp} alt="Sort Up" className='ImgSortUp' />
+                <Image src={SortUp} alt="Sort Up" className='ImgSortUp'/>
               ) : (
-                <Image src={SortDown} alt="Sort Down" className='ImgSortDown' />
+                <Image src={SortDown} alt="Sort Down" className='ImgSortDown'/>
               )}
               <div className={growth >= 0 ? 'SortUp' : 'SortDown'}>
-                {growth >= 0 ? `${growth}%` : `-${Math.abs(growth)}%`}
+                {Math.abs(growth).toFixed(2)}% {/* Lấy giá trị tuyệt đối và làm tròn 2 chữ số */}
               </div>
             </div>
           </div>
         </div>
-
       </div>
 
-      {/* Charts */}
       <div className='ContanerChartReport'>
         <div className='ChartRevenue'>
           <RevenueChart />

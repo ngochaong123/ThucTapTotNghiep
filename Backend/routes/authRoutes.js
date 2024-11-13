@@ -13,7 +13,8 @@ const {
     revenueGrowth,
     memberRegistrationGrowth,
     bookCountByMonth,
-    memberBorrowGrowth
+    memberBorrowGrowth,
+    profitGrowth
 } = require('../controllers/chart');
 
 const router = express.Router();
@@ -56,6 +57,7 @@ router.get('/revenueGrowth',revenueGrowth);
 router.get('/memberRegistrationGrowth',memberRegistrationGrowth);
 router.get('/bookCountByMonth',bookCountByMonth);
 router.get('/memberBorrowGrowth',memberBorrowGrowth);
+router.get('/profitGrowth',profitGrowth);
 
 // Route cho quản lý tài khoản cá nhân 
 router.get('/getUser', getUser);
