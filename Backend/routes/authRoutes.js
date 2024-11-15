@@ -4,24 +4,13 @@ const { getAllBooks, searchBooks, addBook, editBook, DeleteBook, bookUpload } = 
 const { getAllMembers, searchMembers, addMember, editMember, DeleteMember, memberUpload } = require('../controllers/Member');
 const { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook, deleteBorrowBook } = require('../controllers/BorrowdBooks');
 const { getUser, editUser, uploadUser } = require('../controllers/User');
-const { 
-    revenueChart, 
-    quantityBooksChart, 
-    foreignMemberChart, 
-    borrowedBooksByCategory, 
-    registrationTrends,
-    revenueGrowth,
-    memberRegistrationGrowth,
-    bookCountByMonth,
-    memberBorrowGrowth,
-    profitGrowth
-} = require('../controllers/chart');
+const { revenueChart, quantityBooksChart, foreignMemberChart, borrowedBooksByCategory, registrationTrends,revenueGrowth,memberRegistrationGrowth,bookCountByMonth,memberBorrowGrowth,profitGrowth} = require('../controllers/chart');
 
 const router = express.Router();
 
 // Route cho quản lý tài khoản
 router.post('/login', login);
-router.post('/register', register); 
+router.post('/Register', register); 
 
 // Route cho quản lý sách
 router.get('/Book', getAllBooks); 

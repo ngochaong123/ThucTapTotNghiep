@@ -47,53 +47,44 @@ const getUser = (req, res) => {
 };
 
 const editUser = (req, res) => {
-  const { user_code, username, full_name, password, email, age, phone_number, country, avatar_user } = req.body;
+  const { user_code, username, full_name, password, email, age, phone_number, country } = req.body;
   const new_avatar_link = req.file ? req.file.filename : null;
 
-  // Kiểm tra xem có trường nào bị thiếu không
-  if (!user_code || !username || !full_name || !password || !email || !age || !phone_number || !country) {
-      return res.status(400).json({ message: "Thiếu dữ liệu" });
+  // Kiểm tra nếu thiếu thông tin
+  if ( !user_code || !username || !full_name || !password || !email || !phone_number || !country) {
+    return res.status(400).json({ error: 'Vui lòng cung cấp đầy đủ thông tin.' });
   }
 
-  // Cập nhật thông tin người dùng trong cơ sở dữ liệu
-  const updateSql = `
-      UPDATE users 
-      SET 
-          username = ?, 
-          user_code = ?,
-          full_name = ?, 
-          password = ?, 
-          email = ?, 
-          age = ?, 
-          phone_number = ?, 
-          country = ?, 
-          avatar_user = COALESCE(?, avatar_user) 
-      WHERE user_code = ? 
+  // Bắt đầu câu truy vấn 
+  let query = `
+    UPDATE users 
+    SET user_code = ?, username = ?, full_name = ?, password = ?, email = ?, age = ?, phone_number = ?, country = ?
   `;
+  const params = [user_code ,username, full_name, password, email, age, phone_number, country];
 
-  const values = [username, full_name, password, email, age, phone_number, country, new_avatar_link, user_code];
+  // Nếu có ảnh đại diện, thêm vào câu truy vấn
+  if (new_avatar_link) {
+    query += `, avatar_user = ?`;
+    params.push(new_avatar_link);
+  }
+ 
+  // Thêm điều kiện `WHERE id = 1`
+  query += ` WHERE id = 1`;
 
-  db.query(updateSql, values, (err, result) => {
-      if (err) {
-          console.error('Error updating user:', err);
-          return res.status(500).json({ error: 'Error updating user', details: err });
-      }
+  // Thực hiện câu truy vấn
+  db.query(query, params, (err, results) => {
+    if (err) {
+      console.error('Lỗi khi cập nhật thông tin người dùng:', err);
+      return res.status(500).json({ error: 'Không thể cập nhật thông tin người dùng.' });
+    }
 
-      if (result.affectedRows === 0) {
-          return res.status(404).json({ message: 'Không tìm thấy người dùng.' });
-      }
+    // Kiểm tra nếu không có bản ghi nào được cập nhật
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy người dùng để cập nhật.' });
+    }
 
-      // Xoá ảnh đại diện cũ nếu có ảnh mới
-      if (new_avatar_link && avatar_user) {
-          const oldAvatarPath = path.join(__dirname, '../Public/User/', avatar_user);
-          fs.unlink(oldAvatarPath, (unlinkErr) => {
-              if (unlinkErr) console.error('Error deleting old avatar:', unlinkErr);
-          });
-      }
-
-      res.status(200).json({ message: 'Người dùng đã được cập nhật thành công' }); 
+    res.status(200).json({ message: 'Thông tin người dùng đã được cập nhật thành công.' });
   });
 };
-
 
 module.exports = { getUser, editUser, uploadUser };

@@ -6,16 +6,17 @@ USE library_management;
 
 -- Tạo bảng users (tài khoản người dùng)
 CREATE TABLE users (
-    user_code VARCHAR(20) PRIMARY KEY,
+	id int AUTO_INCREMENT PRIMARY KEY,
+    user_code VARCHAR(20),
     username VARCHAR(50) NOT NULL UNIQUE,   
-    full_name VARCHAR(100) NOT NULL,         
+    full_name VARCHAR(100) ,         
     password VARCHAR(255) NOT NULL,          
     email VARCHAR(100) NOT NULL UNIQUE,
     age INT,                                 
     phone_number VARCHAR(15),                
     country VARCHAR(50),                     
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    avatar_user VARCHAR(255) NOT NULL
+    avatar_user VARCHAR(255)
 );
 
 -- Tạo bảng books
@@ -64,8 +65,8 @@ CREATE TABLE revenue_expenses (
 );
 
 -- Thêm tài khoản người dùng (users)
-INSERT INTO users (user_code, username, full_name, password, email, age, phone_number, country, avatar_user) VALUES 
-('MEM001', 'admin1', 'Admin One', 'Tien%123', 'admin1@library.com', 30, '0123456789', 'Vietnam', '5e6ec8d8-a02f-4c4b-8cfe-80361ff763d2.avif');
+-- INSERT INTO users (user_code, username, full_name, password, email, age, phone_number, country, avatar_user) VALUES 
+-- ('MEM001', 'admin1', 'Admin One', 'Tien%123', 'admin1@library.com', 30, '0123456789', 'Vietnam', '5e6ec8d8-a02f-4c4b-8cfe-80361ff763d2.avif');
 
 -- Thêm dữ liệu sách (books)
 INSERT INTO books (book_code, book_name, image_link, quantity, category, author, location, language, received_date)

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate để điều hướng
-import axios from 'axios'; // Import axios để gửi yêu cầu API
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import icon từ react-icons
-import './Register.css'; // Import CSS file
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import './Register.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Logo from '../../images/logo.jpg';
 
 const Register: React.FC = () => {
@@ -10,74 +12,71 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false); // State cho checkbox điều khoản
-  const [error, setError] = useState<string>(''); // State để xử lý lỗi
-  const [showPassword, setShowPassword] = useState<boolean>(false); // State để quản lý hiển thị mật khẩu
-  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false); // State quản lý hiển thị xác nhận mật khẩu
-  const navigate = useNavigate(); // Khai báo useNavigate để điều hướng
+  const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  // Hàm kiểm tra tính hợp lệ của tên người dùng
+  // Kiểm tra tính hợp lệ của tên người dùng
   const isValidUsername = (username: string) => {
     const usernameRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])/;
     return usernameRegex.test(username);
   };
 
-  // Hàm kiểm tra tính hợp lệ của mật khẩu
+  // Kiểm tra tính hợp lệ của mật khẩu
   const isValidPassword = (password: string) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password);
   };
 
+  // Xử lý sự kiện khi người dùng nhấn nút đăng ký
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Kiểm tra tính hợp lệ của tên người dùng
+    // Kiểm tra các điều kiện đầu vào
     if (!isValidUsername(username)) {
-      alert("Tên người dùng phải bao gồm cả chữ và số.");
+      toast.error('Tên người dùng không hợp lệ.');
       return;
     }
-
-    // Kiểm tra tính hợp lệ của mật khẩu
     if (!isValidPassword(password)) {
-      alert("Mật khẩu phải bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
+      toast.error('Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.');
       return;
     }
-
-    // Kiểm tra nếu mật khẩu và xác nhận mật khẩu không trùng khớp
     if (password !== confirmPassword) {
-      alert("Mật khẩu và xác nhận mật khẩu không trùng khớp!");
+      toast.error('Mật khẩu xác nhận không khớp.');
       return;
     }
-
-    // Kiểm tra nếu người dùng chưa chấp nhận các điều khoản
     if (!acceptedTerms) {
-      alert("Bạn cần chấp nhận các điều khoản và điều kiện!");
+      toast.error('Bạn phải chấp nhận các điều khoản.');
       return;
     }
 
     try {
-      // Gửi yêu cầu đăng ký tới backend
-      const response = await axios.post('http://localhost:5000/register', {
-        username,
-        email,
-        password,
+      // Gửi yêu cầu đăng ký đến server
+      const response = await axios.post("http://localhost:5000/Register", {
+        username: username,
+        email: email,
+        password: password,
       });
 
-      if (response.data.success) {
-        alert("Đăng ký thành công!");
-        // Điều hướng tới trang đăng nhập sau khi đăng ký thành công
-        navigate('/login');
+      // Kiểm tra kết quả trả về từ server
+      if (response.status === 201) {
+        toast.success(response.data.message);
+        console.log("Response Status:", response.status);
+        setTimeout(() => navigate('/login'), 3000); // Điều hướng đến trang đăng nhập sau khi đăng ký thành công
       } else {
-        setError("Đăng ký thất bại! Vui lòng thử lại.");
+        toast.error(response.data.message || "Đăng ký thất bại!");
       }
-    } catch (err) {
-      setError("Đã xảy ra lỗi khi đăng ký.");
-      console.error(err);
+    } catch (error) {
+      console.error("Error during registration:", error);
+      toast.error("Lỗi kết nối server!"); // Hiển thị thông báo lỗi nếu không kết nối được với server
     }
-  };
+  }; 
 
   return (
     <div className="register-page">
+      <ToastContainer />
       <div className="logo-container-register">
         <img src={Logo} className="logo-register-page" alt="Logo" />
         <div className="NameLogoRegister">QUẢN LÝ THƯ VIỆN</div>
@@ -87,9 +86,9 @@ const Register: React.FC = () => {
         <form className="register-form" onSubmit={handleSubmit}>
           <h2 style={{ fontSize: "20px" }}>Đăng ký tài khoản thư viện</h2>
 
-          {error && <p className="error-message">{error}</p>} {/* Hiển thị lỗi nếu có */}
+          {error && <p className="error-message">{error}</p>}
 
-          <div className="input-group" style={{width:"332px"}}>
+          <div className="input-group" style={{ width: "332px" }}>
             <label htmlFor="username">Tên người dùng</label>
             <input
               type="text"
@@ -100,7 +99,7 @@ const Register: React.FC = () => {
             />
           </div>
 
-          <div className="input-group" style={{width:"332px"}}>
+          <div className="input-group" style={{ width: "332px" }}>
             <label htmlFor="email">Email</label>
             <input
               type="email"

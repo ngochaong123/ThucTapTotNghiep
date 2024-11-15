@@ -34,26 +34,43 @@ const login = (req, res) => {
   });
 };
 
-
 // API đăng ký
 const register = (req, res) => {
   const { username, email, password } = req.body;
+
+  console.log('Request data:', req.body);  
 
   // Kiểm tra nếu thông tin bị thiếu
   if (!username || !email || !password) {
     return res.status(400).json({ success: false, message: "Thiếu thông tin." });
   }
 
-  // Truy vấn để thêm người dùng mới vào cơ sở dữ liệu
-  const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-  db.execute(query, [username, email, password], (err, results) => {
+  // Kiểm tra xem tài khoản đã tồn tại hay chưa
+  const checkQuery = 'SELECT * FROM users WHERE username = ? OR email = ?';
+  db.query(checkQuery, [username, email], (err, results) => {
     if (err) {
-      return res.status(500).json({ success: false, message: "Lỗi server." });
+      console.error("Database Error:", err);
+      return res.status(500).json({ success: false, message: "Lỗi server khi kiểm tra tài khoản." });
     }
 
-    return res.status(200).json({ success: true, message: "Đăng ký thành công!" });
+    // Nếu tài khoản đã tồn tại
+    if (results.length > 0) {
+      return res.status(400).json({ success: false, message: "Tài khoản hoặc email đã tồn tại." });
+    }
+
+    // Nếu không tồn tại, thêm người dùng mới
+    const insertQuery = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+    db.execute(insertQuery, [username, email, password], (err, results) => {
+      if (err) {
+        console.error("Database Error:", err);
+        return res.status(500).json({ success: false, message: "Lỗi server khi thêm tài khoản." });
+      }
+
+      // Thông báo thành công nếu không có lỗi
+      return res.status(201).json({ success: true, message: "Đăng ký thành công!" });
+    });
   });
 };
 
 // Xuất hàm
-module.exports = { login ,register };
+module.exports = { login, register };
