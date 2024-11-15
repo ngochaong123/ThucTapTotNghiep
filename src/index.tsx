@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 // link page
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register'; 
+import Terms from "./Components/Terms/Terms";
+import Page404 from "./Components/Page404/Page404";
 import Menu from './Components/Menu/Menu'; 
 // sach thu vien
 import LibraryBook from "./Components/libraryBooks/libraryBook/libraryBooks";
@@ -37,6 +39,7 @@ root.render(
         <Route path="/" element={<Login />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
+        <Route path="/Terms" element={<Terms />} />
         
         {/* Menu route with nested routes */}
         <Route path="/Menu" element={<Menu />}>
@@ -65,6 +68,7 @@ root.render(
           {/* nguoi dung */}
           <Route path="User" element={<User />} />
         </Route>
+        <Route path='*' element = {<Page404 />} />
       </Routes>
     </Router>
   </React.StrictMode>

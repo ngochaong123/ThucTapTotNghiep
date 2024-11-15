@@ -1,0 +1,19 @@
+.Page404{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../../images/BG.jpg');
+    min-height: 100vh;
+    background-size: cover;         /* Ensure the background image covers the logo */
+    background-position: center;    /* Center the background image */
+    background-repeat: no-repeat; 
+}
+
+.titlePage404{
+    font-size: 50px;
+    color: white; /* Màu trắng */
+    text-align: center; /* Căn giữa theo chiều ngang */
+    margin-top: 20px; /* Tạo khoảng cách phía trên nếu cần */
+    
+}

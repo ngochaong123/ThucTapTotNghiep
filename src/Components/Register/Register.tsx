@@ -157,7 +157,7 @@ const Register: React.FC = () => {
                 required
               />
               Tôi chấp nhận các
-              <a href="/terms" className="link"> Điều khoản và Điều kiện</a>
+              <a href="/Terms" className="link"> Điều khoản và Điều kiện</a>
             </label>
           </div>
 
