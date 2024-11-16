@@ -5,6 +5,7 @@ const { getAllMembers, searchMembers, addMember, editMember, DeleteMember, membe
 const { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook, deleteBorrowBook } = require('../controllers/BorrowdBooks');
 const { getUser, editUser, uploadUser } = require('../controllers/User');
 const { revenueChart, quantityBooksChart, foreignMemberChart, borrowedBooksByCategory, registrationTrends,revenueGrowth,memberRegistrationGrowth,bookCountByMonth,memberBorrowGrowth,profitGrowth} = require('../controllers/chart');
+const { downloadExcel } = require('../controllers/DowloandData');
 
 const router = express.Router();
 
@@ -47,6 +48,9 @@ router.get('/memberRegistrationGrowth',memberRegistrationGrowth);
 router.get('/bookCountByMonth',bookCountByMonth);
 router.get('/memberBorrowGrowth',memberBorrowGrowth);
 router.get('/profitGrowth',profitGrowth);
+
+// Router dowloand data
+router.get('/downloadExcel',downloadExcel);
 
 // Route cho quản lý tài khoản cá nhân 
 router.get('/getUser', getUser);

@@ -64,10 +64,6 @@ CREATE TABLE revenue_expenses (
   profit INT GENERATED ALWAYS AS (revenue - expenses) STORED
 );
 
--- Thêm tài khoản người dùng (users)
--- INSERT INTO users (user_code, username, full_name, password, email, age, phone_number, country, avatar_user) VALUES 
--- ('MEM001', 'admin1', 'Admin One', 'Tien%123', 'admin1@library.com', 30, '0123456789', 'Vietnam', '5e6ec8d8-a02f-4c4b-8cfe-80361ff763d2.avif');
-
 -- Thêm dữ liệu sách (books)
 INSERT INTO books (book_code, book_name, image_link, quantity, category, author, location, language, received_date)
 VALUES 
@@ -128,8 +124,8 @@ INSERT INTO members (member_code, name, email, phone, registration_date, age, av
 ('MEM005', 'Charlie White', 'charlie@example.com', '3344556677', '2024-02-05', 22, 'user4.jpg', 'France'),
 ('MEM006', 'David Wilson', 'david@example.com', '4455667788', '2024-03-10', 29, 'user5.jpg', 'Germany'),
 ('MEM007', 'Eva Green', 'eva@example.com', '5566778899', '2024-02-15', 32, 'user6.jpg', 'Italy'),
-('MEM008', 'Frank Harris', 'frank@example.com', '6677889900', '2024-02-20', 27, 'user7.jpg', 'Spain'),
-('MEM009', 'Grace Lee', 'grace@example.com', '7788990011', '2024-02-25', 31, 'user8.jpg', 'Japan'),
+('MEM008', 'Frank Harris', 'frank@example.com', '6677889900', '2024-05-20', 27, 'user7.jpg', 'Spain'),
+('MEM009', 'Grace Lee', 'grace@example.com', '7788990011', '2024-07-25', 31, 'user8.jpg', 'Japan'),
 ('MEM010', 'Hank Miller', 'hank@example.com', '8899001122', '2024-03-01', 40, 'user9.jpg', 'South Korea');
 
 INSERT INTO borrowBooks (member_code, book_code, quantity, borrowDate, returnDate) VALUES

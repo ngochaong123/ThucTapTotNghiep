@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import axios from 'axios'; // Import axios để gọi API
-import './Login.css';  // Import CSS
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './Login.css';  
 import Logo from '../../images/logo.jpg';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import icon từ react-icons
-import { useNavigate } from "react-router-dom"; // Import useNavigate để điều hướng
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [rememberMe, setRememberMe] = useState<boolean>(false); // State cho "Remember Me"
-  const [error, setError] = useState<string>(''); // State để lưu lỗi
-  const [showPassword, setShowPassword] = useState<boolean>(false); // State để quản lý hiển thị mật khẩu
-  const navigate = useNavigate(); // Khai báo useNavigate để điều hướng
+  const [error, setError] = useState<string>(''); 
+  const [showPassword, setShowPassword] = useState<boolean>(false); 
+  const navigate = useNavigate(); 
 
   // Hàm kiểm tra tính hợp lệ của tên người dùng
   const isValidUsername = (username: string) => {
@@ -25,10 +25,10 @@ const Login: React.FC = () => {
     return passwordRegex.test(password);
   };
 
+  // Hàm xử lý đăng nhập
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
   
-    // Kiểm tra tính hợp lệ của tên người dùng và mật khẩu
     if (!isValidUsername(username) || !isValidPassword(password)) {
       alert("Tên người dùng hoặc mật khẩu không hợp lệ.");
       return;
@@ -40,7 +40,15 @@ const Login: React.FC = () => {
         password,
       });
   
-      if (response.data.success) {  // Kiểm tra nếu thuộc tính success tồn tại và là true
+      if (response.data.success) {  
+        // Lưu thông tin vào localStorage nếu "Ghi nhớ tài khoản" được chọn
+        if (rememberMe) {
+          localStorage.setItem('username', username);
+          localStorage.setItem('password', password); // Hoặc lưu token nếu có
+        } else {
+          localStorage.removeItem('username');
+          localStorage.removeItem('password');
+        }
         navigate('/menu');
       } else {
         console.log("Đăng nhập không thành công:", response.data);
@@ -51,7 +59,21 @@ const Login: React.FC = () => {
       alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
     }
   };
-  
+
+  // Đọc dữ liệu từ localStorage khi trang được load
+  useEffect(() => {
+    const savedUsername = localStorage.getItem('username');
+    const savedPassword = localStorage.getItem('password');
+    if (savedUsername) {
+      setUsername(savedUsername);
+    }
+    if (savedPassword) {
+      setPassword(savedPassword);
+    }
+    if (savedUsername && savedPassword) {
+      setRememberMe(true); // Nếu có thông tin đăng nhập đã lưu, bật "Ghi nhớ tài khoản"
+    }
+  }, []);
 
   return (
     <div className="login-page">
@@ -64,7 +86,7 @@ const Login: React.FC = () => {
         <form className="login-form" onSubmit={handleSubmit}>
           <h2 style={{ fontSize: "20px" }}>Đăng nhập tài khoản thư viện</h2>
 
-          {error && <p className="error-message">{error}</p>} {/* Hiển thị lỗi nếu có */}
+          {error && <p className="error-message">{error}</p>} 
 
           <div className="input-group-login">
             <label htmlFor="username">Tài khoản</label>

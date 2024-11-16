@@ -104,12 +104,32 @@ const Report: React.FC = () => {
     }
   }, [newBooks, previousBooks]);
 
+  const handleDownloadExcel = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/downloadExcel', {
+        responseType: 'blob', // Định dạng blob để tải file
+      });
+  
+      // Tạo URL từ blob và kích hoạt tải file
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'library_data.xlsx'); // Tên file tải về
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Error downloading the file:', error);
+      alert('Không thể tải file. Vui lòng thử lại!');
+    }
+  };
+
   return (
     <div style={{ marginBottom: '15px' }}>
       <div className='headerReport'>
         <h1>Biểu đồ phân tích</h1>
         <div style={{ display: 'flex' }}>
-          <button className='ButtonHeaderReport'>
+          <button className='ButtonHeaderReport' onClick={handleDownloadExcel}>
             <Image src={downloadIcon} alt="Download" />
             <div>Tải dữ liệu</div>
           </button>
