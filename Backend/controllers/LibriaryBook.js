@@ -227,5 +227,54 @@ const editBook = (req, res) => {
     });
 };
 
+const categories = (req, res) => {
+    db.query(
+        `SELECT DISTINCT category 
+        FROM books 
+        ORDER BY category ASC`,
+        (error, results) => {
+            if (error) {
+                console.error('Error fetching categories:', error);
+                return res.status(500).json({ message: 'Lỗi khi lấy danh sách thể loại' });
+            }
+            const categories = results.map(row => row.category); // Chuyển dữ liệu thành danh sách thể loại
+            res.json(categories);
+        }
+    );
+};  
+
+const location = (req, res) => {
+    db.query(
+        `SELECT DISTINCT location 
+        FROM books 
+        ORDER BY location ASC`,
+        (error, results) => {
+            if (error) {
+                console.error('Error fetching location:', error);
+                return res.status(500).json({ message: 'Lỗi khi lấy danh vị trí sách' });
+            }
+            const location = results.map(row => row.location); // Chuyển dữ liệu thành danh vị trí sách
+            res.json(location);
+        }
+    );
+};
+
+const language = (req, res) => {
+    db.query(
+        `SELECT DISTINCT language 
+        FROM books 
+        ORDER BY language ASC`,
+        (error, results) => {
+            if (error) {
+                console.error('Error fetching language:', error);
+                return res.status(500).json({ message: 'Lỗi khi lấy ngôn ngữ' });
+            }
+            const language = results.map(row => row.language); // Chuyển dữ liệu thành ngôn ngữ
+            res.json(language);
+        }
+    );
+};
+ 
 // Xuất các hàm và middleware
-module.exports = { getAllBooks, searchBooks, addBook, editBook, DeleteBook, bookUpload };
+module.exports = { getAllBooks, searchBooks, addBook, editBook, DeleteBook, categories, location, language, bookUpload };
+

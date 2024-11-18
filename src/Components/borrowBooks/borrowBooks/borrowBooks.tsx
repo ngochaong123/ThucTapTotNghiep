@@ -7,10 +7,10 @@ import Magnifier from '../../../images/icon/magnifier.png';
 import Plus from "../../../images/icon/plus.png";
 
 interface BorrowBook {
-  id : string;
+  id: string;
   member_code: string;
   name: string;
-  book_code:string;
+  book_code: string;
   category: string;
   book_name: string;
   quantity: number;
@@ -23,6 +23,7 @@ interface BorrowBook {
 export default function LibraryBooks() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>(''); 
+  const [categories, setCategories] = useState<string[]>([]); // Thêm state cho danh sách thể loại
   const [searchTerm, setSearchTerm] = useState('');
   const [borrowBooks, setBorrowBooks] = useState<BorrowBook[]>([]);
   const [selectedBorrowBookId, setSelectedBorrowBookId] = useState<string | null>(null); 
@@ -41,16 +42,7 @@ export default function LibraryBooks() {
     } else {
       alert('Vui lòng chọn một cuốn sách để chỉnh sửa thông tin.');
     }
-  };   
-
-  const categories = [
-    'Công nghệ thông tin',
-    'Nông lâm ngư nghiệp',
-    'Y Học - sức khỏe',
-    'Triết học - lý luận',
-    'Lịch sử - quân sự',
-    'Phiêu mưu - mạo hiểm'
-  ];
+  };
 
   const toggleFilterMenu = () => {
     setShowFilterMenu(prev => !prev);
@@ -61,8 +53,7 @@ export default function LibraryBooks() {
   };
 
   const handleSelectBorrowBook = (id: string) => {
-    // Đảm bảo chỉ có thể chọn một ô checkbox duy nhất
-    setSelectedBorrowBookId(prevSelected => prevSelected === id ? null : id);  // Nếu đã chọn, bỏ chọn, nếu chưa chọn, chọn id mới
+    setSelectedBorrowBookId(prevSelected => (prevSelected === id ? null : id));
   };
 
   const fetchBorrowedBooks = async () => {
@@ -77,8 +68,22 @@ export default function LibraryBooks() {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/categories');
+      setCategories(response.data); // Cập nhật danh sách thể loại từ API
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      alert('Lỗi khi tải danh sách thể loại. Vui lòng thử lại sau.');
+    }
+  };
+
   useEffect(() => {
-    fetchBorrowedBooks();
+    fetchCategories(); // Lấy danh sách thể loại khi component được render
+  }, []);
+
+  useEffect(() => {
+    fetchBorrowedBooks(); // Lấy danh sách sách mượn khi thể loại thay đổi
   }, [selectedCategory]);
 
   const filteredBorrowBooks = borrowBooks.filter(borrowBook =>
@@ -167,8 +172,8 @@ export default function LibraryBooks() {
                     <td>
                       <input
                         type="checkbox"
-                        checked={selectedBorrowBookId === borrowBook.id} // Chỉ checkbox có id trùng mới được chọn
-                        onChange={() => handleSelectBorrowBook(borrowBook.id)}  // Cập nhật lại id được chọn
+                        checked={selectedBorrowBookId === borrowBook.id}
+                        onChange={() => handleSelectBorrowBook(borrowBook.id)}
                       />
                     </td>
                     <td>{borrowBook.member_code}</td>

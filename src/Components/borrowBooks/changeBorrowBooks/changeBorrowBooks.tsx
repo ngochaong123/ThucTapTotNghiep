@@ -240,8 +240,12 @@ export default function AddBorrowBooks() {
             }}
           />
           <div>
-            <h2> Ảnh cuốn sách </h2>
-            <div> Chấp nhận ảnh nhỏ hơn 1Mb </div>
+            {formValues.book_name ? (
+              <h3>{formValues.book_name}</h3>
+            ) : (
+              <h2>Ảnh cuốn sách</h2>
+            )}
+            <div>Chấp nhận ảnh nhỏ hơn 1Mb</div>
           </div>
         </div>
       </div>

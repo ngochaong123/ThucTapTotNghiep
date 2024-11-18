@@ -20,6 +20,7 @@ interface Book {
 export default function LibraryBooks() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
+  const [categories, setCategories] = useState<string[]>([]); // Thêm trạng thái categories
   const [selectedBook, setSelectedBook] = useState<string | null>(null);
   const filterRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -36,7 +37,18 @@ export default function LibraryBooks() {
         console.error('Error fetching books:', error);
       }
     };
+
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/categories'); // Gọi API lấy thể loại
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
     fetchBooks();
+    fetchCategories(); // Lấy danh sách thể loại
   }, []);
 
   const handleSelectBook = (bookCode: string) => {
@@ -93,15 +105,6 @@ export default function LibraryBooks() {
     }
   };
 
- const categories = [
-    'Công nghệ thông tin',
-    'Nông lâm ngư nghiệp',
-    'Y Học - sức khỏe',
-    'Triết học - lý luận',
-    'Lịch sử - quân sự',
-    'Phiêu mưu - mạo hiểm'
-  ]; 
-
   const handleEditBook = () => {
     if (selectedBook) {
       const bookToEdit = books.find((book) => book.book_code === selectedBook);
@@ -129,7 +132,7 @@ export default function LibraryBooks() {
         </div>
 
         <div className='LibraryOptionsRow'>
-          <div style={{ display: 'flex'}}>
+          <div style={{ display: 'flex' }}>
             <div className='CategoryBook'>
               <div className="CategoryLabel">Thể loại</div>
               <div className="LibraryCategoryWrapper">
@@ -139,7 +142,7 @@ export default function LibraryBooks() {
                   onChange={handleCategoryChange}
                   className="LibraryCategorySelect"
                 >
-                  <option value="" >Chọn thể loại</option>
+                  <option value="">Chọn thể loại</option>
                   {categories.map((cat, index) => (
                     <option key={index} value={cat}>{cat}</option>
                   ))}

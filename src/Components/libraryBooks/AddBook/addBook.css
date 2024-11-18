@@ -89,16 +89,28 @@
     border: 2px solid #CBCBDC;
 }
 
+.btnAdd_addBook{
+    position: absolute;
+    margin-top: 3px;
+    width: 150px;
+    height: 35px;
+    right: 220px;
+}
+
+.btnAdd_addBook:hover{
+    opacity: 0.7;
+}
+
+.btnAdd_addBook:active{
+    opacity: 0.6;
+}
+
 .inputInfoAddBooklanguage select{
     width: 324px;
     border-radius: 10px;
     padding: 10px;
     background-color: white;
     border: 2px solid #CBCBDC;
-}
-
-inputInfoAddBooklanguage{
-    margin-bottom: 50px;
 }
 
 .inputInfoAddBooklanguage div {
@@ -121,42 +133,41 @@ inputInfoAddBooklanguage{
     border: 2px solid #CBCBDC;
 }
 
-
 .ButtonAddBook{
     margin: 0px 0px 10px 80px;
 }
 
-.SaveButtonBook{
+.btnAddBookSave {
     margin-right: 80px;
 }
 
-.SaveButtonBook,
-.ResetButtonBook{
+.btnAddBookSave ,
+.btnAddBookReset{
     width: 100px;
 }
 
-.SaveButtonBook{
+.btnAddBookSave {
     background-color: #2864F6;
 }
 
-.ResetButtonBook{
+.btnAddBookReset{
     background-color: red;
 }
 
-.SaveButtonBook:hover{
+.btnAddBookSave :hover{
     opacity: 0.7;
 }
 
-.ResetButtonBook:hover{
+.btnAddBookReset:hover{
     background-color: red;
     opacity: 0.7;
 }
 
-.SaveButtonBook:active{
+.btnAddBookSave :active{
     opacity: 0.6;
 }
 
-.ResetButtonBook:active{
+.btnAddBookReset:active{
     background-color: red;
     opacity: 0.6;
 }
