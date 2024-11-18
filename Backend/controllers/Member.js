@@ -48,7 +48,7 @@ const getAllMembers = (req, res) => {
             params.push(formattedDate);
         } else {
             console.log("Invalid date format. Expected 'YYYY-MM-DD'");
-            return res.status(400).json({ error: "Invalid date format. Expected 'YYYY-MM-DD'" });
+            return res.status(400).json({ error: "Lỗi đình dạng ngày/tháng/năm" });
         }
     }
 
@@ -76,7 +76,7 @@ const searchMembers = (req, res) => {
     db.query(sql, params, (err, results) => {
         if (err) {
             console.error('Error searching members: ', err);
-            return res.status(500).json({ error: 'Error searching members' });
+            return res.status(500).json({ error: 'Lỗi tìm kiếm thành viên' });
         }
 
         results.forEach(member => {
@@ -212,7 +212,7 @@ const editMember = (req, res) => {
         db.query(updateSql, values, (err, result) => {
             if (err) {
                 console.error('Error updating member:', err);
-                return res.status(500).json({ error: 'Error updating member' });
+                return res.status(500).json({ error: 'Lỗi cập nhật thành viên' });
             }
 
             if (result.affectedRows === 0) {

@@ -31,9 +31,6 @@ export default function AddBorrowBooks() {
     setImagePreview(formValues.image_link ? `http://localhost:5000${formValues.image_link}` : DefaultAvatar);
   }, [formValues.image_link]);
 
-  // Kiểm tra tính hợp lệ của form
-  const isFormValid = formValues.name && formValues.book_code && formValues.quantity && formValues.member_code && formValues.book_name && selectedBorrowDate && selectedReturnDate && (selectedReturnDate > selectedBorrowDate);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));

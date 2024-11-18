@@ -83,11 +83,11 @@ export default function User() {
       message: 'Bạn có chắc chắn muốn lưu thông tin không?',
       buttons: [
         {
-          label: 'Có',
-          onClick: handleSaveUserData
+          label: 'Hủy'
         },
         {
-          label: 'Không'
+          label: 'Xác nhận',
+          onClick: handleSaveUserData
         }
       ]
     });
@@ -169,11 +169,11 @@ export default function User() {
       message: 'Bạn có chắc chắn muốn đặt lại thông tin không?',
       buttons: [
         {
-          label: 'Có',
-          onClick: resetFormValues
+          label: 'Hủy'
         },
         {
-          label: 'Không'
+          label: 'Xác nhận',
+          onClick: resetFormValues
         }
       ]
     });
@@ -268,7 +268,7 @@ export default function User() {
               </span>
             </div>
           </div>
-          <div className='inputInfoUser'>
+          <div className='inputInfoUser' style={{marginTop:'-10px'}}>
             <div>Quốc gia</div>
             <select name="country" value={formValues.country} onChange={handleChange}>
               <option value="">Chọn quốc gia</option>

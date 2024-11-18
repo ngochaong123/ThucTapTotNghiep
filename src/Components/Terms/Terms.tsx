@@ -8,7 +8,7 @@ export default function Terms() {
       <div className="terms-content">
         <h2>1. Giới Thiệu</h2>
         <p>
-          Chào mừng bạn đến với Quản lý thư viện! Khi bạn sử dụng dịch vụ của chúng tôi, bạn đồng ý tuân theo các điều khoản sử dụng dưới đây. Nếu bạn không đồng ý với bất kỳ điều khoản nào, vui lòng ngừng sử dụng dịch vụ ngay lập tức.
+          Chào mừng bạn đến với ứng dụng Quản lý thư viện! Khi bạn sử dụng dịch vụ của chúng tôi, bạn đồng ý tuân theo các điều khoản sử dụng dưới đây. Nếu bạn không đồng ý với bất kỳ điều khoản nào, vui lòng ngừng sử dụng dịch vụ ngay lập tức.
         </p>
 
         <h2>2. Quyền và Trách Nhiệm của Người Dùng</h2>
@@ -20,13 +20,13 @@ export default function Terms() {
 
         <h2>3. Quyền Sở Hữu</h2>
         <p>
-          Tất cả nội dung, tài liệu, logo, và mã nguồn thuộc quyền sở hữu của [Tên ứng dụng/dịch vụ] hoặc các đối tác của chúng tôi. Bạn không được sao chép, phân phối, hoặc sử dụng nội dung mà không có sự đồng ý bằng văn bản.
+          Tất cả nội dung, tài liệu, logo, và mã nguồn thuộc quyền sở hữu của ứng dụng Quản lý thư viện hoặc các đối tác của chúng tôi. Bạn không được sao chép, phân phối, hoặc sử dụng nội dung mà không có sự đồng ý bằng văn bản.
         </p>
 
         <h2>4. Sử Dụng Dịch Vụ</h2>
         <ul>
-          <li> Chúng tôi cung cấp dịch vụ "như hiện tại" (as-is) và không đảm bảo rằng dịch vụ sẽ không bao giờ bị gián đoạn hoặc lỗi.</li>
-          <li> Chúng tôi có quyền thay đổi hoặc chấm dứt dịch vụ bất kỳ lúc nào mà không cần thông báo trước.</li>
+          <li> Chúng tôi cung cấp dịch vụ "như hiện tại", có nghĩa là dịch vụ được cung cấp theo tình trạng hiện tại mà không có bất kỳ cam kết nào về chất lượng, tính ổn định, hoặc khả năng hoạt động liên tục. Chúng tôi không đảm bảo rằng dịch vụ sẽ luôn hoạt động một cách hoàn hảo hoặc không gặp sự cố.</li>
+          <li> Chúng tôi có quyền thay đổi, tạm ngừng, hoặc chấm dứt dịch vụ bất kỳ lúc nào mà không cần thông báo trước.</li>
         </ul>
 
         <h2>5. Bảo Mật Thông Tin</h2>

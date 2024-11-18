@@ -241,28 +241,4 @@ const deleteBorrowBook = (req, res) => {
     });
 };
 
-const Books = (req, res) => {
-    const query = 'SELECT book_code FROM books';
-    db.query(query, (err, result) => {
-        if (err) {
-        console.error('Lỗi khi truy vấn mã sách:', err);
-        res.status(500).json({ message: 'Lỗi khi lấy mã sách' });
-        } else {
-        res.json(result);
-        }
-    });
-}
-
-const Members = (req, res) => {
-    const query = 'SELECT member_code FROM members';
-    db.query(query, (err, result) => {
-        if (err) {
-        console.error('Lỗi khi truy vấn mã thành viên:', err);
-        res.status(500).json({ message: 'Lỗi khi lấy mã thành viên' });
-        } else {
-        res.json(result);
-        }
-    });
-}
-
-module.exports = { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook, deleteBorrowBook, Books, Members };
+module.exports = { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook, deleteBorrowBook};

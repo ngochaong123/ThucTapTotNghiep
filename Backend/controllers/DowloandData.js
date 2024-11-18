@@ -21,7 +21,7 @@ const downloadExcel = async (req, res) => {
 
         if (books.length === 0 && members.length === 0 && borrowBooks.length === 0 && revenueExpenses.length === 0) {
             console.log('No data found in any table');
-            return res.status(404).send('No data found');
+            return res.status(404).send('Không tìm thấy dữ liệu bảng');
         }
 
         // Tạo một workbook mới
@@ -109,7 +109,7 @@ const downloadExcel = async (req, res) => {
     } catch (error) {
         console.error('Error generating Excel file:', error.message);
         console.error(error.stack); // Hiển thị chi tiết lỗi
-        res.status(500).send('Failed to generate Excel file: ' + error.message);
+        res.status(500).send('Lỗi in file excel: ' + error.message);
     } finally {
         // Đóng kết nối cơ sở dữ liệu sau khi sử dụng
         await db.end();

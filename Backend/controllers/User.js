@@ -32,7 +32,7 @@ const getUser = (req, res) => {
     }
     
     if (results.length === 0) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: 'Không tìm thấy người dùng' });
     }
 
     // Update avatar path if it exists
@@ -45,45 +45,77 @@ const getUser = (req, res) => {
     res.status(200).json(user);
   });
 };
-
+ 
 const editUser = (req, res) => {
-  const { user_code, username, full_name, password, email, age, phone_number, country } = req.body;
+  const { username, full_name, password, email, age, phone_number, country } = req.body;
   const new_avatar_link = req.file ? req.file.filename : null;
 
   // Kiểm tra nếu thiếu thông tin
-  if ( !user_code || !username || !full_name || !password || !email || !phone_number || !country) {
-    return res.status(400).json({ error: 'Vui lòng cung cấp đầy đủ thông tin.' });
+  if (!username || !full_name || !password || !email || !phone_number || !country) {
+    return res.status(400).json({ message: 'Vui lòng cung cấp đầy đủ thông tin.' });
   }
 
-  // Bắt đầu câu truy vấn 
-  let query = `
-    UPDATE users 
-    SET user_code = ?, username = ?, full_name = ?, password = ?, email = ?, age = ?, phone_number = ?, country = ?
-  `;
-  const params = [user_code ,username, full_name, password, email, age, phone_number, country];
+  // Truy vấn để lấy avatar cũ
+  const sql = `SELECT avatar_user FROM users WHERE id = 1`;
 
-  // Nếu có ảnh đại diện, thêm vào câu truy vấn
-  if (new_avatar_link) {
-    query += `, avatar_user = ?`;
-    params.push(new_avatar_link);
-  }
- 
-  // Thêm điều kiện `WHERE id = 1`
-  query += ` WHERE id = 1`;
-
-  // Thực hiện câu truy vấn
-  db.query(query, params, (err, results) => {
+  db.query(sql, (err, results) => {
     if (err) {
-      console.error('Lỗi khi cập nhật thông tin người dùng:', err);
-      return res.status(500).json({ error: 'Không thể cập nhật thông tin người dùng.' });
+      console.error('Lỗi khi tìm kiếm người dùng:', err);
+      return res.status(500).json({ error: 'Lỗi khi tìm kiếm người dùng.' });
     }
 
-    // Kiểm tra nếu không có bản ghi nào được cập nhật
-    if (results.affectedRows === 0) {
-      return res.status(404).json({ error: 'Không tìm thấy người dùng để cập nhật.' });
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy người dùng với id này.' });
     }
 
-    res.status(200).json({ message: 'Thông tin người dùng đã được cập nhật thành công.' });
+    const old_avatar_link = results[0].avatar_user;
+
+    // Cập nhật thông tin người dùng
+    let updateSql = `
+      UPDATE users 
+      SET 
+        username = ?, 
+        full_name = ?, 
+        password = ?, 
+        email = ?, 
+        age = ?, 
+        phone_number = ?, 
+        country = ?
+    `;
+
+    const params = [username, full_name, password, email, age, phone_number, country];
+
+    // Nếu có ảnh đại diện mới, xử lý xóa ảnh cũ và cập nhật ảnh mới
+    if (new_avatar_link) {
+      updateSql += `, avatar_user = ?`;
+      params.push(new_avatar_link);
+
+      // Xóa ảnh cũ nếu có
+      if (old_avatar_link) {
+        const oldAvatarPath = path.resolve(__dirname, '..', 'Public', 'User', old_avatar_link);
+        fs.unlink(oldAvatarPath, (unlinkErr) => {
+          if (unlinkErr) {
+            console.error('Lỗi khi xóa ảnh đại diện cũ:', unlinkErr);
+          }
+        });
+      }
+    }
+
+    // Thêm điều kiện `WHERE id = 1`
+    updateSql += ` WHERE id = 1`;
+
+    db.query(updateSql, params, (err, result) => {
+      if (err) {
+        console.error('Lỗi khi cập nhật thông tin người dùng:', err);
+        return res.status(500).json({ error: 'Lỗi khi cập nhật thông tin người dùng.' });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Không tìm thấy người dùng để cập nhật.' });
+      }
+
+      res.status(200).json({ message: 'Thông tin người dùng đã được cập nhật thành công.' });
+    });
   });
 };
 

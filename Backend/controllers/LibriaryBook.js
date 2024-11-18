@@ -103,9 +103,9 @@ const addBook = (req, res) => {
                     if (unlinkErr) console.error('Error deleting uploaded file:', unlinkErr);
                 });
             }
-            return res.status(500).json({ error: 'Error inserting book' });
+            return res.status(500).json({ error: 'Lỗi nhập thông tin sách' });
         }
-        res.status(201).json({ message: 'Book added successfully', bookId: result.insertId }); // Trả về thông báo thành công
+        res.status(201).json({ message: 'Thêm sách thành công ', bookId: result.insertId }); // Trả về thông báo thành công
     });
 };
 
@@ -222,7 +222,7 @@ const editBook = (req, res) => {
                 });
             }
 
-            res.status(200).json({ message: 'Book updated successfully' });
+            res.status(200).json({ message: 'Chỉnh sửa thông tin sách thành công ' });
         });
     });
 };

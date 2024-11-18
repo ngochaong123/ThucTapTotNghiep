@@ -83,15 +83,24 @@ export default function AddBook() {
 
   const handleDateChange = (date: Date | null) => {
     const currentDate = new Date();
-    if (date && date >= currentDate) {
-      setFormValues({
-        ...formValues,
-        receiveDate: date,
-      });
-    } else {
-      toast.error("Ngày nhận sách phải lớn hơn hoặc bằng ngày hiện tại!");
+    // Xóa phần giờ, phút, giây của currentDate để so sánh chỉ phần ngày
+    currentDate.setHours(0, 0, 0, 0);
+  
+    if (date) {
+      // Xóa phần giờ, phút, giây của date để so sánh chỉ phần ngày
+      const selectedDate = new Date(date);
+      selectedDate.setHours(0, 0, 0, 0);
+  
+      if (selectedDate >= currentDate) {
+        setFormValues({
+          ...formValues,
+          receiveDate: date,
+        });
+      } else {
+        toast.error("Ngày nhận sách phải lớn hơn hoặc bằng ngày hiện tại!");
+      }
     }
-  };
+  };  
 
   const handleReset = () => {
     confirmAlert({
