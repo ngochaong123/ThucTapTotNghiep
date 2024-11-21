@@ -12,8 +12,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 export default function AddBorrowBooks() {
   const [formValues, setFormValues] = useState({
     name: '',
-    book_code: '',
-    quantity: '',
+    book_code: "",
+    quantity: 1,
     member_code: '',
     image_link: '',
     borrowDate: '', 
@@ -23,6 +23,7 @@ export default function AddBorrowBooks() {
   });
 
   const [imagePreview, setImagePreview] = useState<string>(DefaultAvatar); 
+  const [amount, setAmount] = useState(1);
   const [selectedBorrowDate, setSelectedBorrowDate] = useState<Date | null>(null);
   const [selectedReturnDate, setSelectedReturnDate] = useState<Date | null>(null);
 
@@ -57,6 +58,8 @@ export default function AddBorrowBooks() {
     if (book_code) {
       try {
         const { data } = await axios.get(`http://localhost:5000/getBookByCode/${book_code}`);
+        setAmount(data.quantity)
+
         setFormValues((prev) => ({
           ...prev,
           book_name: data.book_name,
@@ -64,6 +67,17 @@ export default function AddBorrowBooks() {
           image_link: data.image_link,
         }));
       } catch (error) {
+        setFormValues((prevValues) => ({
+          name: '',
+          book_code: prevValues.book_code, 
+          quantity: 1,
+          member_code: '',
+          image_link: '',
+          borrowDate: '', 
+          returnDate: '',
+          book_name: '',
+          category: '',
+        }));
         console.error("Không tìm thấy sách", error);
       }
     }
@@ -83,7 +97,7 @@ export default function AddBorrowBooks() {
             setFormValues({
               name: '',
               book_code: '',
-              quantity: '',
+              quantity: 1,
               member_code: '',
               image_link: '',
               borrowDate: '', 
@@ -105,6 +119,10 @@ export default function AddBorrowBooks() {
     // Kiểm tra nếu không có thay đổi
     if (!selectedBorrowDate || !selectedReturnDate || !formValues.member_code || !formValues.book_code || !formValues.quantity) {
       toast.error("Vui lòng điền đầy đủ thông tin.");
+      return;
+    }
+    if(formValues.quantity > amount){
+      toast.error("Trong kho không đủ.");
       return;
     }
   
@@ -191,8 +209,9 @@ export default function AddBorrowBooks() {
             <input name="book_code" value={formValues.book_code} onChange={handleBookCodeChange} placeholder='Mã sách' />
           </div>
           <div className='inputInfoaddBorrowBooks'>
-            <div>Số lượng </div>
-            <input name="quantity" value={formValues.quantity} onChange={handleChange} placeholder='Số lượng' />
+            <div>Số lượng sách trong kho: {amount} </div>
+            <div>mươn số lương bao nhiêu   </div>
+            <input type="number" name="quantity" value={formValues.quantity} onChange={handleChange} placeholder='Số lượng' />
           </div>
           <div className='inputInfoaddBorrowBooks'>
             <div>Ngày mượn sách </div>
