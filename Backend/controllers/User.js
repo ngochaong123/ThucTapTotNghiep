@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
       cb(null, uniqueSuffix);
     }
 });
-
+  
 const uploadUser = multer({
   storage,
   limits: { fileSize: 1 * 1024 * 1024 }, // Giới hạn kích thước tệp tối đa là 1MB

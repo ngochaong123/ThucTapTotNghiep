@@ -38,15 +38,15 @@ export default function Menu() {
       message: 'Bạn có chắc chắn muốn đăng xuất không?',
       buttons: [
         {
-          label: 'Có',
+          label: 'Hủy',
+          onClick: () => {}
+        },
+        {
+          label: 'Xác nhận',
           onClick: () => {
             // Perform necessary logout actions, like removing token or user info
             navigate('/Login');
           }
-        },
-        {
-          label: 'Không',
-          onClick: () => {}
         }
       ]
     });
