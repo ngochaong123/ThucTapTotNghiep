@@ -208,6 +208,12 @@ MembersearchIcon img {
     background-color: transparent; 
     font-size: 15px; 
     margin-top: 3px;
+    position: relative; 
+    z-index: 2;
+}
+
+.react-datepicker-popper {
+    z-index: 9999 !important; /* Đảm bảo popup luôn trên cùng */
 }
 
 .MemberDatePicker:focus {

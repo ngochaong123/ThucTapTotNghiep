@@ -7,7 +7,7 @@ import Magnifier from '../../../images/icon/magnifier.png';
 import Plus from "../../../images/icon/plus.png";
 
 interface BorrowBook {
-  id: string;
+  numberVotes: string;  // Giữ lại numberVotes như là ID
   member_code: string;
   name: string;
   book_code: string;
@@ -23,24 +23,24 @@ interface BorrowBook {
 export default function LibraryBooks() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>(''); 
-  const [categories, setCategories] = useState<string[]>([]); // Thêm state cho danh sách thể loại
+  const [categories, setCategories] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [borrowBooks, setBorrowBooks] = useState<BorrowBook[]>([]);
-  const [selectedBorrowBookId, setSelectedBorrowBookId] = useState<string | null>(null); 
+  const [selectedBorrowBookId, setSelectedBorrowBookId] = useState<string | null>(null); // Giữ lại numberVotes
 
   const navigate = useNavigate();
 
   const handleEditBook = () => {
     if (selectedBorrowBookId) {
-      const bookToEdit = borrowBooks.find((book) => book.id === selectedBorrowBookId);
+      const bookToEdit = borrowBooks.find((book) => book.numberVotes === selectedBorrowBookId);
   
       if (bookToEdit) {
-        navigate(`/Menu/ChangeBorrowBooks?id=${bookToEdit.id}`, { state: { bookData: bookToEdit } });
+        navigate(`/Menu/ChangeBorrowBooks?numberVotes=${bookToEdit.numberVotes}`, { state: { bookData: bookToEdit } });
       } else {
         alert('Không tìm thấy sách với ID đã chọn.');
       }
     } else {
-      alert('Vui lòng chọn một độc giả mượn sách để chỉnh sửa thông tin.');
+      alert('Vui lòng chọn một phiếu mượn sách để chỉnh sửa.');
     }
   };
 
@@ -53,6 +53,7 @@ export default function LibraryBooks() {
   };
 
   const handleSelectBorrowBook = (id: string) => {
+    // Chỉ cho phép chọn một checkbox tại một thời điểm
     setSelectedBorrowBookId(prevSelected => (prevSelected === id ? null : id));
   };
 
@@ -142,6 +143,10 @@ export default function LibraryBooks() {
             </div>
           </div>
 
+          <button className='borrowBooksEditborrowBooks' style={{width:'165px'}}>
+            <div className='borrowBooksNameEdit'>Xác nhận trả sách</div>
+          </button>
+
           <button
             className='borrowBooksEditborrowBooks'
             onClick={handleEditBook}
@@ -156,7 +161,7 @@ export default function LibraryBooks() {
               <thead>
                 <tr>
                   <th></th>
-                  <th>Mã độc giả</th>
+                  <th>Mã Số phiếu</th>
                   <th>Tên độc giả</th>
                   <th>Tên sách</th>
                   <th>Hình ảnh</th>
@@ -168,15 +173,15 @@ export default function LibraryBooks() {
               </thead>
               <tbody>
                 {filteredBorrowBooks.map(borrowBook => (
-                  <tr key={borrowBook.id}>
+                  <tr key={borrowBook.numberVotes}>
                     <td>
                       <input
                         type="checkbox"
-                        checked={selectedBorrowBookId === borrowBook.id}
-                        onChange={() => handleSelectBorrowBook(borrowBook.id)}
+                        checked={selectedBorrowBookId === borrowBook.numberVotes}
+                        onChange={() => handleSelectBorrowBook(borrowBook.numberVotes)}
                       />
                     </td>
-                    <td>{borrowBook.member_code}</td>
+                    <td>{borrowBook.numberVotes}</td>
                     <td>
                       <div style={{ display: 'flex' }}>
                         <img src={`http://localhost:5000${borrowBook.avatar_link}`} className='avatarborrowBooks' alt="Avatar" />

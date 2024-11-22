@@ -11,7 +11,7 @@ const getAllBorrowBooks = (req, res) => {
     const category = req.query.category; 
     let query = `
         SELECT 
-            borrowBooks.id,
+            borrowBooks.numberVotes,
             members.member_code, 
             members.name, 
             members.avatar_link, 

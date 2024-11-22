@@ -354,15 +354,3 @@ borrowBookssearchIcon img {
     margin-top: 5px;
     margin-left: 10px;
 }
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .memberTable {
-    font-size: 14px; /* Reduce font size on small screens */
-  }
-
-  .memberTable th,
-  .memberTable td {
-    padding: 8px; /* Reduce padding on small screens */
-  }
-}

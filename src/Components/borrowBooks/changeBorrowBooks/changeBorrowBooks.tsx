@@ -15,7 +15,7 @@ export default function AddBorrowBooks() {
   const { bookData } = location.state;
 
   const [formValues, setFormValues] = useState({
-    id: '',
+    numberVotes: '',
     name: '',
     book_name: '',
     image_link: '',
@@ -31,11 +31,12 @@ export default function AddBorrowBooks() {
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
   const [selectedBorrowDate, setSelectedBorrowDate] = useState<Date | null>(null);
   const [selectedReturnDate, setSelectedReturnDate] = useState<Date | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>(DefaultAvatar); 
 
   useEffect(() => {
     if (bookData) {
       const initialData = {
-        id: bookData.id || '',
+        numberVotes: bookData.numberVotes || '',
         name: bookData.name || '',
         member_code: bookData.member_code || '',
         image_link: bookData.image_link || '',
@@ -62,6 +63,11 @@ export default function AddBorrowBooks() {
       }
     }
   }, [bookData]);
+
+  // Cập nhật ảnh xem trước khi có image_link
+  useEffect(() => {
+    setImagePreview(formValues.image_link ? `http://localhost:5000${formValues.image_link}` : DefaultAvatar);
+  }, [formValues.image_link]);
 
   // Hàm lấy thông tin thành viên
   const handleMemberCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -133,7 +139,7 @@ export default function AddBorrowBooks() {
           label: 'Xác nhận',
           onClick: async () => {
             // Kiểm tra các trường dữ liệu cần thiết
-            if (!formValues.id || !formValues.member_code || !formValues.book_code || !formValues.quantity || !selectedBorrowDate || !selectedReturnDate) {
+            if (!formValues.numberVotes || !formValues.member_code || !formValues.book_code || !formValues.quantity || !selectedBorrowDate || !selectedReturnDate) {
               toast.error("Vui lòng điền đầy đủ thông tin.");
               return;
             }
@@ -146,7 +152,7 @@ export default function AddBorrowBooks() {
   
             // Chuẩn bị dữ liệu gửi lên API
             const borrowBookData = {
-              id: formValues.id,
+              numberVotes: formValues.numberVotes,
               member_code: formValues.member_code,
               book_code: formValues.book_code,
               quantity: formValues.quantity,
@@ -178,7 +184,7 @@ export default function AddBorrowBooks() {
 
   const handleDelete = async () => {
     // Kiểm tra nếu không có mã sách
-    if (!formValues.id) {
+    if (!formValues.numberVotes) {
       toast.error("Vui lòng chọn sách để xóa.");
       return;
     }
@@ -198,12 +204,12 @@ export default function AddBorrowBooks() {
           label: 'Xác nhận',
           onClick: async () => {
             try {
-              const response = await axios.delete(`http://localhost:5000/deleteBorrowBook/${formValues.id}`);
+              const response = await axios.delete(`http://localhost:5000/deleteBorrowBook/${formValues.numberVotes}`);
               toast.success(response.data.message);
   
               // Đặt lại các giá trị form và ảnh xem trước
               setFormValues({
-                id: '',
+                numberVotes: '',
                 name: '',
                 member_code: '',
                 image_link: '',
@@ -230,7 +236,7 @@ export default function AddBorrowBooks() {
     <div className='FrameContanierchangeBorrowBooks'>
       <h1> Chỉnh sửa độc giả mượn sách </h1>
 
-      <div className='uploadAvatarchangeBorrowBooks'>
+      {/* <div className='uploadAvatarchangeBorrowBooks'>
         <div className='containeruploadAvatarchangeBorrowBooks'>
           <img 
             src={avatarPreview} 
@@ -248,7 +254,7 @@ export default function AddBorrowBooks() {
             <div>Chấp nhận ảnh nhỏ hơn 1Mb</div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className='containeraddMemeber'>
         <div className='containeraddMemeberRight'> 
@@ -257,13 +263,17 @@ export default function AddBorrowBooks() {
             <input name="member_code" value={formValues.member_code} onChange={handleMemberCodeChange} placeholder='Mã độc giả' />
           </div>
           <div className='inputInfochangeBorrowBooks'>
+            <div>Tên độc giả</div>
+            <span className="infoDisplay">{formValues.name}</span>
+          </div>
+          {/* <div className='inputInfochangeBorrowBooks'>
             <div>Mã sách </div>
             <input name="book_code" value={formValues.book_code} onChange={handleBookCodeChange} placeholder='Mã sách' />
           </div>
           <div className='inputInfochangeBorrowBooks'>
             <div>Số lượng </div>
             <input name="quantity" value={formValues.quantity} onChange={handleChange} placeholder='Số lượng' />
-          </div>
+          </div> */}
           <div className='inputInfochangeBorrowBooks'>
             <div>Ngày mượn sách </div>
             <DatePicker
@@ -279,17 +289,17 @@ export default function AddBorrowBooks() {
         
         <div className='containeraddMemeberleft'>
           <div className='inputInfochangeBorrowBooks'>
-            <div>Tên độc giả</div>
-            <span className="infoDisplay">{formValues.name}</span>
+            <div>Mã số phiếu</div>
+            <input name="numberVotes" value={formValues.numberVotes} onChange={handleMemberCodeChange} placeholder='Mã số phiếu' />
           </div>
-          <div className='inputInfochangeBorrowBooks'>
+          {/* <div className='inputInfochangeBorrowBooks'>
             <div>Tên sách</div>
             <span className="infoDisplay" style={{marginTop:'-4px', marginBottom:'1px'}}>{formValues.book_name}</span>
           </div>
           <div className='inputInfochangeBorrowBooks'>
             <div>Thể loại</div>
             <span className="infoDisplay" style={{marginTop:'-4px', marginBottom:'-3px'}}>{formValues.category}</span>
-          </div>
+          </div> */}
           <div className='inputInfochangeBorrowBooks'>
             <div>Ngày trả sách </div>
             <DatePicker
@@ -303,6 +313,65 @@ export default function AddBorrowBooks() {
           </div>
         </div>
       </div>
+
+      <table className="TablechangeBorrowBooks">
+        <thead>
+          <tr >
+            <th >Mã Sách</th>
+            <th >Tên Sách</th>
+            <th >Hình Ảnh</th>
+            <th >Thể Loại</th>
+            <th >Số Lượng</th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* {books.map((book) => (
+            <tr key={book.id}>
+              <td>{book.bookCode}</td>
+              <td>{book.bookName}</td>
+              <td>
+                <img src={book.image} alt={book.bookName} style={{ width: "50px", height: "50px" }} />
+              </td>
+              <td>{book.category}</td>
+              <td>{book.quantity}</td>
+            </tr>
+          ))} */}
+          <tr>
+            <td>
+              <input
+                type="text"
+                name="bookCode"
+                // value={newBook.bookCode}
+                // onChange={handleInputChange}
+                placeholder="Mã sách"
+              />
+            </td>
+            <td>
+            <span >{formValues.book_name || 'Tên sách'}</span>
+            </td>
+            <td>
+              <div className='containeruploadAvatarchangeBorrowBooks'>
+                <img 
+                  src={imagePreview}
+                  alt="Book Cover" 
+                  onError={(e) => {
+                    e.currentTarget.src = DefaultAvatar;
+                  }}
+                />
+              </div>
+            </td>
+            <td>
+              <span >{formValues.category || 'Thể loại'}</span>
+            </td>
+            <td>
+              <input placeholder='Số lượng' />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button className="addBookButton">
+        Thêm sách mới
+      </button>
 
       <div className='ButtonAddchangeBorrowBooks'>
         <button 
