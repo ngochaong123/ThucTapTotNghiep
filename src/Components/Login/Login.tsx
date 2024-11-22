@@ -84,7 +84,7 @@ const Login: React.FC = () => {
 
       <div className="login-container">
         <form className="login-form" onSubmit={handleSubmit}>
-          <h2 style={{ fontSize: "20px" }}>Đăng nhập tài khoản thư viện</h2>
+          <h2 style={{ fontSize: "20px",textAlign:'center' }}>Đăng nhập tài khoản thư viện</h2>
 
           {error && <p className="error-message">{error}</p>} 
 
@@ -127,7 +127,6 @@ const Login: React.FC = () => {
               />
               Ghi nhớ tài khoản
             </label>
-            <a href="/forgot-password" className="link">Quên mật khẩu?</a>
           </div>
 
           <button type="submit">Đăng nhập</button>

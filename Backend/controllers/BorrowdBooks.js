@@ -10,7 +10,7 @@ const validateBookData = (data) => {
 const getAllBorrowBooks = (req, res) => {
     const category = req.query.category; 
     let query = `
-        SELECT 
+        SELECT  
             borrowBooks.numberVotes,
             members.member_code, 
             members.name, 

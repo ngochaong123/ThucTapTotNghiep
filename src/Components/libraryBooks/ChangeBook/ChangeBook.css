@@ -1,4 +1,4 @@
-.FrameContanieraddBook{
+.FrameContanierchangeBooks{
     background-color: white;
     margin-left: 10px;
     padding: 10px;
@@ -22,29 +22,13 @@
     }
 
     div{
-        margin-top: 10px;
-    }
-
-    div h2{
-        font-size: 40px;
-        text-align: start;
-        margin:0 ;
-        margin-left: 0;
-    }
-
-    div div{
-        font-size: 13px;
-        text-align: start;
-        margin: -5px 10px 10px 10px;
-        margin-left: 0;
-        color: #CDCDD0;
-        font-weight: bold;
+        margin-top: 2px;
     }
 }
 
 .ButtonuploadImageChangeBook{
     width: 100px;
-    margin: -25px 0px 10px 300px;
+    margin: -80px 0px 10px 70px;
     background-color: #2864F6;
     position: absolute;
 }
@@ -57,37 +41,39 @@
     opacity: 0.8;
 }
 
-.containeraddBook{
+.containerchangeBooks{
     display: flex;
-    margin-top: 30px;
-    margin-left: 30px;
+    margin-left: -20px;
+    margin-top: -20px;
 }
 
 /* right and left */
 
-.containeraddBookRight,
-.containeraddBookLeft {
+.containerchangeBooksRight,
+.containerchangeBooksLeft {
     display: flex;
     flex-direction: column;
-    margin-left: 50px;
+    margin-left: 30px;
 }
 
-.containeraddBookLeft input,
-.containeraddBookRight input {
+.containerchangeBooksLeft input,
+.containerchangeBooksRight input {
     width: 300px;
     border-radius: 10px;
     padding: 10px;
     background-color: white;
     border: 2px solid #CBCBDC;
+    margin-bottom: 25px;
 }
 
-.containeraddBookRight select,
-.containeraddBookLeft select {
+.containerchangeBooksRight select,
+.containerchangeBooksLeft select {
     width: 324px;
     border-radius: 10px;
     padding: 10px;
     background-color: white;
     border: 2px solid #CBCBDC;
+    margin-bottom: 25px;
 }
 
 .inputInfoChangeBooklanguage select{
@@ -107,7 +93,7 @@ inputInfoChangeBooklanguage{
 }
 
 .inputInfoChangeBook {
-    margin-bottom: 50px;
+    margin-bottom: 5px;
 }
 
 .inputInfoChangeBook div {
@@ -122,9 +108,11 @@ inputInfoChangeBooklanguage{
     border: 2px solid #CBCBDC;
 }
 
-
 .ButtonChangeBook{
-    margin: 0px 0px 10px 80px;
+    display: flex;
+    justify-content: center;
+    margin-top: -20px;
+    margin-bottom: 20px;
 }
 
 .SaveButtonBook{
@@ -159,5 +147,20 @@ inputInfoChangeBooklanguage{
 
 .DeleteButtonBook:active{
     background-color: red;
+    opacity: 0.6;
+}
+
+.btnAdd_ChangeBook{
+    margin-top: 3px;
+    margin-left: 15px;
+    width: 150px;
+    height: 35px;
+}
+
+.btnAdd_ChangeBook:hover{
+    opacity: 0.7;
+}
+
+.btnAdd_ChangeBook:active{
     opacity: 0.6;
 }

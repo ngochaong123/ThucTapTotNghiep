@@ -47,11 +47,11 @@ const getUser = (req, res) => {
 };
  
 const editUser = (req, res) => {
-  const { username, full_name, password, email, age, phone_number, country } = req.body;
+  const {user_code, username, full_name, password, email, age, phone_number, country } = req.body;
   const new_avatar_link = req.file ? req.file.filename : null;
 
   // Kiểm tra nếu thiếu thông tin
-  if (!username || !full_name || !password || !email || !phone_number || !country) {
+  if (!user_code || !username || !full_name || !password || !email || !phone_number || !country) {
     return res.status(400).json({ message: 'Vui lòng cung cấp đầy đủ thông tin.' });
   }
 
@@ -73,7 +73,8 @@ const editUser = (req, res) => {
     // Cập nhật thông tin người dùng
     let updateSql = `
       UPDATE users 
-      SET 
+      SET
+        user_code = ?,
         username = ?, 
         full_name = ?, 
         password = ?, 
@@ -83,7 +84,7 @@ const editUser = (req, res) => {
         country = ?
     `;
 
-    const params = [username, full_name, password, email, age, phone_number, country];
+    const params = [user_code, username, full_name, password, email, age, phone_number, country];
 
     // Nếu có ảnh đại diện mới, xử lý xóa ảnh cũ và cập nhật ảnh mới
     if (new_avatar_link) {
@@ -100,7 +101,7 @@ const editUser = (req, res) => {
         });
       }
     }
-
+ 
     // Thêm điều kiện `WHERE id = 1`
     updateSql += ` WHERE id = 1`;
 

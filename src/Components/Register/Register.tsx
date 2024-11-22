@@ -84,7 +84,7 @@ const Register: React.FC = () => {
 
       <div className="register-container">
         <form className="register-form" onSubmit={handleSubmit}>
-          <h2 style={{ fontSize: "20px" }}>Đăng ký tài khoản thư viện</h2>
+          <h2 style={{ fontSize: "20px", textAlign:'center' }}>Đăng ký tài khoản thư viện</h2>
 
           {error && <p className="error-message">{error}</p>}
 

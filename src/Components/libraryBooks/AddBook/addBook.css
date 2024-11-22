@@ -22,29 +22,13 @@
     }
 
     div{
-        margin-top: 10px;
-    }
-
-    div h2{
-        font-size: 40px;
-        text-align: start;
-        margin:0 ;
-        margin-left: 0;
-    }
-
-    div div{
-        font-size: 13px;
-        text-align: start;
-        margin: -5px 10px 10px 10px;
-        margin-left: 0;
-        color: #CDCDD0;
-        font-weight: bold;
+        margin-top: 2px;
     }
 }
 
 .ButtonuploadImageAddBook{
     width: 100px;
-    margin: -25px 0px 10px 300px;
+    margin: -80px 0px 10px 70px;
     background-color: #2864F6;
     position: absolute;
 }
@@ -59,8 +43,8 @@
 
 .containeraddBook{
     display: flex;
-    margin-top: 30px;
-    margin-left: 30px;
+    margin-left: -20px;
+    margin-top: -20px;
 }
 
 /* right and left */
@@ -69,7 +53,7 @@
 .containeraddBookLeft {
     display: flex;
     flex-direction: column;
-    margin-left: 50px;
+    margin-left: 30px;
 }
 
 .containeraddBookLeft input,
@@ -79,6 +63,7 @@
     padding: 10px;
     background-color: white;
     border: 2px solid #CBCBDC;
+    margin-bottom: 25px;
 }
 
 .containeraddBookRight select {
@@ -87,14 +72,14 @@
     padding: 10px;
     background-color: white;
     border: 2px solid #CBCBDC;
+    margin-bottom: 25px;
 }
 
 .btnAdd_addBook{
-    position: absolute;
     margin-top: 3px;
+    margin-left: 15px;
     width: 150px;
     height: 35px;
-    right: 220px;
 }
 
 .btnAdd_addBook:hover{
@@ -118,7 +103,7 @@
 }
 
 .inputInfoAddBook {
-    margin-bottom: 50px;
+    margin-bottom: 5px;
 }
 
 .inputInfoAddBook div {
@@ -134,7 +119,10 @@
 }
 
 .ButtonAddBook{
-    margin: 0px 0px 10px 80px;
+    display: flex;
+    justify-content: center;
+    margin-top: -20px;
+    margin-bottom: 20px;
 }
 
 .btnAddBookSave {

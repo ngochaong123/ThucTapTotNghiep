@@ -223,11 +223,78 @@ export default function AddBook() {
       <div className='uploadAvatarAddBook'>
         <div className='containeruploadAvatarAddBook'>
           <img src={avatarPreview} alt="Avatar Preview" />
-          <div>
-            <h2>Ảnh cuốn sách</h2>
-            <div>Chấp nhận ảnh nhỏ hơn 1MB</div>
+          <div className='containeraddBook'>
+            <div className='containeraddBookLeft'>
+              <div className='inputInfoAddBook'>
+                <div>Tên sách</div>
+                <input name="book_name" value={formValues.book_name} onChange={handleChange} placeholder='Tên sách' />
+              </div>
+              <div className='inputInfoAddBook' style={{marginTop:'11px'}}>
+                <div>Mã sách</div>
+                <input name="book_code" value={formValues.book_code} onChange={handleChange} placeholder='Mã sách' />
+              </div>
+              <div className='inputInfoAddBook' style={{marginTop:'4px'}}>
+                <div>Tác giả</div>
+                <input name="author" value={formValues.author} onChange={handleChange} placeholder='Tên tác giả' />
+              </div>
+              <div className='inputInfoAddBook' style={{marginTop:'9px'}}>
+                <div>Thời gian nhận</div>
+                <DatePicker
+                  selected={formValues.receiveDate}
+                  onChange={handleDateChange}
+                  dateFormat="dd/MM/yyyy"
+                  className='MemberDatePickerAddBook'
+                  placeholderText='Thời gian'
+                  minDate={new Date()}  // Chỉ cho phép chọn ngày từ hôm nay trở đi
+                />
+              </div>
+            </div>
+
+            <div className='containeraddBookRight'>
+              <div className='inputInfoAddBook'>
+                <div>Thể loại</div>
+                <div style={{display:'flex'}}>
+                  <select name="category" value={formValues.category} onChange={handleChange}>
+                    <option value="">Chọn thể loại</option>
+                    {categories.map((cat, index) => (
+                      <option key={index} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                  <button className='btnAdd_addBook'> Thêm thể loại</button>
+                </div>
+                
+              </div>
+              <div className='inputInfoAddBook'>
+                <div>Số lượng</div>
+                <input name="quantity" value={formValues.quantity} onChange={handleChange} placeholder='Số lượng' />
+              </div>
+              <div className='inputInfoAddBook'>
+                <div>Vị trí</div>
+                <div style={{display:'flex'}}>
+                  <select name="location" value={formValues.location} onChange={handleChange}>
+                    <option value="">Chọn vị trí</option>
+                    {locations.map((loc, index) => (
+                      <option key={index} value={loc}>{loc}</option>
+                    ))}
+                  </select>
+                  <button className='btnAdd_addBook'> Thêm vị trí </button>
+                </div>
+              </div>
+              <div className='inputInfoAddBook'>
+                <div>Ngôn ngữ</div>
+                <div style={{display:'flex'}}>
+                  <select name="language" value={formValues.language} onChange={handleChange}>
+                    <option value="">Chọn ngôn ngữ</option>
+                    {languages.map((lang, index) => (
+                      <option key={index} value={lang}>{lang}</option>
+                    ))}
+                  </select> 
+                  <button className='btnAdd_addBook'> Thêm ngôn ngữ </button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+          </div>
         <button className='ButtonuploadImageAddBook' onClick={triggerFileInput}>Đăng lên</button>
         <input
           id="avatarInput"
@@ -236,81 +303,6 @@ export default function AddBook() {
           style={{ display: 'none' }}
           onChange={handleAvatarUpload}
         />
-      </div>
-
-      {/* Form nhập sách */}
-      <div className='containeraddBook'>
-        <div className='containeraddBookLeft'>
-          <div className='inputInfoAddBook'>
-            <div>Tên sách</div>
-            <input name="book_name" value={formValues.book_name} onChange={handleChange} placeholder='Tên sách' />
-          </div>
-          <div className='inputInfoAddBook'>
-            <div>Mã sách</div>
-            <input name="book_code" value={formValues.book_code} onChange={handleChange} placeholder='Mã sách' />
-          </div>
-          <div className='inputInfoAddBook'>
-            <div>Tác giả</div>
-            <input name="author" value={formValues.author} onChange={handleChange} placeholder='Tên tác giả' />
-          </div>
-          <div className='inputInfoAddBook'>
-            <div>Thời gian nhận</div>
-            <DatePicker
-              selected={formValues.receiveDate}
-              onChange={handleDateChange}
-              dateFormat="dd/MM/yyyy"
-              className='MemberDatePickerAddBook'
-              placeholderText='Thời gian'
-              minDate={new Date()}  // Chỉ cho phép chọn ngày từ hôm nay trở đi
-            />
-          </div>
-        </div>
-
-        <div className='containeraddBookRight'>
-          <div className='inputInfoAddBook'>
-            <div>Thể loại</div>
-            <div style={{display:'flex'}}>
-              <select name="category" value={formValues.category} onChange={handleChange}>
-                <option value="">Chọn thể loại</option>
-                {categories.map((cat, index) => (
-                  <option key={index} value={cat}>{cat}</option>
-                ))}
-              </select>
-              <button className='btnAdd_addBook'> Thêm thể loại</button>
-            </div>
-            
-          </div>
-          <div className='inputInfoAddBook' style={{marginTop:'-10px'}}>
-            <div>Số lượng</div>
-            <input name="quantity" value={formValues.quantity} onChange={handleChange} placeholder='Số lượng' />
-          </div>
-          <div className='inputInfoAddBook' style={{marginTop:'-2px'}}>
-            <div>Vị trí</div>
-            <div style={{display:'flex'}}>
-              <select name="location" value={formValues.location} onChange={handleChange}>
-                <option value="">Chọn vị trí</option>
-                {locations.map((loc, index) => (
-                  <option key={index} value={loc}>{loc}</option>
-                ))}
-              </select>
-              <button className='btnAdd_addBook'> Thêm vị trí </button>
-            </div>
-            
-          </div>
-          <div className='inputInfoAddBook' style={{marginTop:'-10px'}}>
-            <div>Ngôn ngữ</div>
-            <div style={{display:'flex'}}>
-              <select name="language" value={formValues.language} onChange={handleChange}>
-                <option value="">Chọn ngôn ngữ</option>
-                {languages.map((lang, index) => (
-                  <option key={index} value={lang}>{lang}</option>
-                ))}
-              </select> 
-              <button className='btnAdd_addBook'> Thêm ngôn ngữ </button>
-            </div>
-            
-          </div>
-        </div>
       </div>
       
       <div className='ButtonAddBook'>
