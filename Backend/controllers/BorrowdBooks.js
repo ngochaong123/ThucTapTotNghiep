@@ -66,7 +66,7 @@ const getMemberByCode = (req, res) => {
 // Hàm lấy thông tin sách theo mã sách
 const getBookByCode = (req, res) => {
     const { book_code } = req.params;
-    db.query('SELECT book_name, category, image_link,quantity  FROM books WHERE book_code = ?', [book_code], (err, result) => {
+    db.query('SELECT book_name, category, image_link FROM books WHERE book_code = ?', [book_code], (err, result) => {
         if (err) return res.status(500).json({ error: 'Error fetching book information' });
 
         if (result.length > 0) {

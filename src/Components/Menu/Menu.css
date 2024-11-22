@@ -88,6 +88,7 @@
     color: white;
     font-size: 16px;
     transition: background-color 0.3s ease;
+    position: fixed;
     bottom: 0;
     margin-bottom: 10px;
     text-decoration: none;
