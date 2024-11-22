@@ -169,7 +169,7 @@ MembersearchIcon img {
 .MemberAddMember{
     display: flex;
     justify-content: space-between;
-    width: 210px;
+    width: 190px;
     border-radius: 15px;
     padding: 5px 15px 5px 17px;
     background-color: #2864F6;

@@ -77,7 +77,7 @@ export default function Menu() {
         >
           <div className="vertical-bar"></div>
           <img src={Group} alt="Group Icon" className='IconOption' />
-          <div className='NameOptionIcon'>Thành viên</div>
+          <div className='NameOptionIcon'>Độc giả</div>
         </Link>
 
         <Link

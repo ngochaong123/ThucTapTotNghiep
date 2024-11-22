@@ -103,7 +103,7 @@ const addMember = (req, res) => {
                  VALUES (?, ?, ?, ?, CURRENT_DATE, ?, ?, ?)`;
     
     const values = [member_code, name, email, phone, age, avatar_link, country];
-
+ 
     db.query(sql, values, (err, result) => {
         if (err) {
             console.error('Error inserting member:', err);

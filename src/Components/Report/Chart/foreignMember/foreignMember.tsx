@@ -67,7 +67,7 @@ const ForeignMember: React.FC = () => {
 
   return (
     <div>
-      <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>Thành viên người nước ngoài</h2>
+      <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>Độc giả người nước ngoài</h2>
       <div id="chart">
         <ReactApexChart
           options={chartData.options}

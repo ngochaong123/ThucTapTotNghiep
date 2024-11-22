@@ -98,7 +98,7 @@ export default function AddBorrowBooks() {
         }
       ]
     });
-  };
+  }; 
 
   // Lưu thông tin mượn sách
   const handleSave = () => {
@@ -157,7 +157,7 @@ export default function AddBorrowBooks() {
 
   return (
     <div className='FrameContanieraddBorrowBooks'>
-      <h1> Thành viên mượn sách </h1>
+      <h1>Thêm thông tin độc giả mượn sách </h1>
       <ToastContainer />
 
       <div className='uploadAvataraddBorrowBooks'>
@@ -183,8 +183,8 @@ export default function AddBorrowBooks() {
       <div className='containeraddMemeber'>
         <div className='containeraddMemeberRight'> 
           <div className='inputInfoaddBorrowBooks'>
-            <div>Mã thành viên </div>
-            <input name="member_code" value={formValues.member_code} onChange={handleMemberCodeChange} placeholder='Mã thành viên' />
+            <div>Mã độc giả </div>
+            <input name="member_code" value={formValues.member_code} onChange={handleMemberCodeChange} placeholder='Mã độc giả' />
           </div>
           <div className='inputInfoaddBorrowBooks'>
             <div>Mã sách </div>
@@ -207,8 +207,8 @@ export default function AddBorrowBooks() {
         
         <div className='containeraddMemeberleft'>
           <div className='inputInfoaddBorrowBooks'>
-            <div>Tên thành viên</div>
-            <span className="infoDisplay">{formValues.name || 'Tên thành viên'}</span>
+            <div>Tên độc giả</div>
+            <span className="infoDisplay">{formValues.name || 'Tên độc giả'}</span>
           </div>
           <div className='inputInfoaddBorrowBooks'>
             <div>Tên sách</div>

@@ -93,7 +93,7 @@ export default function LibraryMembers() {
 
   const handleEditMember = () => {
     if (!selectedMember) {
-      alert('Vui lòng chọn một thành viên trước khi chỉnh thông tin!');
+      alert('Vui lòng chọn một độc giả trước khi chỉnh thông tin!');
     } else {
       const selectedMemberData = members.find(member => member.member_code === selectedMember);
       if (selectedMemberData) {
@@ -106,12 +106,12 @@ export default function LibraryMembers() {
     <div>
       <div className='MemberCurrentInformation'>
         <div className='MemberheaderMember'>
-          <h1 className='Membertile'> Dữ liệu thành viên </h1>
+          <h1 className='Membertile'> Danh sách độc giả </h1>
           <Link to='/Menu/AddMember' style={{ textDecoration: 'none' }}>
             <button className='MemberAddMember'>
               <div style={{ display: 'flex' }}>
                 <img src={Plus} className='MembericonFilter' alt="Add Member Icon" />
-                <div className='MemberNameiconFilter'> Thêm Thành viên mới </div>
+                <div className='MemberNameiconFilter'> Thêm độc giả mới</div>
               </div>
             </button>
           </Link>
@@ -175,8 +175,8 @@ export default function LibraryMembers() {
               <thead>
                 <tr>
                   <th></th>
-                  <th>Mã thành viên</th>
-                  <th>Tên thành viên</th>
+                  <th>Mã độc giả</th>
+                  <th>Tên độc giả</th>
                   <th>Tuổi</th>
                   <th>Quốc gia</th>
                   <th>Email</th>

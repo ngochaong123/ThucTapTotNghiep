@@ -228,7 +228,7 @@ export default function AddBorrowBooks() {
 
   return (
     <div className='FrameContanierchangeBorrowBooks'>
-      <h1> Chỉnh sửa thông tin mượn sách </h1>
+      <h1> Chỉnh sửa độc giả mượn sách </h1>
 
       <div className='uploadAvatarchangeBorrowBooks'>
         <div className='containeruploadAvatarchangeBorrowBooks'>
@@ -253,8 +253,8 @@ export default function AddBorrowBooks() {
       <div className='containeraddMemeber'>
         <div className='containeraddMemeberRight'> 
           <div className='inputInfochangeBorrowBooks'>
-            <div>Mã thành viên </div>
-            <input name="member_code" value={formValues.member_code} onChange={handleMemberCodeChange} placeholder='Mã thành viên' />
+            <div>Mã độc giả</div>
+            <input name="member_code" value={formValues.member_code} onChange={handleMemberCodeChange} placeholder='Mã độc giả' />
           </div>
           <div className='inputInfochangeBorrowBooks'>
             <div>Mã sách </div>
@@ -279,7 +279,7 @@ export default function AddBorrowBooks() {
         
         <div className='containeraddMemeberleft'>
           <div className='inputInfochangeBorrowBooks'>
-            <div>Tên thành viên</div>
+            <div>Tên độc giả</div>
             <span className="infoDisplay">{formValues.name}</span>
           </div>
           <div className='inputInfochangeBorrowBooks'>

@@ -189,7 +189,7 @@ export default function AddMember() {
 
   return (
     <div className='FrameContanierChangeMember'>
-      <h1> Chỉnh sửa thông tin thành viên </h1>
+      <h1> Chỉnh sửa thông tin độc giả </h1>
 
       <div className='uploadAvatarMember'>
         <div className='containeruploadAvatarMember'>
@@ -217,12 +217,12 @@ export default function AddMember() {
       <div className='containeraddMemeber'>
         <div className='containeraddMemeberRight'> 
           <div className='inputInfoMember'>
-            <div>Tên thành viên </div>
-            <input name="name" value={formValues.name} onChange={handleChange} placeholder='Tên thành viên' />
+            <div>Tên độc giả </div>
+            <input name="name" value={formValues.name} onChange={handleChange} placeholder='Tên độc giả' />
           </div>
           <div className='inputInfoMember'>
-            <div>Mã thành viên </div>
-            <input name="member_code" value={formValues.member_code} onChange={handleChange} style={{ marginBottom: 0 }} placeholder='Mã thành viên' />
+            <div>Mã độc giả</div>
+            <input name="member_code" value={formValues.member_code} onChange={handleChange} style={{ marginBottom: 0 }} placeholder='Mã độc giả' />
           </div>
           <div className='inputInfoMember'>
             <div>Tuổi </div>

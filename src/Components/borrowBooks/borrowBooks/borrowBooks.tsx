@@ -40,7 +40,7 @@ export default function LibraryBooks() {
         alert('Không tìm thấy sách với ID đã chọn.');
       }
     } else {
-      alert('Vui lòng chọn một cuốn sách để chỉnh sửa thông tin.');
+      alert('Vui lòng chọn một độc giả mượn sách để chỉnh sửa thông tin.');
     }
   };
 
@@ -96,7 +96,7 @@ export default function LibraryBooks() {
     <div>
       <div className='borrowBooksCurrentInformation'>
         <div className='borrowBooksheaderborrowBooks'>
-          <h1 className='borrowBookstile'>Thành viên mượn sách</h1>
+          <h1 className='borrowBookstile'>Độc giả mượn sách</h1>
           <Link to='/Menu/AddBorrowBooks' style={{ textDecoration: 'none' }}>
             <button className='borrowBooksAddborrowBooks'>
               <div style={{ display: 'flex' }}>
@@ -134,7 +134,7 @@ export default function LibraryBooks() {
                 <input
                   className="borrowBooksSearchInput"
                   type="text"
-                  placeholder="Tìm kiếm người mượn..."
+                  placeholder="Tìm kiếm độc giả..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -156,8 +156,8 @@ export default function LibraryBooks() {
               <thead>
                 <tr>
                   <th></th>
-                  <th>Mã thành viên</th>
-                  <th>Tên thành viên</th>
+                  <th>Mã độc giả</th>
+                  <th>Tên độc giả</th>
                   <th>Tên sách</th>
                   <th>Hình ảnh</th>
                   <th>Thể loại</th>

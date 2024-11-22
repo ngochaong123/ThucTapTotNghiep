@@ -154,7 +154,7 @@ export default function AddMember() {
 
   return (
     <div className='FrameContanieraddMember'>
-      <h1> Thêm thành viên mới </h1>
+      <h1> Thêm thông tin độc giả </h1>
       <ToastContainer /> {/* Thêm ToastContainer ở đây */}
 
       {/* Upload avatar */}
@@ -170,7 +170,7 @@ export default function AddMember() {
         <input 
           id="avatarInput" 
           type="file" 
-          accept="image/*" 
+          accept="image/*"
           style={{ display: 'none' }} 
           onChange={handleAvatarUpload} 
         />
@@ -181,13 +181,13 @@ export default function AddMember() {
         <div className='containeraddMemeberRight'> 
           {/* Tên thành viên */}
           <div className='inputInfoMember'>
-            <div>Tên thành viên </div>
-            <input name="name" value={formValues.name} onChange={handleChange} placeholder='Tên thành viên' />
+            <div>Tên độc giả </div>
+            <input name="name" value={formValues.name} onChange={handleChange} placeholder='Tên độc giả' />
           </div>
           {/* Mã thành viên */}
           <div className='inputInfoMember'>
-            <div>Mã thành viên </div>
-            <input name="member_code" value={formValues.member_code} onChange={handleChange} style={{ marginBottom: 0 }} placeholder='Mã thành viên' />
+            <div>Mã độc giả </div>
+            <input name="member_code" value={formValues.member_code} onChange={handleChange} style={{ marginBottom: 0 }} placeholder='Mã độc giả' />
           </div>
           {/* Độ tuổi */}
           <div className='inputInfoMember'>

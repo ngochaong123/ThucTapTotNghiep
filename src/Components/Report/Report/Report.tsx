@@ -173,9 +173,9 @@ const Report: React.FC = () => {
           </div>
         </div>
 
-        {/* Thành viên đăng ký */}
+        {/* Độc giả đăng ký */}
         <div className='growthFigures'>
-          <div className='NamegrowthFigures'>Thành viên đăng ký</div>
+          <div className='NamegrowthFigures'>Độc giả đăng ký</div>
           <div className='growthFiguresData'>
             <h1>{memberCount}</h1>
             <div className='growthFiguresSort'>
@@ -211,7 +211,7 @@ const Report: React.FC = () => {
 
         {/* Thành viên mượn sách */}
         <div className='growthFigures' style={{ marginRight: 0 }}>
-          <div className='NamegrowthFigures'>Thành viên mượn sách</div>
+          <div className='NamegrowthFigures'>Độc giả mượn sách</div>
           <div className='growthFiguresData'>
             <h1>{borrowedBooks}</h1>
             <div className='growthFiguresSort'>

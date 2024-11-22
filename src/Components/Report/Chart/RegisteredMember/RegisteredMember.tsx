@@ -66,7 +66,7 @@ class ReaderTrends extends Component<{}, { options: any, series: any[] }> {
   render() {
     return (
       <div>
-        <h3 style={{ textAlign: 'center', marginBottom: '-10px' }}>Số lượng thành viên đăng ký</h3>
+        <h3 style={{ textAlign: 'center', marginBottom: '-10px' }}>Số lượng Độc giả đăng ký</h3>
         <div id="chart">
           <ReactApexChart
             options={this.state.options}
