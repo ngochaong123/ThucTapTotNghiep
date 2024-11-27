@@ -11,6 +11,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default function AddBorrowBooks() {
   const [formValues, setFormValues] = useState({
+    borrow_receipt_id: '',
     name: '',
     book_code: '',
     quantity: '',
@@ -39,13 +40,14 @@ export default function AddBorrowBooks() {
   // Lấy thông tin thành viên từ mã thành viên
   const handleMemberCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const member_code = e.target.value;
-    setFormValues((prev) => ({ ...prev, member_code }));
+    setFormValues((prev) => ({ ...prev, member_code, name: '' })); // Reset tên độc giả
     if (member_code) {
       try {
         const { data } = await axios.get(`http://localhost:5000/getMemberByCode/${member_code}`);
         setFormValues((prev) => ({ ...prev, name: data.name }));
       } catch (error) {
         console.error("Không tìm thấy thành viên", error);
+        setFormValues((prev) => ({ ...prev, name: '' })); // Xóa giá trị tên độc giả
       }
     }
   };
@@ -53,7 +55,7 @@ export default function AddBorrowBooks() {
   // Lấy thông tin sách từ mã sách
   const handleBookCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const book_code = e.target.value;
-    setFormValues((prev) => ({ ...prev, book_code }));
+    setFormValues((prev) => ({ ...prev, book_code, book_name: '', category: '', image_link: '' })); // Reset thông tin sách
     if (book_code) {
       try {
         const { data } = await axios.get(`http://localhost:5000/getBookByCode/${book_code}`);
@@ -65,6 +67,7 @@ export default function AddBorrowBooks() {
         }));
       } catch (error) {
         console.error("Không tìm thấy sách", error);
+        setFormValues((prev) => ({ ...prev, book_name: '', category: '', image_link: '' })); // Xóa thông tin sách
       }
     }
   };
@@ -81,6 +84,7 @@ export default function AddBorrowBooks() {
           label: 'Xác nhận',
           onClick: () => {
             setFormValues({
+              borrow_receipt_id : '',
               name: '',
               book_code: '',
               quantity: '',
@@ -128,6 +132,7 @@ export default function AddBorrowBooks() {
   
             // Chuẩn bị dữ liệu gửi lên API
             const borrowData = {
+              borrow_receipt_id : formValues.borrow_receipt_id,
               member_code: formValues.member_code,
               book_code: formValues.book_code,
               quantity: formValues.quantity,
@@ -157,10 +162,10 @@ export default function AddBorrowBooks() {
 
   return (
     <div className='FrameContanieraddBorrowBooks'>
-      <h1> Thành viên mượn sách </h1>
+      <h1>Thêm thông tin độc giả mượn sách </h1>
       <ToastContainer />
 
-      {/* <div className='uploadAvataraddBorrowBooks'>
+      <div className='uploadAvataraddBorrowBooks'>
         <div className='containeruploadAvataraddBorrowBooks'>
           <img 
             src={imagePreview} 
@@ -178,33 +183,28 @@ export default function AddBorrowBooks() {
             <div>Chấp nhận ảnh nhỏ hơn 1Mb</div>
           </div>
         </div>
-      </div> */}
+      </div>
 
       <div className='containeraddMemeber'>
         <div className='containeraddMemeberRight'> 
           <div className='inputInfoaddBorrowBooks'>
-            <div>Mã thành viên </div>
-            <input name="member_code" value={formValues.member_code} onChange={handleMemberCodeChange} placeholder='Mã thành viên' />
-          </div>
-          <div className='inputInfoaddBorrowBooks'>
-            <div>Tên thành viên</div>
-            <span className="infoDisplay">{formValues.name || 'Tên thành viên'}</span>
-          </div>
-          {/* <div className='inputInfoaddBorrowBooks'>
             <div>Mã sách </div>
             <input name="book_code" value={formValues.book_code} onChange={handleBookCodeChange} placeholder='Mã sách' />
           </div>
           <div className='inputInfoaddBorrowBooks'>
+            <div>Mã độc giả </div>
+            <input name="member_code" value={formValues.member_code} onChange={handleMemberCodeChange} placeholder='Mã độc giả' />
+          </div>
+          <div className='inputInfoaddBorrowBooks'>
             <div>Số lượng </div>
             <input name="quantity" value={formValues.quantity} onChange={handleChange} placeholder='Số lượng' />
-          </div> */}
+          </div>
           <div className='inputInfoaddBorrowBooks'>
             <div>Ngày mượn sách </div>
             <DatePicker
               selected={selectedBorrowDate}
               onChange={(date) => setSelectedBorrowDate(date)}
               dateFormat="dd/MM/yyyy"
-              className='MemberDatePickerAddBorrowBooks'
               placeholderText='Ngày mượn sách'
             />
           </div>
@@ -212,17 +212,17 @@ export default function AddBorrowBooks() {
         
         <div className='containeraddMemeberleft'>
           <div className='inputInfoaddBorrowBooks'>
-            <div>Mã Số phiếu </div>
-            <input  placeholder='Mã Số phiếu' />
+            <div>Mã số phiếu </div>
+            <input name="borrow_receipt_id" value={formValues.borrow_receipt_id} onChange={handleChange} placeholder='Mã số phiếu' />
           </div>
-          {/* <div className='inputInfoaddBorrowBooks'>
-            <div>Tên sách</div>
-            <span className="infoDisplay" style={{marginTop:'-4px', marginBottom:'1px'}}>{formValues.book_name || 'Tên sách'}</span>
+          <div className='inputInfoaddBorrowBooks'>
+            <div>Tên độc giả</div>
+            <span className="infoDisplay">{formValues.name || 'Tên độc giả'}</span>
           </div>
           <div className='inputInfoaddBorrowBooks'>
             <div>Thể loại</div>
             <span className="infoDisplay" style={{marginTop:'-4px', marginBottom:'-3px'}}>{formValues.category || 'Thể loại'}</span>
-          </div> */}
+          </div>
           <div className='inputInfoaddBorrowBooks'>
             <div>Ngày trả sách </div>
             <DatePicker
@@ -234,65 +234,6 @@ export default function AddBorrowBooks() {
           </div>
         </div>
       </div>
-
-      <table className="TableAddBorrowBook">
-        <thead>
-          <tr >
-            <th >Mã Sách</th>
-            <th >Tên Sách</th>
-            <th >Hình Ảnh</th>
-            <th >Thể Loại</th>
-            <th >Số Lượng</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* {books.map((book) => (
-            <tr key={book.id}>
-              <td>{book.bookCode}</td>
-              <td>{book.bookName}</td>
-              <td>
-                <img src={book.image} alt={book.bookName} style={{ width: "50px", height: "50px" }} />
-              </td>
-              <td>{book.category}</td>
-              <td>{book.quantity}</td>
-            </tr>
-          ))} */}
-          <tr>
-            <td>
-              <input
-                type="text"
-                name="bookCode"
-                // value={newBook.bookCode}
-                // onChange={handleInputChange}
-                placeholder="Mã sách"
-              />
-            </td>
-            <td>
-            <span >{formValues.book_name || 'Tên sách'}</span>
-            </td>
-            <td>
-              <div className='containeruploadAvataraddBorrowBooks'>
-                <img 
-                  src={imagePreview} 
-                  alt="Book Cover" 
-                  onError={(e) => {
-                    e.currentTarget.src = DefaultAvatar;
-                  }}
-                />
-              </div>
-            </td>
-            <td>
-              <span >{formValues.category || 'Thể loại'}</span>
-            </td>
-            <td>
-              <input placeholder='Số lượng' />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <button className="addBookButton">
-        Thêm sách mới
-      </button>
       
       <div className='ButtonAddaddBorrowBooks'>
         <button className='SaveButtonaddBorrowBooks' onClick={handleSave}> Lưu </button>

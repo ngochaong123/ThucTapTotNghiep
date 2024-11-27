@@ -230,8 +230,8 @@ export default function User() {
             <input name="full_name" value={formValues.full_name} onChange={handleChange} placeholder='Tên thành viên' />
           </div>
           <div className='inputInfoUser'>
-            <div>Mã thành viên</div>
-            <input name="user_code" value={formValues.user_code} onChange={handleChange} placeholder='Mã thành viên' />
+            <div>Căn cước công đân </div>
+            <input name="user_code" value={formValues.user_code} onChange={handleChange} placeholder='Căn cước công đân' />
           </div>
           <div className='inputInfoUser'>
             <div>Tài khoản</div>

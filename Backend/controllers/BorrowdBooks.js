@@ -11,7 +11,7 @@ const getAllBorrowBooks = (req, res) => {
     const category = req.query.category; 
     let query = `
         SELECT  
-            borrowBooks.numberVotes,
+            borrowBooks.borrow_receipt_id ,
             members.member_code, 
             members.name, 
             members.avatar_link, 
@@ -64,7 +64,7 @@ const getMemberByCode = (req, res) => {
 };
 
 // Hàm lấy thông tin sách theo mã sách
-const getBookByCode = (req, res) => {
+const getBookByCode = (req, res) => { 
     const { book_code } = req.params;
     db.query('SELECT book_name, category, image_link FROM books WHERE book_code = ?', [book_code], (err, result) => {
         if (err) return res.status(500).json({ error: 'Error fetching book information' });
@@ -82,9 +82,9 @@ const getBookByCode = (req, res) => {
 
 // Hàm lưu thông tin mượn sách
 const addborrowBook = (req, res) => {
-    const { member_code, book_code, quantity, borrowDate, returnDate } = req.body;
+    const { borrow_receipt_id, member_code, book_code, quantity, borrowDate, returnDate } = req.body;
 
-    if (!member_code || !book_code || !quantity || !borrowDate || !returnDate) {
+    if (!borrow_receipt_id || !member_code || !book_code || !quantity || !borrowDate || !returnDate) {
         return res.status(400).json({ error: 'Thiếu dữ liệu mượn sách' });
     }
 
@@ -107,10 +107,10 @@ const addborrowBook = (req, res) => {
             }
 
             const borrowQuery = `
-                INSERT INTO borrowBooks (member_code, book_code, quantity, borrowDate, returnDate) 
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO borrowBooks (borrow_receipt_id, member_code, book_code, quantity, borrowDate, returnDate) 
+                VALUES ( ?, ?, ?, ?, ?, ?)
             `;
-            const params = [member_code, book_code, quantity, borrowDate, returnDate];
+            const params = [borrow_receipt_id, member_code, book_code, quantity, borrowDate, returnDate];
 
             db.query(borrowQuery, params, (err) => {
                 if (err) return res.status(500).json({ error: 'Lỗi khi lưu thông tin mượn sách' });
@@ -128,21 +128,21 @@ const addborrowBook = (req, res) => {
 
 // Hàm cập nhật thông tin mượn sách
 const ChangeBorrowBook = (req, res) => {
-    const { id, member_code, book_code, quantity, borrowDate, returnDate } = req.body;
+    const { borrow_receipt_id, member_code, book_code, quantity, borrowDate, returnDate } = req.body;
 
-    if (!id || !member_code || !book_code || !quantity || !borrowDate || !returnDate) {
+    if (!borrow_receipt_id || !member_code || !book_code || !quantity || !borrowDate || !returnDate) {
         return res.status(400).json({ error: 'Vui lòng cung cấp đầy đủ thông tin.' });
     }
 
     // Bước 1: Lấy tổng số lượng sách có sẵn và số lượng sách mượn hiện tại của bản ghi mượn
     const getCurrentAndAvailableQuantityQuery = `
         SELECT b.quantity AS total_quantity, 
-               COALESCE((SELECT quantity FROM borrowBooks WHERE id = ?), 0) AS current_borrowed_quantity
+               COALESCE((SELECT quantity FROM borrowBooks WHERE borrow_receipt_id = ?), 0) AS current_borrowed_quantity
         FROM books b
         WHERE b.book_code = ?
-    `;
+    `; 
 
-    db.query(getCurrentAndAvailableQuantityQuery, [id, book_code], (err, result) => {
+    db.query(getCurrentAndAvailableQuantityQuery, [borrow_receipt_id, book_code], (err, result) => {
         if (err) {
             console.error('Lỗi khi lấy số lượng sách có sẵn:', err);
             return res.status(500).json({ error: 'Đã xảy ra lỗi khi lấy số lượng sách có sẵn.' });
@@ -179,9 +179,9 @@ const ChangeBorrowBook = (req, res) => {
                 // Nếu số lượng mượn mới là 0 hoặc ít hơn, xóa bản ghi
                 const deleteBorrowQuery = `
                     DELETE FROM borrowBooks
-                    WHERE id = ?
+                    WHERE borrow_receipt_id = ?
                 `;
-                db.query(deleteBorrowQuery, [id], (err, deleteResult) => {
+                db.query(deleteBorrowQuery, [borrow_receipt_id], (err, deleteResult) => {
                     if (err) {
                         console.error('Lỗi khi xóa thông tin mượn sách:', err);
                         return res.status(500).json({ error: 'Đã xảy ra lỗi khi xóa thông tin mượn sách.' });
@@ -198,10 +198,10 @@ const ChangeBorrowBook = (req, res) => {
                         quantity = ?, 
                         borrowDate = ?, 
                         returnDate = ?
-                    WHERE id = ?
+                    WHERE borrow_receipt_id = ?
                 `;
 
-                db.query(updateBorrowQuery, [member_code, book_code, quantity, borrowDate, returnDate, id], (err, updateResult) => {
+                db.query(updateBorrowQuery, [member_code, book_code, quantity, borrowDate, returnDate, borrow_receipt_id], (err, updateResult) => {
                     if (err) {
                         console.error('Lỗi khi cập nhật thông tin mượn sách:', err);
                         return res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật thông tin mượn sách.' });
@@ -212,22 +212,22 @@ const ChangeBorrowBook = (req, res) => {
                     }
 
                     res.status(200).json({ message: 'Cập nhật thông tin mượn sách thành công.' });
-                });
+                }); 
             }
         });
     });
 };
 
 const deleteBorrowBook = (req, res) => {
-    const { id } = req.params;
+    const { borrow_receipt_id } = req.params;
 
-    if (!id) {
+    if (!borrow_receipt_id) {
         return res.status(400).json({ error: 'Vui lòng cung cấp ID của bản ghi cần xóa.' });
     }
 
-    const deleteQuery = 'DELETE FROM borrowBooks WHERE id = ?';
+    const deleteQuery = 'DELETE FROM borrowBooks WHERE borrow_receipt_id = ?';
 
-    db.query(deleteQuery, [id], (err, result) => {
+    db.query(deleteQuery, [borrow_receipt_id], (err, result) => {
         if (err) {
             console.error('Lỗi khi xóa thông tin mượn sách:', err);
             return res.status(500).json({ error: 'Đã xảy ra lỗi khi xóa thông tin mượn sách.' });

@@ -7,7 +7,7 @@ import Magnifier from '../../../images/icon/magnifier.png';
 import Plus from "../../../images/icon/plus.png";
 
 interface BorrowBook {
-  numberVotes: string;  // Giữ lại numberVotes như là ID
+  borrow_receipt_id: string;  // Giữ lại numberVotes như là ID
   member_code: string;
   name: string;
   book_code: string;
@@ -32,10 +32,10 @@ export default function LibraryBooks() {
 
   const handleEditBook = () => {
     if (selectedBorrowBookId) {
-      const bookToEdit = borrowBooks.find((book) => book.numberVotes === selectedBorrowBookId);
+      const bookToEdit = borrowBooks.find((book) => book.borrow_receipt_id  === selectedBorrowBookId);
   
       if (bookToEdit) {
-        navigate(`/Menu/ChangeBorrowBooks?numberVotes=${bookToEdit.numberVotes}`, { state: { bookData: bookToEdit } });
+        navigate(`/Menu/ChangeBorrowBooks?borrow_receipt_id =${bookToEdit.borrow_receipt_id }`, { state: { bookData: bookToEdit } });
       } else {
         alert('Không tìm thấy sách với ID đã chọn.');
       }
@@ -97,7 +97,7 @@ export default function LibraryBooks() {
     <div>
       <div className='borrowBooksCurrentInformation'>
         <div className='borrowBooksheaderborrowBooks'>
-          <h1 className='borrowBookstile'>Độc giả mượn sách</h1>
+          <h1 className='borrowBookstile'>Mượn sách</h1>
           <Link to='/Menu/AddBorrowBooks' style={{ textDecoration: 'none' }}>
             <button className='borrowBooksAddborrowBooks'>
               <div style={{ display: 'flex' }}>
@@ -142,11 +142,6 @@ export default function LibraryBooks() {
               </div>
             </div>
           </div>
-
-          <button className='borrowBooksEditborrowBooks' style={{width:'165px'}}>
-            <div className='borrowBooksNameEdit'>Xác nhận trả sách</div>
-          </button>
-
           <button
             className='borrowBooksEditborrowBooks'
             onClick={handleEditBook}
@@ -173,15 +168,15 @@ export default function LibraryBooks() {
               </thead>
               <tbody>
                 {filteredBorrowBooks.map(borrowBook => (
-                  <tr key={borrowBook.numberVotes}>
+                  <tr key={borrowBook.borrow_receipt_id }>
                     <td>
                       <input
                         type="checkbox"
-                        checked={selectedBorrowBookId === borrowBook.numberVotes}
-                        onChange={() => handleSelectBorrowBook(borrowBook.numberVotes)}
+                        checked={selectedBorrowBookId === borrowBook.borrow_receipt_id }
+                        onChange={() => handleSelectBorrowBook(borrowBook.borrow_receipt_id )}
                       />
                     </td>
-                    <td>{borrowBook.numberVotes}</td>
+                    <td>{borrowBook.borrow_receipt_id }</td>
                     <td>
                       <div style={{ display: 'flex' }}>
                         <img src={`http://localhost:5000${borrowBook.avatar_link}`} className='avatarborrowBooks' alt="Avatar" />

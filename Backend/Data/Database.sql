@@ -46,7 +46,7 @@ CREATE TABLE members (
 
 -- Tạo bảng borrowBooks
 CREATE TABLE borrowBooks (
-	numberVotes VARCHAR(20) primary KEY,
+	borrow_receipt_id VARCHAR(20) primary KEY,
     member_code VARCHAR(20),                 -- Mã thành viên
     book_code VARCHAR(20),                   -- Mã sách
     quantity INT NOT NULL,                   -- Số lượng mượn
@@ -128,7 +128,7 @@ INSERT INTO members (member_code, name, email, phone, registration_date, age, av
 ('MEM009', 'Grace Lee', 'grace@example.com', '7788990011', '2024-07-25', 31, 'user8.jpg', 'Japan'),
 ('MEM010', 'Hank Miller', 'hank@example.com', '8899001122', '2024-03-01', 40, 'user9.jpg', 'South Korea');
 
-INSERT INTO borrowBooks (numberVotes, member_code, book_code, quantity, borrowDate, returnDate) VALUES
+INSERT INTO borrowBooks (borrow_receipt_id , member_code, book_code, quantity, borrowDate, returnDate) VALUES
 ('MV001', 'MEM001', 'BK039', 1, '2024-11-01', '2024-11-15'),
 ('MV002', 'MEM002', 'BK044', 2, '2024-11-02', '2024-11-16'),
 ('MV003', 'MEM003', 'BK046', 1, '2024-12-03', '2024-11-17'),

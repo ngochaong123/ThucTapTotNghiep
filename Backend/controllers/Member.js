@@ -70,8 +70,8 @@ const getAllMembers = (req, res) => {
 // Hàm tìm kiếm thành viên theo từ khóa
 const searchMembers = (req, res) => {
     const { keyword } = req.query;
-    const sql = 'SELECT * FROM members WHERE name LIKE ? OR phone LIKE ? OR age LIKE ? OR email LIKE ? OR country LIKE ?';
-    const params = [`%${keyword}%`, `%${keyword}%`, `%${keyword}%`, `%${keyword}%`, `%${keyword}%`];
+    const sql = 'SELECT * FROM members WHERE member_code LIKE ? OR name LIKE ? OR phone LIKE ? OR age LIKE ? OR email LIKE ? OR country LIKE ?';
+    const params = [`%${keyword}%`,`%${keyword}%`, `%${keyword}%`, `%${keyword}%`, `%${keyword}%`, `%${keyword}%`];
 
     db.query(sql, params, (err, results) => {
         if (err) {

@@ -12,6 +12,7 @@ import Report from "../../images/icon/report.png";
 import User from "../../images/icon/user.png";
 import loginOut from "../../images/icon/loginOut.png";
 import borrowBooks from "../../images/icon/borrow-book.png";
+import returnBook from "../../images/icon/towel.png";
 
 export default function Menu() {
   const [activeMenu, setActiveMenu] = useState<string>("LibraryBook"); // Explicit type for activeMenu
@@ -91,6 +92,16 @@ export default function Menu() {
         </Link>
 
         <Link
+          to="returnBook"
+          className={`ButtonMenu ${activeMenu === "returnBook" ? "activeMenu" : ""}`}
+          onClick={() => handleMenuClick("returnBook")}
+        >
+          <div className="vertical-bar"></div>
+          <img src={returnBook} alt="Borrow Books Icon" className='IconOption' />
+          <div className='NameOptionIcon'>Trả sách</div>
+        </Link>
+
+        <Link
           to="Report"
           className={`ButtonMenu ${activeMenu === "Report" ? "activeMenu" : ""}`}
           onClick={() => handleMenuClick("Report")}
@@ -107,7 +118,7 @@ export default function Menu() {
         >
           <div className="vertical-bar"></div>
           <img src={User} alt="User Icon" className='IconOption' />
-          <div className='NameOptionIcon'>Người dùng</div>
+          <div className='NameOptionIcon'>Tài khoản cá nhân</div>
         </Link>
 
         <div
