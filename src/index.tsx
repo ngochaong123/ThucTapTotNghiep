@@ -22,6 +22,8 @@ import ChangeInfo from './Components/Member/changeInfor/changeInfor';
 import BorrowBooks from "./Components/borrowBooks/borrowBooks/borrowBooks";
 import AddBorrowBooks from "./Components/borrowBooks/addBorrowBooks/addBorrowBooks";
 import ChangeBorrowBooks from "./Components/borrowBooks/changeBorrowBooks/changeBorrowBooks";
+//Tra sach
+import ReturnBooks from "./Components/returnBooks/returnBooks";
 // bao cao
 import Report from "./Components/Report/Report/Report";
 // nguoi dung
@@ -61,7 +63,10 @@ root.render(
           <Route path="BorrowBooks" element={<BorrowBooks />} />
           <Route path="AddBorrowBooks" element={<AddBorrowBooks />} />
           <Route path="ChangeBorrowBooks" element={<ChangeBorrowBooks />} />
-          
+
+          {/* tra sách */}
+          <Route path="ReturnBooks" element={<ReturnBooks />} />
+
           {/* bao cao */}
           <Route path="Report" element={<Report />} />
           

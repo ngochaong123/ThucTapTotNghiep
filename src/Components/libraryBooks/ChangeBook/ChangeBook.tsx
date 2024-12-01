@@ -10,20 +10,6 @@ import DefaultAvatar from '../../../images/icon/avatar.jpg';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-const categories = [
-  'Công nghệ thông tin',
-  'Nông lâm ngư nghiệp',
-  'Y học - sức khỏe',
-  'Triết học - lý luận',
-  'Lịch sử - quân sự',
-  'Phiêu mưu - mạo hiểm'
-];
-
-const languages = [
-  'Tiếng anh',
-  'Tiếng việt'
-];
-
 interface FormValues {
   book_name: string;
   book_code: string;
@@ -39,6 +25,41 @@ interface FormValues {
 export default function ChangeBook() {
   const location = useLocation();
   const { state } = location;
+  const [categories, setCategories] = useState<string[]>([]);
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [locations, setLocations] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Gọi API để lấy thể loại sách
+    axios.get('http://localhost:5000/categories')
+      .then(response => {
+        setCategories(response.data);
+      })
+      .catch(error => {
+        console.error('Lỗi khi lấy thể loại:', error);
+        toast.error('Lỗi khi tải thể loại sách.');
+      });
+
+    // Gọi API để lấy ngôn ngữ
+    axios.get('http://localhost:5000/language')
+      .then(response => {
+        setLanguages(response.data);
+      })
+      .catch(error => {
+        console.error('Lỗi khi lấy ngôn ngữ:', error);
+        toast.error('Lỗi khi tải ngôn ngữ.');
+      });
+
+    // Gọi API để lấy vị trí sách
+    axios.get('http://localhost:5000/location')
+      .then(response => {
+        setLocations(response.data);
+      })
+      .catch(error => {
+        console.error('Lỗi khi lấy vị trí:', error);
+        toast.error('Lỗi khi tải vị trí sách.');
+      });
+  }, []);
 
   const [formValues, setFormValues] = useState<FormValues>({
     book_name: state?.book_name || '',
@@ -253,15 +274,15 @@ export default function ChangeBook() {
                 <div>Tên sách</div>
                 <input name="book_name" value={formValues.book_name} placeholder='Tên sách' onChange={handleChange} />
               </div>
-              <div className='inputInfoChangeBook' style={{marginTop:'11px'}}>
+              <div className='inputInfoChangeBook' style={{marginTop:'2px'}}>
                 <div>Mã sách</div>
                 <input name="book_code" value={formValues.book_code} placeholder='Mã sách' onChange={handleChange} />
               </div>
-              <div className='inputInfoChangeBook' style={{marginTop:'4px'}}>
+              <div className='inputInfoChangeBook' style={{marginTop:'3px'}}>
                 <div>Tác giả</div>
                 <input name="author" value={formValues.author} placeholder='Tên tác giả' onChange={handleChange} />
               </div>
-              <div className='inputInfoChangeBook' style={{marginTop:'9px'}}>
+              <div className='inputInfoChangeBook' style={{marginTop:'0px'}}>
                 <div>Ngày tiếp nhận</div>
                 <DatePicker
                   selected={formValues.receiveDate}
@@ -277,47 +298,35 @@ export default function ChangeBook() {
           <div className='containerchangeBooksRight'>
             <div className='inputInfoChangeBook'>
               <div>Thể loại</div>
-              <div style={{display:'flex'}}>
                 <select name="category" value={formValues.category} onChange={handleChange}>
                   <option value="">Chọn thể loại</option>
                   {categories.map((cat, index) => (
                     <option key={index} value={cat}>{cat}</option>
                   ))}
                 </select>
-                <button className='btnAdd_ChangeBook'> Thêm ngôn ngữ </button>
               </div>
-              
-            </div>
             <div className='inputInfoChangeBook'>
               <div>Số lượng</div>
               <input name="quantity" value={formValues.quantity} placeholder='Số lượng' onChange={handleChange} />
             </div>
             <div className='inputInfoChangeBook'>
               <div>Vị trí sách</div>
-              <div style={{display:'flex'}}>
                 <select name="location" value={formValues.location} onChange={handleChange}>
                   <option value="">Chọn vị trí</option>
-                  <option value="Khu A">Khu A</option>
-                  <option value="Khu B">Khu B</option>
-                  <option value="Khu C">Khu C</option>
-                  <option value="Khu D">Khu D</option>
-                  <option value="Khu E">Khu E</option>
+                    {locations.map((loc, index) => (
+                      <option key={index} value={loc}>{loc}</option>
+                  ))}
                 </select>
-                <button className='btnAdd_ChangeBook'> Vị trí sách </button>
               </div>
-            </div>
             <div className='inputInfoChangeBook'>
               <div>Ngôn ngữ</div>
-              <div style={{display:'flex'}}>
                 <select name="language" value={formValues.language} onChange={handleChange}>
                   <option value="">Chọn ngôn ngữ</option>
                   {languages.map((lang, index) => (
                     <option key={index} value={lang}>{lang}</option>
                   ))}
                 </select>
-                <button className='btnAdd_ChangeBook'> Vị trí sách </button>
               </div>
-            </div>
           </div>
             </div>
           </div>

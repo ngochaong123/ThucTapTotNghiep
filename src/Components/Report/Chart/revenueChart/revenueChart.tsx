@@ -118,7 +118,7 @@ const RevenueChart: React.FC = () => {
 
   return (
     <div>
-      <h2 style={{ marginBottom: 0 }}>Doanh thu</h2>
+      <h2 style={{ marginBottom: 0 }}>Biểu đồ phạt thư viện dựa trên số ngày trễ</h2>
       <div id="chart">
         <ReactApexChart 
           options={chartData.options} 

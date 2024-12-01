@@ -11,7 +11,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default function AddBorrowBooks() {
   const [formValues, setFormValues] = useState({
-    borrow_receipt_id: '',
+    borrowBooks_id: '',
     name: '',
     book_code: '',
     quantity: '',
@@ -84,7 +84,7 @@ export default function AddBorrowBooks() {
           label: 'Xác nhận',
           onClick: () => {
             setFormValues({
-              borrow_receipt_id : '',
+              borrowBooks_id : '',
               name: '',
               book_code: '',
               quantity: '',
@@ -132,7 +132,7 @@ export default function AddBorrowBooks() {
   
             // Chuẩn bị dữ liệu gửi lên API
             const borrowData = {
-              borrow_receipt_id : formValues.borrow_receipt_id,
+              borrowBooks_id : formValues.borrowBooks_id,
               member_code: formValues.member_code,
               book_code: formValues.book_code,
               quantity: formValues.quantity,
@@ -212,8 +212,8 @@ export default function AddBorrowBooks() {
         
         <div className='containeraddMemeberleft'>
           <div className='inputInfoaddBorrowBooks'>
-            <div>Mã số phiếu </div>
-            <input name="borrow_receipt_id" value={formValues.borrow_receipt_id} onChange={handleChange} placeholder='Mã số phiếu' />
+            <div>Mã mượn sách </div>
+            <input name="borrowBooks_id" value={formValues.borrowBooks_id} onChange={handleChange} placeholder='Mã số phiếu' />
           </div>
           <div className='inputInfoaddBorrowBooks'>
             <div>Tên độc giả</div>

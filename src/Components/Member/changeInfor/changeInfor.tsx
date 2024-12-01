@@ -8,7 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-export default function AddMember() {
+export default function ChangeInfor() {
   const location = useLocation();
   const memberData = location.state;
   

@@ -149,18 +149,3 @@ inputInfoChangeBooklanguage{
     background-color: red;
     opacity: 0.6;
 }
-
-.btnAdd_ChangeBook{
-    margin-top: 3px;
-    margin-left: 15px;
-    width: 150px;
-    height: 35px;
-}
-
-.btnAdd_ChangeBook:hover{
-    opacity: 0.7;
-}
-
-.btnAdd_ChangeBook:active{
-    opacity: 0.6;
-}

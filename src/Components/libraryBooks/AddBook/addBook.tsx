@@ -229,16 +229,16 @@ export default function AddBook() {
                 <div>Tên sách</div>
                 <input name="book_name" value={formValues.book_name} onChange={handleChange} placeholder='Tên sách' />
               </div>
-              <div className='inputInfoAddBook' style={{marginTop:'11px'}}>
+              <div className='inputInfoAddBook' style={{marginTop:'2px'}}>
                 <div>Mã sách</div>
                 <input name="book_code" value={formValues.book_code} onChange={handleChange} placeholder='Mã sách' />
               </div>
-              <div className='inputInfoAddBook' style={{marginTop:'4px'}}>
+              <div className='inputInfoAddBook' style={{marginTop:'3px'}}>
                 <div>Tác giả</div>
                 <input name="author" value={formValues.author} onChange={handleChange} placeholder='Tên tác giả' />
               </div>
-              <div className='inputInfoAddBook' style={{marginTop:'9px'}}>
-                <div>Thời gian nhận</div>
+              <div className='inputInfoAddBook' style={{marginTop:'0px'}}>
+                <div>Ngày tiếp nhận</div>
                 <DatePicker
                   selected={formValues.receiveDate}
                   onChange={handleDateChange}
@@ -253,16 +253,12 @@ export default function AddBook() {
             <div className='containeraddBookRight'>
               <div className='inputInfoAddBook'>
                 <div>Thể loại</div>
-                <div style={{display:'flex'}}>
                   <select name="category" value={formValues.category} onChange={handleChange}>
                     <option value="">Chọn thể loại</option>
                     {categories.map((cat, index) => (
                       <option key={index} value={cat}>{cat}</option>
                     ))}
                   </select>
-                  <button className='btnAdd_addBook'> Thêm thể loại</button>
-                </div>
-                
               </div>
               <div className='inputInfoAddBook'>
                 <div>Số lượng</div>
@@ -270,27 +266,21 @@ export default function AddBook() {
               </div>
               <div className='inputInfoAddBook'>
                 <div>Vị trí</div>
-                <div style={{display:'flex'}}>
                   <select name="location" value={formValues.location} onChange={handleChange}>
                     <option value="">Chọn vị trí</option>
                     {locations.map((loc, index) => (
                       <option key={index} value={loc}>{loc}</option>
                     ))}
                   </select>
-                  <button className='btnAdd_addBook'> Thêm vị trí </button>
                 </div>
-              </div>
               <div className='inputInfoAddBook'>
                 <div>Ngôn ngữ</div>
-                <div style={{display:'flex'}}>
                   <select name="language" value={formValues.language} onChange={handleChange}>
                     <option value="">Chọn ngôn ngữ</option>
                     {languages.map((lang, index) => (
                       <option key={index} value={lang}>{lang}</option>
                     ))}
                   </select> 
-                  <button className='btnAdd_addBook'> Thêm ngôn ngữ </button>
-                </div>
               </div>
             </div>
           </div>

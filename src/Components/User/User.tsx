@@ -61,7 +61,7 @@ export default function User() {
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch('https://restcountries.com/v3.1/all');
+        const response = await fetch('https://restcountries.com/v3/all');
         const data = await response.json();
         const countryNames = data.map((country: { name: { common: string } }) => country.name.common);
         setCountries(countryNames);

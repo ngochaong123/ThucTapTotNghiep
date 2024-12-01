@@ -1,0 +1,357 @@
+.ReturnBooksSearch {
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9; 
+    border-radius: 25px;
+    border: 2px solid #E0E0E0; 
+    padding: 5px 10px; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+    width: 300px;
+    height: 20px;
+}
+
+.ReturnBookstile{
+    margin: 20px 0px 0px 30px;
+    font-size: 30px;
+}
+
+.ReturnBookssearchIcon {
+    margin-right: 0px; 
+}
+
+ReturnBookssearchIcon img {
+    width: 15px; 
+    height: 15px; 
+}
+
+.ReturnBooksheaderReturnBooks{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: -20px;
+}
+
+.ReturnBookscontanierHeaderLeft{
+    display: flex;
+
+    h1{
+        margin-top: 9px;
+        font-size: 18px;
+    }
+}
+
+.ReturnBooksOptionsRow{
+    display: flex;
+    justify-content: space-between;
+}
+
+.ReturnBooksSearchInput {
+    width: 400px;
+    height: 40px;
+    border: none; 
+    border-radius: 20px;
+    padding-left: 10px; 
+    background-color: transparent; /* Nền trong suốt */
+    font-size: 16px; 
+}
+
+.ReturnBooksSearchInput::placeholder {
+    color: #A0A0A0; 
+    font-size: 14px;
+}
+
+.ReturnBooksSearchInput:focus {
+    outline: none; 
+}
+
+.ReturnBooksCurrentInformation{
+    border-radius: 10px;
+    height: 180px;
+    padding: 5px;
+    margin-left: 10px;
+    background-color: white;
+}
+
+.ReturnBooksChooseReturnBooks{
+    display: flex;
+}
+
+.ReturnBooksNameChoose{
+    display: flex;
+    font-weight: bold;
+    margin: 0px 10px 5px 20px;
+}
+
+.ReturnBooksheader{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: -20px;
+}
+
+.ReturnBooksCalendar{
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+    border-radius: 15px;
+    padding: 3px 15px 4px 10px;
+    background-color: white;
+    margin: 0px 20px 20px 20px;
+    border: 2px solid #CBCBDC;
+
+    .ReturnBooksiconCalender{
+        width: 15px;
+        height: 15px;
+        margin-top: 8px;
+        margin-left: 4px;
+    }
+
+    .ReturnBooksiconPlus{
+        width: 15px;
+        height: 15px;
+        margin-top: 9px;
+        margin-left: 4px;
+    }
+    
+    .ReturnBooksNameCalender{
+        margin: 5px 7px ;
+        color: #A0A0A0;
+    }
+}
+
+.ReturnBooksCalendar:hover {
+    background-color: white;
+    border-radius: 15px;
+}
+
+.ReturnBooksCalendar:active{
+    background-color: white;
+    opacity: 0.9;
+}
+
+.CategoryReturnBooks{
+    margin-top: 5px;
+    margin-left: 20px;
+}
+
+.ReturnBooksNameSearch{
+    display: flex;
+    font-weight: bold;
+    margin: 0px 10px 5px 15px;
+}
+
+.ReturnBooksSearch{
+    display: flex;
+    justify-content: space-between;
+    border-radius: 15px;
+    padding: 5px 15px 5px 10px;
+    background-color: white;
+    margin: 0 20px 20px 20px;
+    border: 2px solid #CBCBDC;
+    align-items: center;
+    width: 300px;
+    height: 28px;
+    
+}
+
+.ReturnBooksstatuses {
+    height: 40px;
+    border-radius: 15px; /* Bo góc */
+    padding: 10px; /* Khoảng cách bên trong */
+    padding-right: 40px; /* Để có khoảng cách cho icon */
+    width: 211px;
+    background-color: white; /* Màu nền trắng */
+    border: 2px solid #CBCBDC; /* Đường viền */
+    background-repeat: no-repeat; /* Không lặp lại biểu tượng */
+    background-position: right 10px center; /* Đặt vị trí biểu tượng mũi tên bên phải */
+    background-size: 20px; /* Kích thước biểu tượng mũi tên */
+}
+
+.ReturnBooksNameiconFilter{
+    margin: 5px 7px ;
+    color: black;
+}
+
+.ReturnBookssearchIcon {
+    margin-right: 0px; 
+}
+
+.ReturnBookssearchIcon img {
+    width: 15px; 
+    height: 15px; 
+}
+
+.ReturnBooksAddReturnBooks{
+    display: flex;
+    justify-content: space-between;
+    width: 150px;
+    border-radius: 15px;
+    padding: 5px 15px 5px 17px;
+    background-color: #2864F6;
+    margin: 20px 20px 50px 20px;
+    border: 2px solid #2864F6;
+
+    .ReturnBooksiconFilter{
+        width: 15px;
+        height: 15px;
+        margin-top: 5px;
+        margin-left: 4px;
+    }
+    
+    .ReturnBooksNameiconFilter{
+        margin: 5px 10px ;
+        color: white;
+    }
+}
+
+.ReturnBooksAddReturnBooks:hover {
+    background-color: #2864F6;
+    opacity: 0.8;
+    border-radius: 15px;
+}
+
+.ReturnBooksAddReturnBooks:active{
+    background-color: #2864F6;
+    opacity: 0.7;
+}
+
+.ReturnBooksDatePicker{
+    width: 120px;
+    margin-left: 10px;
+    border: none;
+    outline: none; 
+    background-color: transparent; 
+    font-size: 15px; 
+    margin-top: 3px;
+}
+
+.ReturnBooksDatePicker:focus {
+    border: none; 
+    outline: none; 
+}
+
+.ReturnBooksOptionFilter ul {
+    display: flex;
+    list-style-type: none;
+    padding: 8px 0;
+    cursor: pointer;
+    width: 180px;
+    margin: 0 auto; /* Đảm bảo danh sách nằm giữa trong khung cha */
+}
+
+.ReturnBooksOptionFilter img{
+    width: 20px;
+    height: 20px;
+}
+
+.ReturnBooksOptionFilter div{
+    margin-left: 20px;
+}
+  
+.ReturnBooksOptionFilter ul:hover {
+    /* background-color: #497DF7; */
+    background-color: white;
+    opacity: 0.8;
+    border-radius: 10px;
+}
+
+.ReturnBooksEditReturnBooks{
+    display: flex;
+    justify-content: space-between;
+    width: 180px;
+    border-radius: 15px;
+    padding: 5px 15px 5px 17px;
+    background-color: #2864F6;
+    margin: 20px 20px 50px 20px;
+    border: 2px solid #2864F6;
+
+    .ReturnBooksiconPlus{
+        width: 15px;
+        height: 15px;
+        margin-top: 5px;
+        margin-left: 4px;
+    }
+    
+    .ReturnBooksNameEdit{
+        margin: 5px 10px ;
+        color: white;
+    }
+}
+
+.ReturnBooksEditReturnBooks:hover {
+    background-color: #2864F6;
+    opacity: 0.8;
+    border-radius: 15px;
+}
+
+.ReturnBooksEditReturnBooks:active{
+    background-color: #2864F6;
+    opacity: 0.7;
+}
+
+
+/* table */
+
+.FrameReturnBookstableContainer{
+    background-color: white;
+    padding: 1px 20px 10px 20px;
+    border-radius: 10px;
+    margin: -3px -5px 0px -5px;
+}
+
+/* ReturnBooks table container with scrolling */
+.ReturnBookstableContainer {
+  margin-top: 20px; /* Space above the table */
+  max-height: 440px; /* Set a max height for the container */
+  overflow-y: scroll; /* Enable vertical scrolling */
+  border: 1px solid #ccc; /* Optional: Add a border around the container */
+  border-radius: 5px; /* Optional: Round the corners of the container */
+}
+
+/* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+.ReturnBookstableContainer::-webkit-scrollbar {
+  width: 0; /* Hide vertical scrollbar */
+  background: transparent; /* Make background transparent */
+}
+
+/* Header styles */
+.memberTable thead {
+  position: sticky; /* Make the header sticky */
+  top: 0; /* Stick to the top of the container */
+  background-color: #2864F6; /* Bootstrap primary color for header */
+  color: white; /* White text color for header */
+  z-index: 2; /* Ensure header is above other content */
+}
+
+/* ReturnBooks table */
+.memberTable {
+  width: 100%; /* Full width of the container */
+  border-collapse: collapse; /* Remove spacing between cells */
+}
+
+.memberTable th,
+.memberTable td {
+  padding: 10px; /* Padding for cells */
+  text-align: left; /* Left align text */
+  border-bottom: 1px solid #ccc; /* Border below cells */
+}
+
+/* Checkbox styles */
+.memberTable input[type="checkbox"] {
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+/* Selected member checkbox styles */
+.memberTable input[type="checkbox"]:checked {
+  accent-color: #007bff; /* Change checkbox color when checked */
+}
+
+/* change image */
+.avatarReturnBooks{
+    width: 30px;
+    height: 30px;
+    border-radius: 50px;
+}
+
+.nameAvatarAddmember{
+    margin-top: 5px;
+    margin-left: 10px;
+}

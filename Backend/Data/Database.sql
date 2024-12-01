@@ -46,14 +46,22 @@ CREATE TABLE members (
 
 -- Tạo bảng borrowBooks
 CREATE TABLE borrowBooks (
-	borrow_receipt_id VARCHAR(20) primary KEY,
-    member_code VARCHAR(20),                 -- Mã thành viên
-    book_code VARCHAR(20),                   -- Mã sách
-    quantity INT NOT NULL,                   -- Số lượng mượn
-    borrowDate DATE,                         -- Ngày mượn
-    returnDate DATE,                         -- Ngày trả
-    FOREIGN KEY (member_code) REFERENCES members(member_code),
-    FOREIGN KEY (book_code) REFERENCES books(book_code)
+    borrowBooks_id VARCHAR(20) PRIMARY KEY,   -- ID biên nhận mượn
+    member_code VARCHAR(20) NOT NULL,                   -- Mã thành viên
+    book_code VARCHAR(20) NOT NULL,                     -- Mã sách
+    quantity INT NOT NULL CHECK (quantity > 0),         -- Số lượng mượn (phải > 0)
+    borrowDate DATE NOT NULL,                           -- Ngày mượn
+    returnDate DATE DEFAULT NULL,                       -- Ngày trả (có thể NULL nếu chưa trả)
+    FOREIGN KEY (member_code) REFERENCES members(member_code), -- Khóa ngoại tới members
+    FOREIGN KEY (book_code) REFERENCES books(book_code) -- Khóa ngoại tới books
+);
+
+CREATE TABLE returnBook (
+    returnBook_id VARCHAR(20) PRIMARY KEY,                -- ID chính của bảng (không sử dụng AUTO_INCREMENT)
+    borrowBooks_id VARCHAR(20) NOT NULL,                  -- Khóa ngoại liên kết với bảng borrowBooks
+    PenaltyFees int DEFAULT 0,                 			  -- Phí phạt (mặc định là 0)
+    Status VARCHAR(20) DEFAULT 'Đang mượn',               -- Trạng thái (mặc định: Đang mượn)
+    FOREIGN KEY (borrowBooks_id) REFERENCES borrowBooks(borrowBooks_id) -- Khóa ngoại liên kết với bảng borrowBooks
 );
 
 CREATE TABLE revenue_expenses (
@@ -128,7 +136,7 @@ INSERT INTO members (member_code, name, email, phone, registration_date, age, av
 ('MEM009', 'Grace Lee', 'grace@example.com', '7788990011', '2024-07-25', 31, 'user8.jpg', 'Japan'),
 ('MEM010', 'Hank Miller', 'hank@example.com', '8899001122', '2024-03-01', 40, 'user9.jpg', 'South Korea');
 
-INSERT INTO borrowBooks (borrow_receipt_id , member_code, book_code, quantity, borrowDate, returnDate) VALUES
+INSERT INTO borrowBooks (borrowBooks_id , member_code, book_code, quantity, borrowDate, returnDate) VALUES
 ('MV001', 'MEM001', 'BK039', 1, '2024-11-01', '2024-11-15'),
 ('MV002', 'MEM002', 'BK044', 2, '2024-11-02', '2024-11-16'),
 ('MV003', 'MEM003', 'BK046', 1, '2024-12-03', '2024-11-17'),
@@ -137,6 +145,18 @@ INSERT INTO borrowBooks (borrow_receipt_id , member_code, book_code, quantity, b
 ('MV006', 'MEM006', 'BK034', 8, '2024-07-03', '2024-11-17'),
 ('MV007', 'MEM008', 'BK011', 7, '2024-06-03', '2024-11-17'),
 ('MV008', 'MEM010', 'BK011', 6, '2024-03-08', '2024-11-17');
+
+
+INSERT INTO returnBook (returnBook_id, borrowBooks_id, PenaltyFees, Status)
+VALUES
+('RB001', 'MV001', 10000, 'Đang mượn'),  
+('RB002', 'MV002', 80000, 'Trễ hạn'),
+('RB003', 'MV003', 0, 'Đang mượn'),   
+('RB004', 'MV004', 15000, 'Trễ hạn'),      
+('RB005', 'MV005', 100000, 'Đang mượn'),
+('RB006', 'MV006', 0, 'Đang mượn'),
+('RB007', 'MV007', 0, 'Đang mượn'),
+('RB008', 'MV008', 100000, 'Trễ hạn');
 
 -- Thêm dữ liệu mẫu vào bảng
 INSERT INTO revenue_expenses (Time, revenue, expenses) VALUES

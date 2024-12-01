@@ -10,12 +10,12 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import axios from 'axios';
 
-export default function AddBorrowBooks() {
+export default function ChangeBorrowBooks() {
   const location = useLocation();
   const { bookData } = location.state;
 
   const [formValues, setFormValues] = useState({
-    borrow_receipt_id: '',
+    borrowBooks_id: '',
     name: '',
     book_name: '',
     image_link: '',
@@ -35,7 +35,7 @@ export default function AddBorrowBooks() {
   useEffect(() => {
     if (bookData) {
       const initialData = {
-        borrow_receipt_id: bookData.borrow_receipt_id || '',
+        borrowBooks_id: bookData.borrowBooks_id || '',
         name: bookData.name || '',
         member_code: bookData.member_code || '',
         image_link: bookData.image_link || '',
@@ -149,7 +149,7 @@ export default function AddBorrowBooks() {
           label: 'Xác nhận',
           onClick: async () => {
             // Kiểm tra các trường dữ liệu cần thiết
-            if (!formValues.borrow_receipt_id || !formValues.member_code || !formValues.book_code || !formValues.quantity || !selectedBorrowDate || !selectedReturnDate) {
+            if (!formValues.borrowBooks_id || !formValues.member_code || !formValues.book_code || !formValues.quantity || !selectedBorrowDate || !selectedReturnDate) {
               toast.error("Vui lòng điền đầy đủ thông tin.");
               return;
             }
@@ -162,7 +162,7 @@ export default function AddBorrowBooks() {
   
             // Chuẩn bị dữ liệu gửi lên API
             const borrowBookData = {
-              borrow_receipt_id: formValues.borrow_receipt_id,
+              borrowBooks_id: formValues.borrowBooks_id,
               member_code: formValues.member_code,
               book_code: formValues.book_code,
               quantity: formValues.quantity,
@@ -194,7 +194,7 @@ export default function AddBorrowBooks() {
 
   const handleDelete = async () => {
     // Kiểm tra nếu không có mã sách
-    if (!formValues.borrow_receipt_id) {
+    if (!formValues.borrowBooks_id) {
       toast.error("Vui lòng chọn sách để xóa.");
       return;
     }
@@ -214,12 +214,12 @@ export default function AddBorrowBooks() {
           label: 'Xác nhận',
           onClick: async () => {
             try {
-              const response = await axios.delete(`http://localhost:5000/deleteBorrowBook/${formValues.borrow_receipt_id}`);
+              const response = await axios.delete(`http://localhost:5000/deleteBorrowBook/${formValues.borrowBooks_id}`);
               toast.success(response.data.message);
   
               // Đặt lại các giá trị form và ảnh xem trước
               setFormValues({
-                borrow_receipt_id: '',
+                borrowBooks_id: '',
                 name: '',
                 member_code: '',
                 image_link: '',
@@ -295,8 +295,8 @@ export default function AddBorrowBooks() {
         
         <div className='containeraddMemeberleft'>
           <div className='inputInfochangeBorrowBooks'>
-            <div>Mã số phiếu</div>
-            <input name="borrow_receipt_id" value={formValues.borrow_receipt_id} onChange={handleChange} placeholder='Mã số phiếu' />
+            <div>Mã mượn sách</div>
+            <input name="borrowBooks_id" value={formValues.borrowBooks_id} onChange={handleChange} placeholder='Mã số phiếu' />
           </div>
           <div className='inputInfochangeBorrowBooks'>
             <div>Tên độc giả</div>

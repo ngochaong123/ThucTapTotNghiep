@@ -129,6 +129,12 @@ const Report: React.FC = () => {
       <div className='headerReport'>
         <h1>Biểu đồ phân tích</h1>
         <div style={{ display: 'flex' }}>
+          <button className='ButtonHeaderReport' >
+            <div>Lọc theo tháng</div>
+          </button>
+          <button className='ButtonHeaderReport' >
+          <div>Lọc theo năm</div>
+          </button>
           <button className='ButtonHeaderReport' onClick={handleDownloadExcel}>
             <Image src={downloadIcon} alt="Download" />
             <div>Tải dữ liệu</div>
@@ -139,7 +145,7 @@ const Report: React.FC = () => {
       <div className='ContaniergrowthFigures'>
         {/* Doanh thu */}
         <div className='growthFigures'>
-          <div className='NamegrowthFigures'>Doanh thu</div>
+          <div className='NamegrowthFigures'>Số tiền phạt</div>
           <div className='growthFiguresData'>
             <h1>{revenue.toLocaleString()}</h1>
             <div className='growthFiguresSort' style={{ marginLeft: '-5px' }}>
@@ -157,7 +163,7 @@ const Report: React.FC = () => {
 
         {/* Lợi nhuận */}
         <div className='growthFigures'>
-          <div className='NamegrowthFigures'>Lợi nhuận</div>
+          <div className='NamegrowthFigures'>Độc giả trả trể sách</div>
           <div className='growthFiguresData'>
             <h1>{profit.toLocaleString()}</h1>
             <div className='growthFiguresSort' style={{ marginLeft: '-5px' }}>

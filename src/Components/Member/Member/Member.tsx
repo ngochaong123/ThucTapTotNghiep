@@ -21,7 +21,7 @@ interface Member {
   country: string;
 }
 
-export default function LibraryMembers() {
+export default function Member() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [members, setMembers] = useState<Member[]>([]);

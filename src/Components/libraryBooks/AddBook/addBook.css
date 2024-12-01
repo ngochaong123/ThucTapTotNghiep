@@ -75,21 +75,6 @@
     margin-bottom: 25px;
 }
 
-.btnAdd_addBook{
-    margin-top: 3px;
-    margin-left: 15px;
-    width: 150px;
-    height: 35px;
-}
-
-.btnAdd_addBook:hover{
-    opacity: 0.7;
-}
-
-.btnAdd_addBook:active{
-    opacity: 0.6;
-}
-
 .inputInfoAddBooklanguage select{
     width: 324px;
     border-radius: 10px;

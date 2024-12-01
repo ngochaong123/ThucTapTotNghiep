@@ -7,7 +7,7 @@ import Magnifier from '../../../images/icon/magnifier.png';
 import Plus from "../../../images/icon/plus.png";
 
 interface BorrowBook {
-  borrow_receipt_id: string;  // Giữ lại numberVotes như là ID
+  borrowBooks_id: string;  // Giữ lại numberVotes như là ID
   member_code: string;
   name: string;
   book_code: string;
@@ -20,7 +20,7 @@ interface BorrowBook {
   returnDate: string;
 }
 
-export default function LibraryBooks() {
+export default function BorrowBooks() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>(''); 
   const [categories, setCategories] = useState<string[]>([]);
@@ -32,10 +32,10 @@ export default function LibraryBooks() {
 
   const handleEditBook = () => {
     if (selectedBorrowBookId) {
-      const bookToEdit = borrowBooks.find((book) => book.borrow_receipt_id  === selectedBorrowBookId);
+      const bookToEdit = borrowBooks.find((book) => book.borrowBooks_id  === selectedBorrowBookId);
   
       if (bookToEdit) {
-        navigate(`/Menu/ChangeBorrowBooks?borrow_receipt_id =${bookToEdit.borrow_receipt_id }`, { state: { bookData: bookToEdit } });
+        navigate(`/Menu/ChangeBorrowBooks?borrowBooks_id =${bookToEdit.borrowBooks_id }`, { state: { bookData: bookToEdit } });
       } else {
         alert('Không tìm thấy sách với ID đã chọn.');
       }
@@ -156,7 +156,7 @@ export default function LibraryBooks() {
               <thead>
                 <tr>
                   <th></th>
-                  <th>Mã Số phiếu</th>
+                  <th>Mã mượn sách</th>
                   <th>Tên độc giả</th>
                   <th>Tên sách</th>
                   <th>Hình ảnh</th>
@@ -168,15 +168,15 @@ export default function LibraryBooks() {
               </thead>
               <tbody>
                 {filteredBorrowBooks.map(borrowBook => (
-                  <tr key={borrowBook.borrow_receipt_id }>
+                  <tr key={borrowBook.borrowBooks_id }>
                     <td>
                       <input
                         type="checkbox"
-                        checked={selectedBorrowBookId === borrowBook.borrow_receipt_id }
-                        onChange={() => handleSelectBorrowBook(borrowBook.borrow_receipt_id )}
+                        checked={selectedBorrowBookId === borrowBook.borrowBooks_id }
+                        onChange={() => handleSelectBorrowBook(borrowBook.borrowBooks_id )}
                       />
                     </td>
-                    <td>{borrowBook.borrow_receipt_id }</td>
+                    <td>{borrowBook.borrowBooks_id }</td>
                     <td>
                       <div style={{ display: 'flex' }}>
                         <img src={`http://localhost:5000${borrowBook.avatar_link}`} className='avatarborrowBooks' alt="Avatar" />
