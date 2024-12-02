@@ -5,9 +5,9 @@ import './Report.css';
 // Chart imports
 import RegisteredMember from '../Chart/RegisteredMember/RegisteredMember';
 import BorrowedBooksByCategory from "../Chart/BorrowedBooksByCategory/BorrowedBooksByCategory";
-import ForeignMember from "../Chart/foreignMember/foreignMember";
+import GenderRatio from "../Chart/genderRatio/genderRatio";
 import QuantityBooksChart from "../Chart/quantityBooksChart/quantityBooksChart";
-import RevenueChart from '../Chart/revenueChart/revenueChart';
+import RevenueChart from '../Chart/OverduePenaltyChart/OverduePenaltyChart';
 
 // Icon imports
 import downloadIcon from "../../../images/icon/download.png";
@@ -130,9 +130,6 @@ const Report: React.FC = () => {
         <h1>Biểu đồ phân tích</h1>
         <div style={{ display: 'flex' }}>
           <button className='ButtonHeaderReport' >
-            <div>Lọc theo tháng</div>
-          </button>
-          <button className='ButtonHeaderReport' >
           <div>Lọc theo năm</div>
           </button>
           <button className='ButtonHeaderReport' onClick={handleDownloadExcel}>
@@ -235,7 +232,7 @@ const Report: React.FC = () => {
       </div>
 
       <div className='ContanerChartReport'>
-        <div className='ChartRevenue'>
+        <div className='OverduePenaltyChart'>
           <RevenueChart />
         </div>
         <div className='quantityBooks'>
@@ -244,8 +241,8 @@ const Report: React.FC = () => {
       </div>
 
       <div className='ContanerChartReport'>
-        <div className='ForeignersReadBooks'>
-          <ForeignMember />
+        <div className='genderRatio'>
+          <GenderRatio />
         </div>
         <div className='ReaderTrends'>
           <RegisteredMember />

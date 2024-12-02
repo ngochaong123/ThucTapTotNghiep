@@ -1,24 +1,51 @@
 const db = require('../Data/Database'); // Database connection
 
-// Hàm lấy dữ liệu doanh thu và chi phí từ bảng revenue_expenses
-const revenueChart = (req, res) => {
-    const sql = 'SELECT * FROM revenue_expenses';
-    db.query(sql, (err, results) => {
-        if (err) return res.status(500).send(err);
+// Hàm lấy dữ liệu Biểu đồ phạt quá hạn
+const OverduePenaltyChart = (req, res) => {
+    const sql = `
+        SELECT 
+            rb.PenaltyFees, 
+            bb.returnDate 
+        FROM 
+            returnBook rb 
+        JOIN 
+            borrowBooks bb 
+        ON 
+            rb.borrowBooks_id = bb.borrowBooks_id
+        WHERE 
+            rb.PenaltyFees <> 0
+    `;
 
-        // Chuyển đổi dữ liệu từ 'Time' thành tên tháng
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error("Database query error:", err);
+            return res.status(500).send(err);
+        }
+
+        // Chuyển đổi dữ liệu thành tháng
         const formattedData = results.map(item => {
-            const month = new Date(item.Time).toLocaleString('default', { month: 'long' }); // Chỉ lấy tháng
+            const month = new Date(item.returnDate).toLocaleString('default', { month: 'long' }); // Lấy tên tháng
             return {
                 month: month,
-                revenue: item.revenue,
-                expenses: item.expenses
-            }; 
+                penaltyFees: item.PenaltyFees
+            };
         });
 
-        res.json(formattedData); // Trả về dữ liệu theo tháng
+        // Tổng hợp dữ liệu theo tháng
+        const aggregatedData = formattedData.reduce((acc, curr) => {
+            const found = acc.find(item => item.month === curr.month);
+            if (found) {
+                found.penaltyFees += curr.penaltyFees;
+            } else {
+                acc.push(curr);
+            }
+            return acc;
+        }, []);
+
+        res.json(aggregatedData); // Trả về dữ liệu đã tổng hợp
     });
 };
+
 
 // Hàm lấy dữ liệu số lượng sách theo thể loại
 const quantityBooksChart = (req, res) => {
@@ -37,21 +64,56 @@ const quantityBooksChart = (req, res) => {
     });
 };
 
-// Hàm lấy số lượng thành viên theo quốc gia
-const foreignMemberChart = (req, res) => {
+// Hàm Tỷ lệ giới tính độc giả đăng ký
+const genderRatio = (req, res) => {
     const sql = `
-        SELECT country, COUNT(*) as total_members
-        FROM members
-        GROUP BY country
+        SELECT 
+            CASE 
+                WHEN gender LIKE '%Nam%' THEN 'Nam'
+                WHEN gender LIKE '%Nữ%' THEN 'Nữ'
+                ELSE NULL
+            END AS genderGroup,
+            COUNT(*) AS count
+        FROM 
+            members
+        WHERE 
+            gender LIKE '%Nam%' OR gender LIKE '%Nữ%'
+        GROUP BY 
+            genderGroup
     `;
-    
+
     db.query(sql, (err, results) => {
         if (err) {
-            return res.status(500).send(err); // Nếu có lỗi, trả về lỗi 500
+            console.error("Database query error:", err);
+            return res.status(500).json({ error: "Lỗi truy vấn cơ sở dữ liệu" });
         }
-        res.json(results);  // Trả về dữ liệu số lượng thành viên theo quốc gia
+
+        const genderData = results.reduce((acc, item) => {
+            acc[item.genderGroup.toLowerCase()] = item.count;
+            return acc;
+        }, {});
+
+        const maleCount = genderData.nam || 0;
+        const femaleCount = genderData.nữ || 0;
+
+        const total = maleCount + femaleCount;
+        const malePercentage = total ? ((maleCount / total) * 100).toFixed(2) : 0;
+        const femalePercentage = total ? ((femaleCount / total) * 100).toFixed(2) : 0;
+
+        res.json({
+            totalMembers: total,
+            male: {
+                count: maleCount,
+                percentage: `${malePercentage}%`,
+            },
+            female: {
+                count: femaleCount,
+                percentage: `${femalePercentage}%`,
+            },
+        });
     });
 };
+
 
 // Hàm lấy dữ liệu số lượng sách đã mượn theo thể loại
 const borrowedBooksByCategory = (req, res) => {
@@ -278,9 +340,9 @@ const memberBorrowGrowth = (req, res) => {
 };
   
 module.exports = {
-    revenueChart,
+    OverduePenaltyChart,
     quantityBooksChart,
-    foreignMemberChart,
+    genderRatio,
     borrowedBooksByCategory,
     registrationTrends,
     revenueGrowth,

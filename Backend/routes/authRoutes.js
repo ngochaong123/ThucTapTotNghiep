@@ -4,12 +4,12 @@ const { getAllBooks, searchBooks, addBook, editBook, DeleteBook, categories, loc
 const { getAllMembers, searchMembers, addMember, editMember, DeleteMember, memberUpload } = require('../controllers/Member');
 const { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook, deleteBorrowBook} = require('../controllers/BorrowdBooks');
 const { getUser, editUser, uploadUser } = require('../controllers/User');
-const { revenueChart, quantityBooksChart, foreignMemberChart, borrowedBooksByCategory, registrationTrends,revenueGrowth, memberRegistrationGrowth, bookCountByMonth, memberBorrowGrowth, profitGrowth} = require('../controllers/chart');
+const { OverduePenaltyChart, quantityBooksChart, genderRatio, borrowedBooksByCategory, registrationTrends,revenueGrowth, memberRegistrationGrowth, bookCountByMonth, memberBorrowGrowth, profitGrowth} = require('../controllers/chart');
 const { downloadExcel } = require('../controllers/DowloandData');
 const {getAllreturnBooks, getStatuses, calculatePenaltyForAll, getUniqueFee, returnBooks} = require('../controllers/returnBooks')
 
 const router = express.Router();
- 
+
 // Route cho quản lý tài khoản
 router.post('/login', login);
 router.post('/Register', register); 
@@ -47,9 +47,9 @@ router.post('/calculatePenaltyForAll',calculatePenaltyForAll);
 router.delete('/returnBooks/:id',returnBooks); 
 
 //Router chart
-router.get('/revenueChart',revenueChart);
+router.get('/OverduePenaltyChart',OverduePenaltyChart);
 router.get('/quantityBooksChart',quantityBooksChart);
-router.get('/foreignMemberChart',foreignMemberChart);
+router.get('/genderRatio',genderRatio);
 router.get('/borrowedBooksByCategory',borrowedBooksByCategory);
 router.get('/registrationTrends',registrationTrends); 
 

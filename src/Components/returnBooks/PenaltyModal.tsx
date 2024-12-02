@@ -34,7 +34,6 @@ const PenaltyModal: React.FC<PenaltyModalProps> = ({ isOpen, onRequestClose, onS
         if (response.status === 200) {
           const { updatedBooks } = response.data;
           onSave(updatedBooks); // Truyền danh sách các sách với phí phạt đã tính vào hàm onSave
-          alert('Phí phạt đã được tính và lưu cho tất cả sách trả');
           
           // Reset trang sau khi lưu
           window.location.reload();  // Tải lại trang

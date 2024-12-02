@@ -15,7 +15,8 @@ const getAllreturnBooks = (req, res) => {
             borrowBooks.quantity, 
             borrowBooks.borrowDate, 
             borrowBooks.returnDate,      
-            returnBook.PenaltyFees,    
+            returnBook.PenaltyFees,
+            borrowBooks.latePaymDate,    
             returnBook.Status           
         FROM 
             borrowBooks 

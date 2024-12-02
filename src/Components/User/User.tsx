@@ -15,14 +15,13 @@ export default function User() {
     user_code: '',
     username: '', 
     avatar_user: '',
-    country: '',
+    gender: '',
     age: '',
     password: '', 
   });
   
   const [initialFormValues, setInitialFormValues] = useState(formValues);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [countries, setCountries] = useState<string[]>([]);
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isFormValid, setIsFormValid] = useState(false);
@@ -58,22 +57,15 @@ export default function User() {
     );
   }, [formValues]);
 
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const response = await fetch('https://restcountries.com/v3/all');
-        const data = await response.json();
-        const countryNames = data.map((country: { name: { common: string } }) => country.name.common);
-        setCountries(countryNames);
-      } catch (error) {
-        console.error('Error fetching countries:', error);
-      }
-    };
-    fetchCountries();
-  }, []);
-
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    // Kiểm tra và giới hạn tuổi
+    if (name === 'age') {
+      if (value && (isNaN(Number(value)) || Number(value) > 100)) {
+        toast.error("Vui lòng nhập tuổi hợp lệ dưới 100!");
+        return;
+      }
+    }
     setFormValues({ ...formValues, [name]: value });
   };
 
@@ -119,7 +111,7 @@ export default function User() {
         formData.append('email', formValues.email);
         formData.append('age', formValues.age);
         formData.append('phone_number', formValues.phone_number);
-        formData.append('country', formValues.country);
+        formData.append('gender', formValues.gender);
         
         // Thêm ảnh đại diện nếu có
         if (avatarFile) {
@@ -187,7 +179,7 @@ export default function User() {
       user_code: '',
       username: '', 
       avatar_user: '',
-      country: '',
+      gender: '',
       age: '',
       password: '', 
     });
@@ -269,11 +261,17 @@ export default function User() {
             </div>
           </div>
           <div className='inputInfoUser' style={{marginTop:'-10px'}}>
-            <div>Quốc gia</div>
-            <select name="country" value={formValues.country} onChange={handleChange}>
-              <option value="">Chọn quốc gia</option>
-              {countries.map((country, index) => (
-                <option key={index} value={country}>{country}</option>
+            <div>Giới tính</div>
+            <select 
+              name="gender" 
+              value={formValues.gender} 
+              onChange={handleChange}
+            >
+              <option value="">Chọn giới tính</option>
+              {["Nam", "Nữ"].map((gender, index) => (
+                <option key={index} value={gender}>
+                  {gender}
+                </option>
               ))}
             </select>
           </div>

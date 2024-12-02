@@ -14,7 +14,7 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     age INT,                                 
     phone_number VARCHAR(15),                
-    country VARCHAR(50),                     
+    gender VARCHAR(50),                     
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     avatar_user VARCHAR(255)
 );
@@ -41,7 +41,7 @@ CREATE TABLE members (
     registration_date DATE NOT NULL,
     age INT NOT NULL,
     avatar_link VARCHAR(255),
-    country VARCHAR(50) NOT NULL
+    gender VARCHAR(50) NOT NULL
 );
 
 -- Tạo bảng borrowBooks
@@ -63,7 +63,6 @@ CREATE TABLE borrowBooks (
     FOREIGN KEY (book_code) REFERENCES books(book_code)         -- Khóa ngoại tới bảng books
 );
 
-
 CREATE TABLE returnBook (
     returnBook_id VARCHAR(20) PRIMARY KEY,
     borrowBooks_id VARCHAR(20) NOT NULL,
@@ -73,14 +72,6 @@ CREATE TABLE returnBook (
     FOREIGN KEY (borrowBooks_id) REFERENCES borrowBooks(borrowBooks_id)
 );
 
-CREATE TABLE revenue_expenses (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  Time DATE NOT NULL,
-  revenue INT NOT NULL,
-  expenses INT NOT NULL,
-  latePaymDate date ,
-  profit INT GENERATED ALWAYS AS (revenue - expenses) STORED
-);
 
 -- Thêm dữ liệu sách (books)
 INSERT INTO books (book_code, book_name, image_link, quantity, category, author, location, language, received_date)
@@ -134,27 +125,27 @@ VALUES
 ('BK047', 'Tress of the Emerald Sea', '60531406.jpg', 10, 'Phiêu mưu - mạo hiểm', 'Brandon Sanderson', 'Khu B', 'Tiếng anh', '2024-01-10'),
 ('BK048', 'SPY×FAMILY 1', '52961491.jpg', 3, 'Phiêu mưu - mạo hiểm', 'Tatsuya Endo', 'Khu B', 'Tiếng anh', '2024-07-14');
 
-INSERT INTO members (member_code, name, email, phone, registration_date, age, avatar_link, country) VALUES
-('MEM001', 'John Doe', 'john@example.com', '1234567890', '2024-03-15', 25, 'avatar.jpeg', 'United States'),
-('MEM002', 'Jane Smith', 'jane@example.com', '0987654321', '2024-01-20', 30, 'user1.jpg', 'United Kingdom'),
-('MEM003', 'Alice Johnson', 'alice@example.com', '1122334455', '2024-01-25', 28, 'user2.jpg', 'Canada'),
-('MEM004', 'Bob Brown', 'bob@example.com', '2233445566', '2024-02-01', 35, 'user3.jpg', 'Australia'),
-('MEM005', 'Charlie White', 'charlie@example.com', '3344556677', '2024-02-05', 22, 'user4.jpg', 'France'),
-('MEM006', 'David Wilson', 'david@example.com', '4455667788', '2024-03-10', 29, 'user5.jpg', 'Germany'),
-('MEM007', 'Eva Green', 'eva@example.com', '5566778899', '2024-02-15', 32, 'user6.jpg', 'Italy'),
-('MEM008', 'Frank Harris', 'frank@example.com', '6677889900', '2024-05-20', 27, 'user7.jpg', 'Spain'),
-('MEM009', 'Grace Lee', 'grace@example.com', '7788990011', '2024-07-25', 31, 'user8.jpg', 'Japan'),
-('MEM010', 'Hank Miller', 'hank@example.com', '8899001122', '2024-03-01', 40, 'user9.jpg', 'South Korea');
+INSERT INTO members (member_code, name, email, phone, registration_date, age, avatar_link, gender) VALUES
+('MEM001', 'John Doe', 'john@example.com', '1234567890', '2024-03-15', 25, 'avatar.jpeg', 'Nam'),
+('MEM002', 'Jane Smith', 'jane@example.com', '0987654321', '2024-01-20', 30, 'user1.jpg', 'Nam'),
+('MEM003', 'Alice Johnson', 'alice@example.com', '1122334455', '2024-01-25', 28, 'user2.jpg', 'Nữ'),
+('MEM004', 'Bob Brown', 'bob@example.com', '2233445566', '2024-02-01', 35, 'user3.jpg', 'Nữ'),
+('MEM005', 'Charlie White', 'charlie@example.com', '3344556677', '2024-02-05', 22, 'user4.jpg', 'Nam'),
+('MEM006', 'David Wilson', 'david@example.com', '4455667788', '2024-03-10', 29, 'user5.jpg', 'Nữ'),
+('MEM007', 'Eva Green', 'eva@example.com', '5566778899', '2024-02-15', 32, 'user6.jpg', 'Nam'),
+('MEM008', 'Frank Harris', 'frank@example.com', '6677889900', '2024-05-20', 27, 'user7.jpg', 'Nữ'),
+('MEM009', 'Grace Lee', 'grace@example.com', '7788990011', '2024-07-25', 31, 'user8.jpg', 'Nam'),
+('MEM010', 'Hank Miller', 'hank@example.com', '8899001122', '2024-03-01', 40, 'user9.jpg', 'Nữ');
 
 INSERT INTO borrowBooks (borrowBooks_id , member_code, book_code, quantity, borrowDate, returnDate) VALUES
 ('MV001', 'MEM001', 'BK039', 1, '2024-11-01', '2024-11-15'),
-('MV002', 'MEM002', 'BK044', 2, '2024-11-02', '2024-11-16'),
-('MV003', 'MEM003', 'BK046', 1, '2024-12-03', '2024-11-17'),
-('MV004', 'MEM004', 'BK048', 3, '2024-11-03', '2024-11-17'),
-('MV005', 'MEM005', 'BK043', 4, '2024-05-03', '2024-11-17'),
+('MV002', 'MEM002', 'BK044', 2, '2024-11-02', '2024-12-16'),
+('MV003', 'MEM003', 'BK046', 1, '2024-11-03', '2024-11-17'),
+('MV004', 'MEM004', 'BK048', 3, '2024-11-03', '2024-12-17'),
+('MV005', 'MEM005', 'BK043', 4, '2024-05-03', '2024-06-17'),
 ('MV006', 'MEM006', 'BK034', 8, '2024-07-03', '2024-11-17'),
-('MV007', 'MEM008', 'BK011', 7, '2024-06-03', '2024-11-17'),
-('MV008', 'MEM010', 'BK011', 6, '2024-03-08', '2024-11-17');
+('MV007', 'MEM008', 'BK011', 7, '2024-06-03', '2024-07-17'),
+('MV008', 'MEM010', 'BK011', 6, '2024-03-08', '2024-05-17');
 
 
 INSERT INTO returnBook (returnBook_id, borrowBooks_id, Fee, PenaltyFees, Status)
@@ -167,19 +158,3 @@ VALUES
 ('RB006', 'MV006', 12000, 12000, 'Trễ hạn'),
 ('RB007', 'MV007', 12000, 0, 'Đang mượn'),
 ('RB008', 'MV008', 12000, 100000, 'Trễ hạn');
-
--- Thêm dữ liệu mẫu vào bảng
-INSERT INTO revenue_expenses (Time, revenue, expenses) VALUES
-('2024-01-01', 20144000, 12176000),
-('2024-02-01', 21550000, 15185000),
-('2024-03-01', 21570000, 20101000),
-('2024-04-01', 21560000, 19098000),
-('2024-05-01', 20610000, 15870000),
-('2024-06-01', 20580000, 20105000),
-('2024-07-01', 21630000, 23910000),
-('2024-08-01', 22600000, 24114000),
-('2024-09-01', 23660000, 23940000),
-('2024-10-01', 24870000, 28740000),
-('2024-11-01', 21550000, 22400000),
-('2024-12-01', 30620000, 27600000);
-

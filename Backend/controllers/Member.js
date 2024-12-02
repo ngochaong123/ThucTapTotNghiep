@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
 // Đảm bảo rằng trường 'avatar_link' tồn tại trong form gửi lên
 const memberUpload = multer({ 
     storage: storage,
-    fileFilter: (req, file, cb) => {
+    fileFilter: (req, file, cb) => { 
         if (file.fieldname === 'avatar_link') {
             cb(null, true); // Chấp nhận file
         } else {
@@ -29,8 +29,8 @@ const memberUpload = multer({
 
 // Hàm kiểm tra dữ liệu đầu vào cho thành viên mới
 const validateMemberData = (data) => {
-    const { member_code, name, age, country, email, phone } = data;
-    return member_code && name && age && country && email && phone;
+    const { member_code, name, age, gender, email, phone } = data;
+    return member_code && name && gender && age && email && phone;
 };
 
 // Hàm lấy danh sách tất cả thành viên
@@ -39,7 +39,7 @@ const getAllMembers = (req, res) => {
     let sql = 'SELECT * FROM members';
     const params = [];
 
-    // Kiểm tra registrationDate
+    // Kiểm tra registrationDate 
     if (registrationDate) {
         const dateParts = registrationDate.split('-');
         if (dateParts.length === 3) {
@@ -88,22 +88,24 @@ const searchMembers = (req, res) => {
 };
 
 const addMember = (req, res) => {
-    const { member_code, name, age, country, email, phone } = req.body;
+    const { member_code, name, age, gender, email, phone } = req.body;
     const avatar_link = req.file ? req.file.filename : null; // Kiểm tra nếu file ảnh đã được tải lên
-    
+
     // Kiểm tra dữ liệu đầu vào
     if (!validateMemberData(req.body)) {
         return res.status(400).json({ message: 'Tất cả các trường là bắt buộc!' });
     }
 
-    console.log("Data: ", req.body);
-    console.log("Image: ", avatar_link);
+    // Kiểm tra xem age có phải là số hợp lệ không
+    if (isNaN(age) || age <= 0) {
+        return res.status(400).json({ message: 'Tuổi phải là một số hợp lệ và lớn hơn 0!' });
+    }
 
-    const sql = `INSERT INTO members (member_code, name, email, phone, registration_date, age, avatar_link, country) 
+    const sql = `INSERT INTO members (member_code, name, email, phone, registration_date, age, avatar_link, gender) 
                  VALUES (?, ?, ?, ?, CURRENT_DATE, ?, ?, ?)`;
-    
-    const values = [member_code, name, email, phone, age, avatar_link, country];
- 
+
+    const values = [member_code, name, email, phone, age, avatar_link, gender];
+
     db.query(sql, values, (err, result) => {
         if (err) {
             console.error('Error inserting member:', err);
@@ -121,6 +123,7 @@ const addMember = (req, res) => {
         res.status(201).json({ message: 'Thành viên đã được thêm thành công', memberId: result.insertId });
     });
 };
+
 
 const DeleteMember = async (req, res) => {
     const { member_code } = req.params;
@@ -146,7 +149,6 @@ const DeleteMember = async (req, res) => {
             console.error("Lỗi khi xóa ảnh:", err);
             return res.status(500).json({ message: "Có lỗi xảy ra khi xóa ảnh." });
           }
-          console.log("Ảnh đại diện đã được xóa thành công.");
         });
       } else {
         console.log("File ảnh đại diện không tồn tại, bỏ qua bước xóa ảnh.");
@@ -158,8 +160,6 @@ const DeleteMember = async (req, res) => {
       if (result[0].affectedRows === 0) {
         return res.status(404).json({ message: "Không tìm thấy thành viên với mã này." });
       }
-  
-      res.status(200).json({ message: "Đã xóa thành viên và ảnh đại diện thành công." });
     } catch (error) {
       console.error("Error deleting member:", error);
       res.status(500).json({ message: "Có lỗi xảy ra khi xóa thành viên và ảnh đại diện." });
@@ -168,11 +168,11 @@ const DeleteMember = async (req, res) => {
 
 const editMember = (req, res) => {
     const { member_code } = req.params;
-    const { name, age, country, email, phone } = req.body;
+    const { name, age, gender, email, phone } = req.body; // Đổi 'country' thành 'gender'
     const new_avatar_link = req.file ? req.file.filename : null;
 
     // Kiểm tra các trường cần thiết
-    if (!member_code || !name || !age || !country || !email || !phone) {
+    if (!member_code || !name || !age || !gender || !email || !phone) {
         return res.status(400).json({ message: "Thiếu dữ liệu" });
     }
 
@@ -200,14 +200,14 @@ const editMember = (req, res) => {
             SET 
                 name = ?, 
                 age = ?, 
-                country = ?, 
+                gender = ?,
                 email = ?, 
                 phone = ?, 
                 avatar_link = COALESCE(?, avatar_link) 
             WHERE 
                 member_code = ?`;
 
-        const values = [name, age, country, email, phone, new_avatar_link, member_code];
+        const values = [name, age, gender, email, phone, new_avatar_link, member_code];
 
         db.query(updateSql, values, (err, result) => {
             if (err) {
@@ -231,6 +231,7 @@ const editMember = (req, res) => {
         });
     });
 };
+
 
 // Export hàm xử lý
 module.exports = { getAllMembers, searchMembers, addMember, editMember, DeleteMember, memberUpload };

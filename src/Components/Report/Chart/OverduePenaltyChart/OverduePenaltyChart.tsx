@@ -3,8 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 
 interface ChartDataItem {
   month: string;
-  revenue: number;
-  expenses: number;
+  penaltyFees: number; // Đặt lại đúng tên trường dữ liệu
 }
 
 interface ChartSeries {
@@ -55,11 +54,10 @@ interface ChartState {
   options: ChartOptions;
 }
 
-const RevenueChart: React.FC = () => {
+const OverduePenaltyChart: React.FC = () => {
   const [chartData, setChartData] = useState<ChartState>({
     series: [
-      { name: 'Doanh thu', data: [] },
-      { name: 'Chi phí', data: [] },
+      { name: 'Số tiền phạt', data: [] },
     ],
     options: {
       chart: { type: 'bar', height: 350 },
@@ -67,64 +65,58 @@ const RevenueChart: React.FC = () => {
       dataLabels: { enabled: false },
       stroke: { show: true, width: 2, colors: ['transparent'] },
       xaxis: { categories: [] },
-      yaxis: { title: { text: 'VND' } },
+      yaxis: { title: { text: 'VNĐ' } },
       fill: { opacity: 1 },
       tooltip: {
         y: {
           formatter: (val: number) => {
-            // Định dạng số theo đồng Việt Nam (VND)
-            const VND = new Intl.NumberFormat('vi-VN', {
-              style: 'currency',
-              currency: 'VND',
-            });
-
-            // Trả về số tiền theo định dạng VND
+            const VND = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' });
             return VND.format(val);
-          }
-        }
+          },
+        },
       },
     },
   });
 
   useEffect(() => {
-    fetch('http://localhost:5000/revenueChart')
-      .then(response => response.json())
-      .then((data: ChartDataItem[]) => {
-        if (data && data.length > 0) {
-          // Lấy tháng, doanh thu và chi phí
-          const months = data.map((item) => item.month);
-          const revenue = data.map((item) => item.revenue);
-          const expenses = data.map((item) => item.expenses);
-
-          setChartData({
-            series: [
-              { name: 'Doanh thu', data: revenue },
-              { name: 'Chi phí', data: expenses },
-            ],
-            options: {
-              ...chartData.options,
-              xaxis: {
-                ...chartData.options.xaxis,
-                categories: months, // Chỉ hiển thị tháng
-              },
-            },
-          });
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/OverduePenaltyChart');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
         }
-      })
-      .catch(error => {
+        const data: ChartDataItem[] = await response.json();
+
+        if (data && data.length > 0) {
+          const months = data.map((item) => item.month);
+          const penaltyFees = data.map((item) => item.penaltyFees);
+
+          setChartData((prevState) => ({
+            ...prevState,
+            series: [{ name: 'Số tiền phạt', data: penaltyFees }],
+            options: {
+              ...prevState.options,
+              xaxis: { ...prevState.options.xaxis, categories: months },
+            },
+          }));
+        }
+      } catch (error) {
         console.error('Error fetching data:', error);
-      });
-  }, []); // Chỉ chạy một lần khi component mount
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div>
-      <h2 style={{ marginBottom: 0 }}>Biểu đồ phạt thư viện dựa trên số ngày trễ</h2>
+      <h2 style={{ marginBottom: 0 }}>Biểu đồ phạt theo thời gian quá hạn</h2>
       <div id="chart">
-        <ReactApexChart 
-          options={chartData.options} 
-          series={chartData.series} 
-          type="bar" 
-          height={300} 
+        <ReactApexChart
+          options={chartData.options}
+          series={chartData.series}
+          type="bar"
+          height={350}
           width="750px"
         />
       </div>
@@ -132,4 +124,4 @@ const RevenueChart: React.FC = () => {
   );
 };
 
-export default RevenueChart;
+export default OverduePenaltyChart;

@@ -21,6 +21,7 @@ interface ReturnBooks {
   returnDate: string;
   PenaltyFees: number;
   Fee: number;
+  latePaymDate: number;
   Status: string;
 }
 
@@ -252,6 +253,7 @@ export default function ReturnBooks() {
                   <th>Số lượng</th>
                   <th>Ngày mượn sách</th>
                   <th>Ngày trả sách</th>
+                  <th>Số ngày trả trễ</th>
                   <th>Phí phạt</th>
                   <th>Trạng thái</th>
                 </tr>
@@ -280,6 +282,7 @@ export default function ReturnBooks() {
                     <td>{returnBook.quantity}</td>
                     <td>{new Date(returnBook.borrowDate).toLocaleDateString('vi-VN')}</td>
                     <td>{new Date(returnBook.returnDate).toLocaleDateString('vi-VN')}</td>
+                    <td>{returnBook.latePaymDate}</td>
                     <td>
                       {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(returnBook.PenaltyFees)}
                     </td>

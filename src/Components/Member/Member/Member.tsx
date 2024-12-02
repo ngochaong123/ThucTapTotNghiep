@@ -18,7 +18,7 @@ interface Member {
   avatar_link: string;
   registration_date: string;
   age: number;
-  country: string;
+  gender: string;
 }
 
 export default function Member() {
@@ -178,7 +178,7 @@ export default function Member() {
                   <th>Mã độc giả</th>
                   <th>Tên độc giả</th>
                   <th>Tuổi</th>
-                  <th>Quốc gia</th>
+                  <th>Giới tính</th>
                   <th>Email</th>
                   <th>Số điện thoại</th>
                   <th>Ngày đăng ký</th>
@@ -202,7 +202,7 @@ export default function Member() {
                       </div>
                     </td>
                     <td>{member.age}</td>
-                    <td>{member.country}</td>
+                    <td>{member.gender}</td>
                     <td>{member.email}</td>
                     <td>{member.phone}</td>
                     <td>{new Date(member.registration_date).toLocaleDateString('vi-VN')}</td>

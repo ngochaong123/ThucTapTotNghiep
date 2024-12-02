@@ -47,11 +47,11 @@ const getUser = (req, res) => {
 };
  
 const editUser = (req, res) => {
-  const {user_code, username, full_name, password, email, age, phone_number, country } = req.body;
+  const {user_code, username, full_name, password, email, age, phone_number, gender } = req.body;
   const new_avatar_link = req.file ? req.file.filename : null;
 
   // Kiểm tra nếu thiếu thông tin
-  if (!user_code || !username || !full_name || !password || !email || !phone_number || !country) {
+  if (!user_code || !username || !full_name || !password || !email || !phone_number || !gender) {
     return res.status(400).json({ message: 'Vui lòng cung cấp đầy đủ thông tin.' });
   }
 
@@ -81,10 +81,10 @@ const editUser = (req, res) => {
         email = ?, 
         age = ?, 
         phone_number = ?, 
-        country = ?
+        gender = ?
     `;
 
-    const params = [user_code, username, full_name, password, email, age, phone_number, country];
+    const params = [user_code, username, full_name, password, email, age, phone_number, gender];
 
     // Nếu có ảnh đại diện mới, xử lý xóa ảnh cũ và cập nhật ảnh mới
     if (new_avatar_link) {

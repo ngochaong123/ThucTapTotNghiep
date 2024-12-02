@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './changeInfor.css';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DefaultAvatar from "../../../images/icon/avatar.jpg";
@@ -20,7 +20,7 @@ export default function ChangeInfor() {
     phone: memberData ? memberData.phone : '',
     email: memberData ? memberData.email : '',
     avatar_link: memberData ? memberData.avatar_link : '',
-    country: memberData ? memberData.country : '',
+    gender: memberData ? memberData.gender : '',
     age: memberData ? memberData.age : '',
   });
 
@@ -28,18 +28,16 @@ export default function ChangeInfor() {
   const [imagePreview, setImagePreview] = useState<string>(`http://localhost:5000${formValues.avatar_link}`);
   const [isChanged, setIsChanged] = useState(false);
 
-  useEffect(() => {
-    fetch('https://restcountries.com/v3.1/all')
-      .then((response) => response.json())
-      .then((data) => {
-        const countryNames = data.map((country: any) => country.name.common);
-        setCountries(countryNames);
-      })
-      .catch((error) => console.error('Error fetching countries:', error));
-  }, []);
-
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value, type } = e.target;
+
+    if (name === 'age') {
+      // Chỉ cho phép nhập số và kiểm tra điều kiện tuổi
+      if (value && (isNaN(Number(value)) || Number(value) > 100)) {
+        toast.error("Vui lòng nhập tuổi hợp lệ dưới 100!");
+        return;
+      }
+    }
 
     if (type === 'file') {
       const fileInput = e.target as HTMLInputElement;
@@ -108,17 +106,17 @@ export default function ChangeInfor() {
                 phone: '',
                 email: '',
                 avatar_link: '',
-                country: '',
+                gender: '',
                 age: '',
               });
               setImagePreview(DefaultAvatar);
-              setIsChanged(false); 
 
-              // Trì hoãn 6 giây trước khi chuyển hướng
+              toast.success('Xóa thành viên thành công!');
               setTimeout(() => {
                 navigate('/menu/Member', { replace: true });
-              }, 6000); // 6000ms = 6 giây
+              }, 6000);
 
+              setIsChanged(false); 
             } catch (error) {
               console.error("lỗi xóa thành viên", error);
               toast.error("Có lỗi xảy ra khi xóa thành viên.");
@@ -138,6 +136,12 @@ export default function ChangeInfor() {
   
     if (!formValues.name || !formValues.phone || !formValues.email || !formValues.member_code) {
       toast.error("Vui lòng điền tất cả các trường bắt buộc.");
+      return;
+    }
+  
+    // Kiểm tra tuổi hợp lệ
+    if (formValues.age < 18 || formValues.age > 100) {
+      toast.error("Tuổi phải nằm trong khoảng từ 18 đến 100.");
       return;
     }
   
@@ -165,7 +169,7 @@ export default function ChangeInfor() {
             formData.append('member_code', formValues.member_code);
             formData.append('phone', formValues.phone);
             formData.append('email', formValues.email);
-            formData.append('country', formValues.country);
+            formData.append('gender', formValues.gender);
             formData.append('age', formValues.age);
   
             const avatarInput = document.getElementById("avatarInput") as HTMLInputElement;
@@ -181,12 +185,11 @@ export default function ChangeInfor() {
                   'Content-Type': 'multipart/form-data',
                 },
               });
-              toast.success(response.data.message);
 
-              // Trì hoãn 6 giây trước khi chuyển hướng
+              toast.success(response.data.message);
               setTimeout(() => {
                 navigate('/menu/Member', { replace: true });
-              }, 6000); // 6000ms = 6 giây
+              }, 6000);
 
               setIsChanged(false);
             } catch (error) {
@@ -198,6 +201,7 @@ export default function ChangeInfor() {
       ]
     });
   };
+  
 
   return (
     <div className='FrameContanierChangeMember'>
@@ -238,7 +242,15 @@ export default function ChangeInfor() {
           </div>
           <div className='inputInfoMember'>
             <div>Tuổi </div>
-            <input name="age" value={formValues.age} onChange={handleChange} style={{ marginBottom: 0 }} placeholder='Tuổi' />
+            <input 
+              name="age" 
+              value={formValues.age} 
+              onChange={handleChange} 
+              placeholder='Tuổi' 
+              type="number" 
+              min="0" 
+              max="100" 
+            />
           </div>
         </div>
         
@@ -252,12 +264,16 @@ export default function ChangeInfor() {
             <input name="email" value={formValues.email} onChange={handleChange} placeholder='Email' />
           </div>
           <div className='inputInfoMember'>
-            <div>Quốc gia </div>
-            <select name="country" value={formValues.country} onChange={handleChange}>
-              <option value="">Chọn quốc gia</option>
-              {countries.map((country, index) => (
-                <option key={index} value={country}>
-                  {country}
+            <div>Giới tính </div>
+            <select 
+              name="gender" 
+              value={formValues.gender} 
+              onChange={handleChange}
+            >
+              <option value="">Chọn giới tính</option>
+              {["Nam", "Nữ"].map((gender, index) => (
+                <option key={index} value={gender}>
+                  {gender}
                 </option>
               ))}
             </select>
