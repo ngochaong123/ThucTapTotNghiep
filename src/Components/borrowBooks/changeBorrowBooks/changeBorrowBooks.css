@@ -130,8 +130,7 @@
     margin-right: 80px;
 }
 
-.SaveButtonchangeBorrowBooks,
-.ResetButtonchangeBorrowBooks{
+.SaveButtonchangeBorrowBooks{
     width: 100px;
 }
 
@@ -139,24 +138,10 @@
     background-color: #2864F6;
 }
 
-.ResetButtonchangeBorrowBooks{
-    background-color: red;
-}
-
 .SaveButtonchangeBorrowBooks:hover{
     opacity: 0.7;
 }
 
-.ResetButtonchangeBorrowBooks:hover{
-    background-color: red;
-    opacity: 0.7;
-}
-
 .SaveButtonchangeBorrowBooks:active{
-    opacity: 0.6;
-}
-
-.ResetButtonchangeBorrowBooks:active{
-    background-color: red;
     opacity: 0.6;
 }

@@ -142,23 +142,48 @@ const returnBooks = async (req, res) => {
     return res.status(400).json({ message: 'ID sách trả không hợp lệ.' });
   }
 
-  const deleteQuery = 'DELETE FROM returnBook WHERE returnBook_id = ?';
+  // Truy vấn để lấy borrowBooks_id từ returnBook trước khi xóa
+  const selectBorrowIdQuery = 'SELECT borrowBooks_id FROM returnBook WHERE returnBook_id = ?';
 
-  // Thực hiện câu lệnh DELETE
-  db.query(deleteQuery, [returnBookId], (err, result) => { 
+  db.query(selectBorrowIdQuery, [returnBookId], (err, selectResult) => {
     if (err) {
-      console.error('Lỗi khi xóa sách trả:', err);
-      return res.status(500).json({ message: 'Có lỗi xảy ra khi xóa sách trả.' });
+      console.error('Lỗi khi lấy borrowBooks_id:', err);
+      return res.status(500).json({ message: 'Có lỗi xảy ra khi xử lý dữ liệu.' });
     }
 
-    // Kiểm tra xem bản ghi có tồn tại không
-    if (result.affectedRows === 0) {
+    if (selectResult.length === 0) {
       return res.status(404).json({ message: 'Không tìm thấy bản ghi sách trả.' });
     }
 
-    // Xóa thành công
-    return res.status(200).json({ message: 'Xóa sách trả thành công!' });
+    const borrowBooksId = selectResult[0].borrowBooks_id;
+
+    // Xóa bản ghi trong bảng returnBook
+    const deleteReturnQuery = 'DELETE FROM returnBook WHERE returnBook_id = ?';
+
+    db.query(deleteReturnQuery, [returnBookId], (err, deleteResult) => {
+      if (err) {
+        console.error('Lỗi khi xóa sách trả:', err);
+        return res.status(500).json({ message: 'Có lỗi xảy ra khi xóa sách trả.' });
+      }
+
+      if (deleteResult.affectedRows === 0) {
+        return res.status(404).json({ message: 'Không tìm thấy bản ghi sách trả.' });
+      }
+
+      // Xóa bản ghi trong bảng borrowBooks
+      const deleteBorrowQuery = 'DELETE FROM borrowBooks WHERE borrowBooks_id = ?';
+
+      db.query(deleteBorrowQuery, [borrowBooksId], (err, borrowDeleteResult) => {
+        if (err) {
+          console.error('Lỗi khi xóa borrowBooks:', err);
+          return res.status(500).json({ message: 'Có lỗi xảy ra khi xóa thông tin mượn sách.' });
+        }
+
+        return res.status(200).json({ message: 'Xóa sách trả và thông tin mượn sách thành công!' });
+      });
+    });
   });
 };
+ 
 
 module.exports = { getAllreturnBooks, getStatuses, calculatePenaltyForAll, getUniqueFee, returnBooks };

@@ -1,10 +1,10 @@
 const mysql = require('mysql2/promise');
 const ExcelJS = require('exceljs');
-const path = require('path'); // Để xử lý đường dẫn
+const path = require('path');
 const fs = require('fs');
 
 const downloadExcel = async (req, res) => {
-    // Tạo kết nối cơ sở dữ liệu trực tiếp từ mysql2/promise
+    // Kết nối đến cơ sở dữ liệu
     const db = await mysql.createConnection({
         host: 'localhost',
         user: 'root',
@@ -13,21 +13,22 @@ const downloadExcel = async (req, res) => {
     });
 
     try {
-        // Truy vấn tất cả các bảng
+        // Truy vấn dữ liệu từ các bảng
         const [books] = await db.query('SELECT * FROM books');
         const [members] = await db.query('SELECT * FROM members');
         const [borrowBooks] = await db.query('SELECT * FROM borrowBooks');
-        const [revenueExpenses] = await db.query('SELECT * FROM revenue_expenses');
+        const [returnBook] = await db.query('SELECT * FROM returnBook');
 
-        if (books.length === 0 && members.length === 0 && borrowBooks.length === 0 && revenueExpenses.length === 0) {
+        // Kiểm tra nếu không có dữ liệu trong các bảng
+        if (books.length === 0 && members.length === 0 && borrowBooks.length === 0 && returnBook.length === 0) {
             console.log('No data found in any table');
             return res.status(404).send('Không tìm thấy dữ liệu bảng');
         }
 
-        // Tạo một workbook mới
+        // Tạo workbook mới
         const workbook = new ExcelJS.Workbook();
-        
-        // Tạo sheet cho bảng Books
+
+        // Thêm sheet Books
         const worksheetBooks = workbook.addWorksheet('Books Data');
         worksheetBooks.columns = [
             { header: 'Book Code', key: 'book_code', width: 15 },
@@ -42,7 +43,7 @@ const downloadExcel = async (req, res) => {
         ];
         worksheetBooks.addRows(books);
 
-        // Tạo sheet cho bảng Members
+        // Thêm sheet Members
         const worksheetMembers = workbook.addWorksheet('Members Data');
         worksheetMembers.columns = [
             { header: 'Member Code', key: 'member_code', width: 15 },
@@ -52,50 +53,47 @@ const downloadExcel = async (req, res) => {
             { header: 'Registration Date', key: 'registration_date', width: 15 },
             { header: 'Age', key: 'age', width: 5 },
             { header: 'Avatar Link', key: 'avatar_link', width: 30 },
-            { header: 'Country', key: 'country', width: 15 }
+            { header: 'Gender', key: 'gender', width: 10 }
         ];
         worksheetMembers.addRows(members);
 
-        // Tạo sheet cho bảng BorrowBooks
+        // Thêm sheet BorrowBooks
         const worksheetBorrowBooks = workbook.addWorksheet('BorrowBooks Data');
         worksheetBorrowBooks.columns = [
-            { header: 'ID', key: 'id', width: 5 },
+            { header: 'BorrowBooks ID', key: 'borrowBooks_id', width: 20 },
             { header: 'Member Code', key: 'member_code', width: 15 },
             { header: 'Book Code', key: 'book_code', width: 15 },
             { header: 'Quantity', key: 'quantity', width: 10 },
             { header: 'Borrow Date', key: 'borrowDate', width: 15 },
-            { header: 'Return Date', key: 'returnDate', width: 15 }
+            { header: 'Return Date', key: 'returnDate', width: 15 },
+            { header: 'Late Payment Days', key: 'latePaymDate', width: 20 }
         ];
         worksheetBorrowBooks.addRows(borrowBooks);
 
-        // Tạo sheet cho bảng RevenueExpenses
-        const worksheetRevenueExpenses = workbook.addWorksheet('RevenueExpenses Data');
-        worksheetRevenueExpenses.columns = [
-            { header: 'ID', key: 'id', width: 5 },
-            { header: 'Time', key: 'Time', width: 15 },
-            { header: 'Revenue', key: 'revenue', width: 10 },
-            { header: 'Expenses', key: 'expenses', width: 10 },
-            { header: 'Profit', key: 'profit', width: 10 }
+        // Thêm sheet ReturnBook
+        const worksheetReturnBook = workbook.addWorksheet('ReturnBook Data');
+        worksheetReturnBook.columns = [
+            { header: 'ReturnBook ID', key: 'returnBook_id', width: 20 },
+            { header: 'BorrowBooks ID', key: 'borrowBooks_id', width: 20 },
+            { header: 'Fee', key: 'Fee', width: 10 },
+            { header: 'Penalty Fees', key: 'PenaltyFees', width: 15 },
+            { header: 'Status', key: 'Status', width: 15 }
         ];
-        worksheetRevenueExpenses.addRows(revenueExpenses);
-
-        // Định nghĩa đường dẫn file Excel
-        const filePath = path.join(__dirname, 'library_data.xlsx');
+        worksheetReturnBook.addRows(returnBook);
 
         // Ghi workbook vào file
+        const filePath = path.join(__dirname, 'library_data.xlsx');
         await workbook.xlsx.writeFile(filePath);
         console.log('Excel file was written successfully');
 
-        // Gửi file Excel dưới dạng response để tải về
+        // Gửi file Excel để tải về
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename="library_data.xlsx"');
         res.sendFile(filePath, (err) => {
-            // Xử lý khi gửi xong file
             if (err) {
                 console.error('Error sending file:', err);
             } else {
                 console.log('File sent successfully');
-                // Xóa file sau khi gửi
                 fs.unlink(filePath, (unlinkErr) => {
                     if (unlinkErr) {
                         console.error('Error deleting file:', unlinkErr);
@@ -108,10 +106,9 @@ const downloadExcel = async (req, res) => {
 
     } catch (error) {
         console.error('Error generating Excel file:', error.message);
-        console.error(error.stack); // Hiển thị chi tiết lỗi
+        console.error(error.stack);
         res.status(500).send('Lỗi in file excel: ' + error.message);
     } finally {
-        // Đóng kết nối cơ sở dữ liệu sau khi sử dụng
         await db.end();
     }
 };

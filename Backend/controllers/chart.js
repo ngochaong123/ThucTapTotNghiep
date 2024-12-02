@@ -156,75 +156,75 @@ const registrationTrends = (req, res) => {
 
 // Hàm tính toán doanh thu và tỷ lệ thay đổi giữa 2 tháng gần nhất
 const revenueGrowth = (req, res) => {
-    // Truy vấn để lấy doanh thu theo từng tháng từ bảng revenue_expenses
-    const query = `
-        SELECT MONTH(Time) AS month, revenue
-        FROM revenue_expenses
-        ORDER BY Time DESC
-        LIMIT 2;
-    `;
+    
+    // const query = `
+    //     SELECT MONTH(Time) AS month, revenue
+    //     FROM revenue_expenses
+    //     ORDER BY Time DESC
+    //     LIMIT 2;
+    // `;
 
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error('Error executing query:', err);
-            res.status(500).send('Error fetching data');
-            return;
-        }
+    // db.query(query, (err, results) => {
+    //     if (err) {
+    //         console.error('Error executing query:', err);
+    //         res.status(500).send('Error fetching data');
+    //         return;
+    //     }
 
-        if (results.length < 2) {
-            return res.json({ revenue: 0, growth: 0 }); // Trả về 0 nếu không đủ dữ liệu
-        }
+    //     if (results.length < 2) {
+    //         return res.json({ revenue: 0, growth: 0 }); // Trả về 0 nếu không đủ dữ liệu
+    //     }
 
-        const [latestMonth, previousMonth] = results;
-        const revenueThisMonth = latestMonth.revenue;
-        const revenueLastMonth = previousMonth.revenue;
+    //     const [latestMonth, previousMonth] = results;
+    //     const revenueThisMonth = latestMonth.revenue;
+    //     const revenueLastMonth = previousMonth.revenue;
 
-        // Tính tỷ lệ thay đổi doanh thu
-        const growth = ((revenueThisMonth - revenueLastMonth) / revenueLastMonth) * 100;
+    //     // Tính tỷ lệ thay đổi doanh thu
+    //     const growth = ((revenueThisMonth - revenueLastMonth) / revenueLastMonth) * 100;
 
-        // Trả về doanh thu và tỷ lệ thay đổi
-        res.json({
-            revenue: revenueThisMonth,
-            growth: growth.toFixed(2), // Chỉ lấy 2 chữ số thập phân
-        });
-    });
+    //     // Trả về doanh thu và tỷ lệ thay đổi
+    //     res.json({
+    //         revenue: revenueThisMonth,
+    //         growth: growth.toFixed(2), // Chỉ lấy 2 chữ số thập phân
+    //     });
+    // });
 };
  
 const profitGrowth = (req, res) => {
-    const query = `
-        SELECT 
-            a.profit AS latest_profit,  
-            ((a.profit - b.profit) / b.profit) * 100 AS growth_percentage
-        FROM revenue_expenses a
-        JOIN revenue_expenses b
-            ON MONTH(a.Time) = MONTH(b.Time) + 1
-            AND YEAR(a.Time) = YEAR(b.Time)  -- Đảm bảo chỉ tính tháng liền kề trong cùng năm
-        ORDER BY a.Time DESC
-        LIMIT 1;  -- Lấy tháng mới nhất và tháng trước đó
-    `;
+    // const query = `
+    //     SELECT 
+    //         a.profit AS latest_profit,  
+    //         ((a.profit - b.profit) / b.profit) * 100 AS growth_percentage
+    //     FROM revenue_expenses a
+    //     JOIN revenue_expenses b
+    //         ON MONTH(a.Time) = MONTH(b.Time) + 1
+    //         AND YEAR(a.Time) = YEAR(b.Time)  -- Đảm bảo chỉ tính tháng liền kề trong cùng năm
+    //     ORDER BY a.Time DESC
+    //     LIMIT 1;  -- Lấy tháng mới nhất và tháng trước đó
+    // `;
     
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error('Error executing query:', err);
-            return res.status(500).send('Error fetching data');
-        }
+    // db.query(query, (err, results) => {
+    //     if (err) {
+    //         console.error('Error executing query:', err);
+    //         return res.status(500).send('Error fetching data');
+    //     }
 
-        if (results.length === 0) {
-            return res.json({ profit: 0, growth: 0 });
-        }
+    //     if (results.length === 0) {
+    //         return res.json({ profit: 0, growth: 0 });
+    //     }
 
-        const { latest_profit, growth_percentage } = results[0];
+    //     const { latest_profit, growth_percentage } = results[0];
 
-        // Ép kiểu growth_percentage sang số và kiểm tra giá trị
-        const growth = growth_percentage != null && !isNaN(growth_percentage)
-            ? Number(growth_percentage).toFixed(2)
-            : "0.00";
+    //     // Ép kiểu growth_percentage sang số và kiểm tra giá trị
+    //     const growth = growth_percentage != null && !isNaN(growth_percentage)
+    //         ? Number(growth_percentage).toFixed(2)
+    //         : "0.00";
 
-        res.json({
-            profit: latest_profit,
-            growth: growth
-        });
-    });
+    //     res.json({
+    //         profit: latest_profit,
+    //         growth: growth
+    //     });
+    // });
 }; 
  
 // Hàm lấy số lượng thành viên đăng ký trong tháng lớn nhất và tỷ lệ thay đổi so với tháng trước

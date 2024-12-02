@@ -21,7 +21,7 @@ CREATE TABLE users (
 
 -- Tạo bảng books
 CREATE TABLE books (
-    book_code VARCHAR(50) PRIMARY KEY,
+    book_code VARCHAR(20) PRIMARY KEY,
     book_name VARCHAR(255) NOT NULL,
     author VARCHAR(100) NOT NULL,
     quantity INT NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE books (
 
 -- Tạo bảng members
 CREATE TABLE members (
-    member_code VARCHAR(10) PRIMARY KEY,
+    member_code VARCHAR(20) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     phone VARCHAR(15) NOT NULL,
@@ -44,23 +44,16 @@ CREATE TABLE members (
     gender VARCHAR(50) NOT NULL
 );
 
--- Tạo bảng borrowBooks
 CREATE TABLE borrowBooks (
-    borrowBooks_id VARCHAR(20) PRIMARY KEY,   -- ID biên nhận mượn
-    member_code VARCHAR(20) NOT NULL,          -- Mã thành viên
-    book_code VARCHAR(20) NOT NULL,            -- Mã sách
-    quantity INT NOT NULL CHECK (quantity > 0),-- Số lượng mượn (phải > 0)
-    borrowDate DATE NOT NULL,                  -- Ngày mượn
-    returnDate DATE DEFAULT NULL,              -- Ngày trả (có thể NULL nếu chưa trả)
-    latePaymDate INT GENERATED ALWAYS AS (
-        CASE 
-            WHEN returnDate IS NOT NULL THEN 
-                GREATEST(DATEDIFF(returnDate, borrowDate), 0)  -- Nếu ngày trả trễ thì sẽ là số dương, nếu không sẽ là 0
-            ELSE 0
-        END
-    ) STORED,                                  -- Cột latePaymDate tính số ngày trễ, nếu chưa trả thì là 0
-    FOREIGN KEY (member_code) REFERENCES members(member_code),  -- Khóa ngoại tới bảng members
-    FOREIGN KEY (book_code) REFERENCES books(book_code)         -- Khóa ngoại tới bảng books
+    borrowBooks_id VARCHAR(20) PRIMARY KEY,
+    member_code VARCHAR(20) NOT NULL,
+    book_code VARCHAR(20) NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    borrowDate DATE NOT NULL,
+    returnDate DATE DEFAULT NULL,
+    latePaymDate INT DEFAULT NULL,
+    FOREIGN KEY (member_code) REFERENCES members(member_code),
+    FOREIGN KEY (book_code) REFERENCES books(book_code)
 );
 
 CREATE TABLE returnBook (
@@ -72,6 +65,29 @@ CREATE TABLE returnBook (
     FOREIGN KEY (borrowBooks_id) REFERENCES borrowBooks(borrowBooks_id)
 );
 
+DELIMITER //
+
+CREATE TRIGGER before_insert_borrowBooks
+BEFORE INSERT ON borrowBooks
+FOR EACH ROW
+BEGIN
+    IF NEW.returnDate IS NOT NULL THEN
+        -- Tính số ngày giữa ngày trả và ngày hiện tại
+        SET NEW.latePaymDate = DATEDIFF(CURDATE(), NEW.returnDate);
+        
+        -- Nếu latePaymDate là số âm, đặt giá trị là 0
+        IF NEW.latePaymDate < 0 THEN
+            SET NEW.latePaymDate = 0;
+        END IF;
+    ELSE
+        -- Nếu chưa trả, latePaymDate là 0
+        SET NEW.latePaymDate = 0;
+    END IF;
+END;
+//
+DELIMITER ;
+
+DELIMITER ;
 
 -- Thêm dữ liệu sách (books)
 INSERT INTO books (book_code, book_name, image_link, quantity, category, author, location, language, received_date)
@@ -139,22 +155,23 @@ INSERT INTO members (member_code, name, email, phone, registration_date, age, av
 
 INSERT INTO borrowBooks (borrowBooks_id , member_code, book_code, quantity, borrowDate, returnDate) VALUES
 ('MV001', 'MEM001', 'BK039', 1, '2024-11-01', '2024-11-15'),
-('MV002', 'MEM002', 'BK044', 2, '2024-11-02', '2024-12-16'),
+('MV002', 'MEM002', 'BK044', 2, '2024-11-02', '2024-12-01'),
 ('MV003', 'MEM003', 'BK046', 1, '2024-11-03', '2024-11-17'),
-('MV004', 'MEM004', 'BK048', 3, '2024-11-03', '2024-12-17'),
+('MV004', 'MEM004', 'BK048', 3, '2024-11-03', '2024-12-01'),
 ('MV005', 'MEM005', 'BK043', 4, '2024-05-03', '2024-06-17'),
 ('MV006', 'MEM006', 'BK034', 8, '2024-07-03', '2024-11-17'),
 ('MV007', 'MEM008', 'BK011', 7, '2024-06-03', '2024-07-17'),
 ('MV008', 'MEM010', 'BK011', 6, '2024-03-08', '2024-05-17');
 
-
 INSERT INTO returnBook (returnBook_id, borrowBooks_id, Fee, PenaltyFees, Status)
 VALUES
 ('RB001', 'MV001', 12000, 0, 'Đang mượn'),  
-('RB002', 'MV002', 12000, 80000, 'Trễ hạn'),
+('RB002', 'MV002', 12000, 0, 'Trễ hạn'),
 ('RB003', 'MV003', 12000, 0, 'Đang mượn'),   
-('RB004', 'MV004', 12000, 15000, 'Trễ hạn'),      
+('RB004', 'MV004', 12000, 0, 'Trễ hạn'),      
 ('RB005', 'MV005', 12000, 0, 'Đang mượn'),
-('RB006', 'MV006', 12000, 12000, 'Trễ hạn'),
+('RB006', 'MV006', 12000, 0, 'Trễ hạn'),
 ('RB007', 'MV007', 12000, 0, 'Đang mượn'),
-('RB008', 'MV008', 12000, 100000, 'Trễ hạn');
+('RB008', 'MV008', 12000, 0, 'Trễ hạn');
+
+
