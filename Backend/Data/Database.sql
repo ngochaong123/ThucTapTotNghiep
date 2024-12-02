@@ -47,21 +47,30 @@ CREATE TABLE members (
 -- Tạo bảng borrowBooks
 CREATE TABLE borrowBooks (
     borrowBooks_id VARCHAR(20) PRIMARY KEY,   -- ID biên nhận mượn
-    member_code VARCHAR(20) NOT NULL,                   -- Mã thành viên
-    book_code VARCHAR(20) NOT NULL,                     -- Mã sách
-    quantity INT NOT NULL CHECK (quantity > 0),         -- Số lượng mượn (phải > 0)
-    borrowDate DATE NOT NULL,                           -- Ngày mượn
-    returnDate DATE DEFAULT NULL,                       -- Ngày trả (có thể NULL nếu chưa trả)
-    FOREIGN KEY (member_code) REFERENCES members(member_code), -- Khóa ngoại tới members
-    FOREIGN KEY (book_code) REFERENCES books(book_code) -- Khóa ngoại tới books
+    member_code VARCHAR(20) NOT NULL,          -- Mã thành viên
+    book_code VARCHAR(20) NOT NULL,            -- Mã sách
+    quantity INT NOT NULL CHECK (quantity > 0),-- Số lượng mượn (phải > 0)
+    borrowDate DATE NOT NULL,                  -- Ngày mượn
+    returnDate DATE DEFAULT NULL,              -- Ngày trả (có thể NULL nếu chưa trả)
+    latePaymDate INT GENERATED ALWAYS AS (
+        CASE 
+            WHEN returnDate IS NOT NULL THEN 
+                GREATEST(DATEDIFF(returnDate, borrowDate), 0)  -- Nếu ngày trả trễ thì sẽ là số dương, nếu không sẽ là 0
+            ELSE 0
+        END
+    ) STORED,                                  -- Cột latePaymDate tính số ngày trễ, nếu chưa trả thì là 0
+    FOREIGN KEY (member_code) REFERENCES members(member_code),  -- Khóa ngoại tới bảng members
+    FOREIGN KEY (book_code) REFERENCES books(book_code)         -- Khóa ngoại tới bảng books
 );
 
+
 CREATE TABLE returnBook (
-    returnBook_id VARCHAR(20) PRIMARY KEY,                -- ID chính của bảng (không sử dụng AUTO_INCREMENT)
-    borrowBooks_id VARCHAR(20) NOT NULL,                  -- Khóa ngoại liên kết với bảng borrowBooks
-    PenaltyFees int DEFAULT 0,                 			  -- Phí phạt (mặc định là 0)
-    Status VARCHAR(20) DEFAULT 'Đang mượn',               -- Trạng thái (mặc định: Đang mượn)
-    FOREIGN KEY (borrowBooks_id) REFERENCES borrowBooks(borrowBooks_id) -- Khóa ngoại liên kết với bảng borrowBooks
+    returnBook_id VARCHAR(20) PRIMARY KEY,
+    borrowBooks_id VARCHAR(20) NOT NULL,
+	Fee INT DEFAULT 0,
+    PenaltyFees INT DEFAULT 0,
+    Status VARCHAR(20) DEFAULT 'Đang mượn',
+    FOREIGN KEY (borrowBooks_id) REFERENCES borrowBooks(borrowBooks_id)
 );
 
 CREATE TABLE revenue_expenses (
@@ -69,6 +78,7 @@ CREATE TABLE revenue_expenses (
   Time DATE NOT NULL,
   revenue INT NOT NULL,
   expenses INT NOT NULL,
+  latePaymDate date ,
   profit INT GENERATED ALWAYS AS (revenue - expenses) STORED
 );
 
@@ -147,16 +157,16 @@ INSERT INTO borrowBooks (borrowBooks_id , member_code, book_code, quantity, borr
 ('MV008', 'MEM010', 'BK011', 6, '2024-03-08', '2024-11-17');
 
 
-INSERT INTO returnBook (returnBook_id, borrowBooks_id, PenaltyFees, Status)
+INSERT INTO returnBook (returnBook_id, borrowBooks_id, Fee, PenaltyFees, Status)
 VALUES
-('RB001', 'MV001', 10000, 'Đang mượn'),  
-('RB002', 'MV002', 80000, 'Trễ hạn'),
-('RB003', 'MV003', 0, 'Đang mượn'),   
-('RB004', 'MV004', 15000, 'Trễ hạn'),      
-('RB005', 'MV005', 100000, 'Đang mượn'),
-('RB006', 'MV006', 0, 'Đang mượn'),
-('RB007', 'MV007', 0, 'Đang mượn'),
-('RB008', 'MV008', 100000, 'Trễ hạn');
+('RB001', 'MV001', 12000, 0, 'Đang mượn'),  
+('RB002', 'MV002', 12000, 80000, 'Trễ hạn'),
+('RB003', 'MV003', 12000, 0, 'Đang mượn'),   
+('RB004', 'MV004', 12000, 15000, 'Trễ hạn'),      
+('RB005', 'MV005', 12000, 0, 'Đang mượn'),
+('RB006', 'MV006', 12000, 12000, 'Trễ hạn'),
+('RB007', 'MV007', 12000, 0, 'Đang mượn'),
+('RB008', 'MV008', 12000, 100000, 'Trễ hạn');
 
 -- Thêm dữ liệu mẫu vào bảng
 INSERT INTO revenue_expenses (Time, revenue, expenses) VALUES
@@ -172,3 +182,4 @@ INSERT INTO revenue_expenses (Time, revenue, expenses) VALUES
 ('2024-10-01', 24870000, 28740000),
 ('2024-11-01', 21550000, 22400000),
 ('2024-12-01', 30620000, 27600000);
+

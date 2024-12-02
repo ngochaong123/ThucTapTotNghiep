@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './addMember.css';
+import { useNavigate } from 'react-router-dom';
 import DefaultAvatar from "../../../images/icon/avatar.jpg";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -20,6 +21,7 @@ export default function AddMember() {
   
   const [countries, setCountries] = useState<string[]>([]);
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
+  const navigate = useNavigate();
 
   const isFormValid = formValues.name && formValues.phone && formValues.email && formValues.member_code;
 
@@ -131,16 +133,18 @@ export default function AddMember() {
                 formData.append('avatar_link', avatarInput.files[0]);
               }
   
-              console.log("data: ", formValues);
-  
               const response = await axios.post('http://localhost:5000/addMember', formData, {
                 headers: {
                   'Content-Type': 'multipart/form-data',
                 },
               });
-  
-              console.log(response.data);
               toast.success('Lưu thành viên thành công!');
+
+              // Trì hoãn 6 giây trước khi chuyển hướng
+              setTimeout(() => {
+                navigate('/menu/Member', { replace: true });
+              }, 6000); // 6000ms = 6 giây
+
               handleReset();
             } catch (error) {
               console.error('Đã xảy ra lỗi khi lưu thành viên:', error);

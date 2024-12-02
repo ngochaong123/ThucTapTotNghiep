@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './changeBorrowBooks.css';
 import DatePicker from 'react-datepicker';
+import { useNavigate } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,6 +14,7 @@ import axios from 'axios';
 export default function ChangeBorrowBooks() {
   const location = useLocation();
   const { bookData } = location.state;
+  const navigate = useNavigate();
 
   const [formValues, setFormValues] = useState({
     borrowBooks_id: '',
@@ -174,6 +176,12 @@ export default function ChangeBorrowBooks() {
               const response = await axios.post('http://localhost:5000/ChangeBorrowBook', borrowBookData);
               if (response.status >= 200 && response.status < 300) {
                 toast.success("Lưu thông tin mượn sách thành công!");
+
+                // Trì hoãn 6 giây trước khi chuyển hướng
+                setTimeout(() => {
+                  navigate('/menu/borrowBooks', { replace: true });
+                }, 6000); // 6000ms = 6 giây
+
                 setOriginalValues(formValues);
               } else {
                 toast.error("Đã xảy ra lỗi khi lưu thông tin.");
@@ -231,6 +239,12 @@ export default function ChangeBorrowBooks() {
                 returnDate: '',
               });
               setAvatarPreview(DefaultAvatar);
+
+              // Trì hoãn 6 giây trước khi chuyển hướng
+              setTimeout(() => {
+                navigate('/menu/borrowBooks', { replace: true });
+              }, 6000); // 6000ms = 6 giây
+
             } catch (error) {
               console.error("Lỗi hủy sách:", error);
               toast.error("Có lỗi xảy ra khi xóa sách.");

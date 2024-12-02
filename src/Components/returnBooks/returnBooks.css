@@ -182,19 +182,12 @@ ReturnBookssearchIcon img {
 .ReturnBooksAddReturnBooks{
     display: flex;
     justify-content: space-between;
-    width: 150px;
+    width: 165px;
     border-radius: 15px;
     padding: 5px 15px 5px 17px;
     background-color: #2864F6;
     margin: 20px 20px 50px 20px;
     border: 2px solid #2864F6;
-
-    .ReturnBooksiconFilter{
-        width: 15px;
-        height: 15px;
-        margin-top: 5px;
-        margin-left: 4px;
-    }
     
     .ReturnBooksNameiconFilter{
         margin: 5px 10px ;
@@ -256,7 +249,7 @@ ReturnBookssearchIcon img {
 .ReturnBooksEditReturnBooks{
     display: flex;
     justify-content: space-between;
-    width: 180px;
+    width: 163px;
     border-radius: 15px;
     padding: 5px 15px 5px 17px;
     background-color: #2864F6;
@@ -354,4 +347,130 @@ ReturnBookssearchIcon img {
 .nameAvatarAddmember{
     margin-top: 5px;
     margin-left: 10px;
+}
+
+/* Ví dụ về CSS cho modal */
+/* Modal Overlay */
+.Overlay {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Đảm bảo modal ở trên cùng */
+}
+
+.status-green {
+    color: green; /* Màu xanh lá cho "Đang mượn" */
+}
+  
+.status-red {
+    color: red; /* Màu đỏ cho "Trễ hạn" */
+}
+  
+
+/* Modal container */
+.Modal {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    z-index: 10000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+  
+.Modal h2 {
+    text-align: center;
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+  
+.input-group-penalty {
+    margin-bottom: 20px;
+}
+  
+.input-group-penalty label {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 8px;
+    display: block;
+}
+  
+.input-group-penalty input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    box-sizing: border-box;
+}
+  
+.input-group-penalty input:focus {
+    border-color: #2864F6;
+}
+  
+/* Button container */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+  
+.button-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 48%;
+}
+  
+.button-container button:hover {
+    opacity: 0.8;
+}
+  
+.button-container .save-button {
+    background-color: #2864F6;
+    color: white;
+}
+  
+.button-container .save-button:hover {
+    background-color: #2864F6;
+  }
+  
+.button-container .cancel-button {
+    background-color: #f44336;
+    color: white;
+}
+  
+.button-container .cancel-button:hover {
+    background-color: #e53935;
+}
+  
+/* Overlay */
+.Overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+/* Ẩn nút lên xuống ở input[type="number"] */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

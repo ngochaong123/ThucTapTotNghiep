@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ChangeBook.css';
 import DatePicker from 'react-datepicker';
+import { useNavigate } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
@@ -28,6 +29,7 @@ export default function ChangeBook() {
   const [categories, setCategories] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [locations, setLocations] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Gọi API để lấy thể loại sách
@@ -193,6 +195,11 @@ export default function ChangeBook() {
                 },
               });
               toast.success(response.data.message);
+
+              setTimeout(() => {
+                navigate('/menu/LibraryBook', { replace: true });
+              }, 6000); // 6000ms = 6 giây
+
               setIsChanged(false);
             } catch (error) {
               console.error("Lỗi cập nhật sách:", error);
@@ -242,6 +249,12 @@ export default function ChangeBook() {
               });
               setImagePreview(DefaultAvatar);
               setIsChanged(false);
+
+              // Trì hoãn 6 giây trước khi chuyển hướng
+              setTimeout(() => {
+                navigate('/menu/LibraryBook', { replace: true });
+              }, 6000); // 6000ms = 6 giây
+
             } catch (error) {
               console.error("Error deleting book:", error);
               toast.error("Có lỗi xảy ra khi xóa sách.");

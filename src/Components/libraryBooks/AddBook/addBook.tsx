@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './addBook.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -38,6 +39,7 @@ export default function AddBook() {
   const [categories, setCategories] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [locations, setLocations] = useState<string[]>([]);
+  const navigate = useNavigate();
   
   const isFormValid = formValues.book_name && formValues.book_code && formValues.author && formValues.category;
 
@@ -201,8 +203,13 @@ export default function AddBook() {
                 },
               });
               
-            
               toast.success('Lưu sách thành công!');
+  
+              // Trì hoãn 6 giây trước khi chuyển hướng
+              setTimeout(() => {
+                navigate('/menu/LibraryBook', { replace: true });
+              }, 6000); // 6000ms = 6 giây
+          
             } catch (error) {
               console.error('Đã xảy ra lỗi khi lưu sách:', error);
               toast.error('Đã xảy ra lỗi, vui lòng thử lại!');

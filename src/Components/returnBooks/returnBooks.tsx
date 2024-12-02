@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import './returnBooks.css';
 import axios from 'axios';
 import Magnifier from '../../images/icon/magnifier.png';
+import PenaltyModal from './PenaltyModal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 interface ReturnBooks {
   returnBook_id: string;
@@ -15,6 +20,7 @@ interface ReturnBooks {
   borrowDate: string;
   returnDate: string;
   PenaltyFees: number;
+  Fee: number;
   Status: string;
 }
 
@@ -25,6 +31,41 @@ export default function ReturnBooks() {
   const [filteredReturnBooks, setFilteredReturnBooks] = useState<ReturnBooks[]>([]); // Store filtered books
   const [statuses, setStatuses] = useState<string[]>([]); // Lưu danh sách trạng thái
   const [selectedStatus, setSelectedStatus] = useState<string>(''); // Trạng thái đã chọn
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [penalties, setPenalties] = useState<{ returnBook_id: string, totalPenalty: number }[]>([]);
+  const [selectedFee, setSelectedFee] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchFee = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/getUniqueFee');
+  
+        if (response.data?.length > 0) {
+          console.log('Fee từ API:', response.data[0].Fee);
+          setSelectedFee(response.data[0].Fee); // Cập nhật giá trị Fee đầu tiên vào state
+        } else {
+          console.warn('Không có phí trả sách nào được tìm thấy.');
+        }
+      } catch (err) {
+        console.error('Lỗi khi gọi API:', err);
+      }
+    };
+  
+    fetchFee();
+  }, []);  
+
+  const handleAddPenaltyClick = () => {
+    setIsModalOpen(true);  // Mở modal khi nhấn nút "Phí nộp trể"
+  };
+
+  const handleSavePenalty = (updatedBooks: { returnBook_id: string, totalPenalty: number }[]) => {
+    setPenalties(updatedBooks);  // Lưu danh sách phí phạt vào state của component cha
+    console.log('Danh sách phí phạt đã lưu:', updatedBooks);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);  // Đóng modal khi hủy hoặc sau khi lưu
+  };
 
   // Lấy danh sách trạng thái từ API
   useEffect(() => {
@@ -86,14 +127,69 @@ export default function ReturnBooks() {
     setSelectedReturnBookId(prevSelected => (prevSelected === id ? null : id));
   };
 
+  const handleReturnBook = async () => {
+    if (!selectedReturnBookId) {
+      toast.warn('Vui lòng chọn sách để trả.', { position: 'top-right' });
+      return;
+    }
+  
+    // Hiển thị hộp thoại xác nhận trước khi thực hiện trả sách
+    confirmAlert({
+      title: 'Xác nhận trả sách',
+      message: 'Bạn có chắc chắn muốn trả sách này?',
+      buttons: [
+        {
+          label: 'Hủy',
+          onClick: () => toast.info('Hủy trả sách.', { position: 'top-right' })
+        },
+        {
+          label: 'Xác nhận',
+          onClick: async () => {
+            try {
+              const response = await axios.delete(`http://localhost:5000/returnBooks/${selectedReturnBookId}`);
+              if (response.status === 200) {
+                toast.success('Đã trả sách thành công!', { position: 'top-right' });
+  
+                // Cập nhật lại danh sách sách sau khi trả
+                setReturnBooks(prevBooks => prevBooks.filter(book => book.returnBook_id !== selectedReturnBookId));
+                setFilteredReturnBooks(prevBooks => prevBooks.filter(book => book.returnBook_id !== selectedReturnBookId));
+                setSelectedReturnBookId(null);
+              }
+            } catch (error: unknown) {
+              console.error('Lỗi khi trả sách:', error);
+  
+              if (axios.isAxiosError(error)) {
+                // Nếu lỗi là từ Axios
+                if (error.response?.status === 404) {
+                  toast.error('Không tìm thấy bản ghi sách cần trả.', { position: 'top-right' });
+                } else {
+                  toast.error('Có lỗi xảy ra từ phía server. Vui lòng thử lại sau.', { position: 'top-right' });
+                }
+              } else {
+                // Lỗi không phải từ Axios
+                toast.error('Không thể kết nối tới server. Vui lòng kiểm tra kết nối mạng.', { position: 'top-right' });
+              }
+            }
+          }
+        }
+      ]
+    });
+  };  
+
   return (
     <div>
       <div className='ReturnBooksCurrentInformation'>
+      <ToastContainer />
         <div className='ReturnBooksheaderReturnBooks'>
           <h1 className='ReturnBookstile'>Trả sách</h1>
-            <button className='ReturnBooksAddReturnBooks'>
-              <div className='ReturnBooksNameiconFilter'>Phí nộp trể</div>
-            </button>
+          <button className='ReturnBooksAddReturnBooks'  onClick={handleAddPenaltyClick}>
+            <div className='ReturnBooksNameiconFilter'>Chỉnh sửa phí nộp</div>
+          </button>
+          <PenaltyModal
+            isOpen={isModalOpen}           // Điều kiện modal mở
+            onRequestClose={handleCloseModal} // Hàm đóng modal
+            onSave={handleSavePenalty}      // Hàm lưu phí phạt (truyền qua prop)
+          />
         </div>
 
         <div className='ReturnBooksOptionsRow'>
@@ -129,8 +225,16 @@ export default function ReturnBooks() {
                 />
               </div>
             </div>
+            <div>
+              <div className="ReturnBooksNameSearch">Mức phí phạt</div>
+              <span className="ReturnBooksSearch" style={{width:'250px'}}>
+                {selectedFee > 0 
+                  ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(selectedFee) 
+                  : 'Mức phí phạt'}
+              </span>
+            </div>
           </div>
-          <button className='ReturnBooksEditReturnBooks'>
+          <button className='ReturnBooksEditReturnBooks' onClick={handleReturnBook}>
             <div className='ReturnBooksNameEdit'>Xác nhận trả sách</div>
           </button>
         </div>
@@ -176,8 +280,12 @@ export default function ReturnBooks() {
                     <td>{returnBook.quantity}</td>
                     <td>{new Date(returnBook.borrowDate).toLocaleDateString('vi-VN')}</td>
                     <td>{new Date(returnBook.returnDate).toLocaleDateString('vi-VN')}</td>
-                    <td>{returnBook.PenaltyFees}</td>
-                    <td>{returnBook.Status}</td>
+                    <td>
+                      {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(returnBook.PenaltyFees)}
+                    </td>
+                    <td className={returnBook.Status === "Đang mượn" ? "status-green" : "status-red"}>
+                      {returnBook.Status}
+                    </td>
                   </tr>
                 ))}
               </tbody>

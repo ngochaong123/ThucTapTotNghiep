@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './addBorrowBooks.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DefaultAvatar from "../../../images/icon/avatar.jpg";
 import { ToastContainer, toast } from 'react-toastify';
@@ -26,6 +27,7 @@ export default function AddBorrowBooks() {
   const [imagePreview, setImagePreview] = useState<string>(DefaultAvatar); 
   const [selectedBorrowDate, setSelectedBorrowDate] = useState<Date | null>(null);
   const [selectedReturnDate, setSelectedReturnDate] = useState<Date | null>(null);
+  const navigate = useNavigate();
 
   // Cập nhật ảnh xem trước khi có image_link
   useEffect(() => {
@@ -144,6 +146,11 @@ export default function AddBorrowBooks() {
               const response = await axios.post('http://localhost:5000/addborrowBook', borrowData);
               if (response.status >= 200 && response.status < 300) {
                 toast.success("Lưu thông tin mượn sách thành công");
+
+                setTimeout(() => {
+                  navigate('/menu/borrowBooks', { replace: true });
+                }, 6000); // 6000ms = 6 giây
+
               } else {
                 toast.error("Đã xảy ra lỗi khi lưu thông tin.");
               }

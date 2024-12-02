@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './changeInfor.css';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +12,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 export default function ChangeInfor() {
   const location = useLocation();
   const memberData = location.state;
+  const navigate = useNavigate();
   
   const [formValues, setFormValues] = useState({
     member_code: memberData ? memberData.member_code : '',
@@ -111,6 +113,12 @@ export default function ChangeInfor() {
               });
               setImagePreview(DefaultAvatar);
               setIsChanged(false); 
+
+              // Trì hoãn 6 giây trước khi chuyển hướng
+              setTimeout(() => {
+                navigate('/menu/Member', { replace: true });
+              }, 6000); // 6000ms = 6 giây
+
             } catch (error) {
               console.error("lỗi xóa thành viên", error);
               toast.error("Có lỗi xảy ra khi xóa thành viên.");
@@ -167,8 +175,6 @@ export default function ChangeInfor() {
               formData.append('avatar_link', file, newFileName);
             }
   
-            console.log("Form Data:", formValues);
-  
             try {
               const response = await axios.put(`http://localhost:5000/editMember/${formValues.member_code}`, formData, {
                 headers: {
@@ -176,6 +182,12 @@ export default function ChangeInfor() {
                 },
               });
               toast.success(response.data.message);
+
+              // Trì hoãn 6 giây trước khi chuyển hướng
+              setTimeout(() => {
+                navigate('/menu/Member', { replace: true });
+              }, 6000); // 6000ms = 6 giây
+
               setIsChanged(false);
             } catch (error) {
               console.error("Lỗi cập nhật thành viên:", error);

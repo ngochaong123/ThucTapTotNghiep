@@ -6,7 +6,7 @@ const { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, Change
 const { getUser, editUser, uploadUser } = require('../controllers/User');
 const { revenueChart, quantityBooksChart, foreignMemberChart, borrowedBooksByCategory, registrationTrends,revenueGrowth, memberRegistrationGrowth, bookCountByMonth, memberBorrowGrowth, profitGrowth} = require('../controllers/chart');
 const { downloadExcel } = require('../controllers/DowloandData');
-const {getAllreturnBooks, getStatuses} = require('../controllers/returnBooks')
+const {getAllreturnBooks, getStatuses, calculatePenaltyForAll, getUniqueFee, returnBooks} = require('../controllers/returnBooks')
 
 const router = express.Router();
  
@@ -42,13 +42,16 @@ router.delete('/deleteBorrowBook/:id',deleteBorrowBook);
 // Route trả sách
 router.get('/getAllreturnBooks',getAllreturnBooks);
 router.get('/getStatuses',getStatuses);
+router.get('/getUniqueFee',getUniqueFee);
+router.post('/calculatePenaltyForAll',calculatePenaltyForAll);
+router.delete('/returnBooks/:id',returnBooks); 
 
 //Router chart
 router.get('/revenueChart',revenueChart);
 router.get('/quantityBooksChart',quantityBooksChart);
 router.get('/foreignMemberChart',foreignMemberChart);
 router.get('/borrowedBooksByCategory',borrowedBooksByCategory);
-router.get('/registrationTrends',registrationTrends);
+router.get('/registrationTrends',registrationTrends); 
 
 // Router cho dữ liệu so sánh tháng cũ và tháng mới
 router.get('/revenueGrowth',revenueGrowth);
