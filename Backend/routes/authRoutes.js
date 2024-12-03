@@ -4,17 +4,17 @@ const { getAllBooks, searchBooks, addBook, editBook, DeleteBook, categories, loc
 const { getAllMembers, searchMembers, addMember, editMember, DeleteMember, memberUpload } = require('../controllers/Member');
 const { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook} = require('../controllers/BorrowdBooks');
 const { getUser, editUser, uploadUser } = require('../controllers/User');
-const { OverduePenaltyChart, quantityBooksChart, genderRatio, borrowedBooksByCategory, registrationTrends,revenueGrowth, memberRegistrationGrowth, bookCountByMonth, memberBorrowGrowth, profitGrowth} = require('../controllers/chart');
+const { OverduePenaltyChart, quantityBooksChart, genderRatio, borrowedBooksByCategory, registrationTrends} = require('../controllers/chart');
 const { downloadExcel } = require('../controllers/DowloandData');
 const {getAllreturnBooks, getStatuses, calculatePenaltyForAll, getUniqueFee, returnBooks} = require('../controllers/returnBooks')
 
 const router = express.Router();
-
+ 
 // Route cho quản lý tài khoản
 router.post('/login', login);
 router.post('/Register', register); 
 
-// Route cho quản lý sách
+// Route cho quản lý sách 
 router.get('/Book', getAllBooks); 
 router.get('/search', searchBooks); 
 router.get('/categories', categories); 
@@ -52,13 +52,6 @@ router.get('/genderRatio',genderRatio);
 router.get('/borrowedBooksByCategory',borrowedBooksByCategory);
 router.get('/registrationTrends',registrationTrends); 
 
-// Router cho dữ liệu so sánh tháng cũ và tháng mới
-router.get('/revenueGrowth',revenueGrowth);
-router.get('/memberRegistrationGrowth',memberRegistrationGrowth);
-router.get('/bookCountByMonth',bookCountByMonth);
-router.get('/memberBorrowGrowth',memberBorrowGrowth);
-router.get('/profitGrowth',profitGrowth);
- 
 // Router dowloand data
 router.get('/downloadExcel',downloadExcel);
 

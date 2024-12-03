@@ -28,64 +28,6 @@
     
 }
 
-/* growthFigures */
-
-.ContaniergrowthFigures{
-    display: flex;
-    margin-left: var(--marginLeft);
-}
-
-.growthFigures{
-    border-radius: 10px;
-    width: 200px;
-    background-color: white;
-    padding: 15px; 
-    margin-right: 20px;
-
-    .NamegrowthFigures{
-        margin: 0px 0px 10px 8px;
-    }
-}
-
-.growthFiguresData{
-    display: flex;
-    justify-content: space-around;
-
-    h1{
-        font-size: 27px;
-        margin-top: -1px;
-        margin-bottom: 2px;
-        margin-left: -10px;
-    }
-
-}
-
-.growthFiguresSort{
-    display: flex;
-    justify-content: space-between;
-    margin: 10px -15px 0px 30px ;
-
-    .ImgSortDown{
-        width: auto;
-        height: 20px;
-        margin-top: 1px;
-    }
-
-    .ImgSortUp{
-        width: auto;
-        height: 20px;
-        margin-top: 3px;
-    }
-
-    .SortUp{
-       color: #009F12;
-    }
-
-    .SortDown{
-        color: #E54E4E;
-    }
-}
-
 /* chart */
 .ContanerChartReport{
     display: flex;

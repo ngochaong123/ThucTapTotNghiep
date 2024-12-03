@@ -29,22 +29,17 @@ export default function Terms() {
           <li> Chúng tôi có quyền thay đổi, tạm ngừng, hoặc chấm dứt dịch vụ bất kỳ lúc nào mà không cần thông báo trước.</li>
         </ul>
 
-        <h2>5. Bảo Mật Thông Tin</h2>
-        <p>
-          Chúng tôi cam kết bảo vệ thông tin cá nhân của bạn theo Chính sách bảo mật. Bạn chịu trách nhiệm bảo mật thông tin tài khoản của mình và thông báo ngay cho chúng tôi nếu phát hiện có dấu hiệu lạm dụng.
-        </p>
-
-        <h2>6. Giới Hạn Trách Nhiệm</h2>
+        <h2>5. Giới Hạn Trách Nhiệm</h2>
         <p>
           Chúng tôi không chịu trách nhiệm với bất kỳ tổn thất hoặc thiệt hại nào phát sinh từ việc sử dụng hoặc không sử dụng được dịch vụ. Một số giới hạn có thể không áp dụng tại khu vực pháp lý nơi các quy định cấm hạn chế trách nhiệm.
         </p>
 
-        <h2>7. Chấm Dứt</h2>
+        <h2>6. Chấm Dứt</h2>
         <p>
           Chúng tôi có quyền tạm ngừng hoặc chấm dứt tài khoản của bạn nếu bạn vi phạm các điều khoản này. Bạn cũng có thể ngừng sử dụng dịch vụ bất kỳ lúc nào bằng cách xóa tài khoản của mình.
         </p>
 
-        <h2>8. Thay Đổi Điều Khoản</h2>
+        <h2>7. Thay Đổi Điều Khoản</h2>
         <p>
           Chúng tôi có thể sửa đổi điều khoản sử dụng bất kỳ lúc nào. Các thay đổi sẽ có hiệu lực ngay khi được công bố trên website hoặc ứng dụng.
         </p>

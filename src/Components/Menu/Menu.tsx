@@ -15,8 +15,32 @@ import borrowBooks from "../../images/icon/borrow-book.png";
 import returnBook from "../../images/icon/towel.png";
 
 export default function Menu() {
+  const [formValues, setFormValues] = useState({
+    full_name: '',
+    avatar_user: '',
+  });
   const [activeMenu, setActiveMenu] = useState<string>("LibraryBook"); // Explicit type for activeMenu
+  const [initialFormValues, setInitialFormValues] = useState(formValues);
+  const [avatarPreview, setAvatarPreview] = useState<string>(User);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/getUser`);
+        if (!response.ok) throw new Error('Không thể lấy dữ liệu người dùng');
+        
+        const userData = await response.json();
+        setFormValues(userData);
+        setInitialFormValues(userData);
+        setAvatarPreview(`http://localhost:5000${userData.avatar_user}`);
+
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    fetchUserData();
+  }, []);
 
   // Load active menu from localStorage when the component mounts
   useEffect(() => {
@@ -117,8 +141,14 @@ export default function Menu() {
           onClick={() => handleMenuClick("User")}
         >
           <div className="vertical-bar"></div>
-          <img src={User} alt="User Icon" className='IconOption' />
-          <div className='NameOptionIcon'>Tài khoản cá nhân</div>
+          <img 
+            src={formValues.avatar_user ? `http://localhost:5000${formValues.avatar_user}` : User} 
+            alt="User Icon" 
+            className='avatarMenu' 
+          />
+          <div className='NameOptionIcon'>
+            {formValues.full_name ? `${formValues.full_name}` : 'Tài khoản cá nhân'}
+          </div>
         </Link>
 
         <div

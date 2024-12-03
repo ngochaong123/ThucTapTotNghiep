@@ -184,7 +184,7 @@ export default function ReturnBooks() {
         <div className='ReturnBooksheaderReturnBooks'>
           <h1 className='ReturnBookstile'>Trả sách</h1>
           <button className='ReturnBooksAddReturnBooks'  onClick={handleAddPenaltyClick}>
-            <div className='ReturnBooksNameiconFilter'>Chỉnh sửa phí nộp</div>
+            <div className='ReturnBooksNameiconFilter'>Sửa phí phạt trễ hạn</div>
           </button>
           <PenaltyModal
             isOpen={isModalOpen}           // Điều kiện modal mở
