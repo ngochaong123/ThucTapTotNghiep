@@ -3,7 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 
 interface ChartDataItem {
   month: string;
-  penaltyFees: number; // Đặt lại đúng tên trường dữ liệu
+  penaltyFees: number;
 }
 
 interface ChartSeries {
@@ -78,6 +78,25 @@ const OverduePenaltyChart: React.FC = () => {
     },
   });
 
+  // Map tên tháng tiếng Anh sang tiếng Việt
+  const translateMonthToVietnamese = (month: string): string => {
+    const monthsInVietnamese: { [key: string]: string } = {
+      January: 'Tháng 1',
+      February: 'Tháng 2',
+      March: 'Tháng 3',
+      April: 'Tháng 4',
+      May: 'Tháng 5',
+      June: 'Tháng 6',
+      July: 'Tháng 7',
+      August: 'Tháng 8',
+      September: 'Tháng 9',
+      October: 'Tháng 10',
+      November: 'Tháng 11',
+      December: 'Tháng 12',
+    };
+    return monthsInVietnamese[month] || month;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -88,7 +107,7 @@ const OverduePenaltyChart: React.FC = () => {
         const data: ChartDataItem[] = await response.json();
 
         if (data && data.length > 0) {
-          const months = data.map((item) => item.month);
+          const months = data.map((item) => translateMonthToVietnamese(item.month));
           const penaltyFees = data.map((item) => item.penaltyFees);
 
           setChartData((prevState) => ({

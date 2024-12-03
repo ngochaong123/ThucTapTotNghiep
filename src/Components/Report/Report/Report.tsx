@@ -7,7 +7,7 @@ import RegisteredMember from '../Chart/RegisteredMember/RegisteredMember';
 import BorrowedBooksByCategory from "../Chart/BorrowedBooksByCategory/BorrowedBooksByCategory";
 import GenderRatio from "../Chart/genderRatio/genderRatio";
 import QuantityBooksChart from "../Chart/quantityBooksChart/quantityBooksChart";
-import RevenueChart from '../Chart/OverduePenaltyChart/OverduePenaltyChart';
+import OverduePenaltyChart from '../Chart/OverduePenaltyChart/OverduePenaltyChart';
 
 // Icon imports
 import downloadIcon from "../../../images/icon/download.png";
@@ -68,7 +68,7 @@ const Report: React.FC = () => {
 
       <div className='ContanerChartReport'>
         <div className='OverduePenaltyChart'>
-          <RevenueChart />
+          <OverduePenaltyChart />
         </div>
         <div className='quantityBooks'>
           <QuantityBooksChart />
