@@ -186,7 +186,7 @@ export default function LibraryBooks() {
                   <th>Tác giả</th>
                   <th>Vị trí sách</th>
                   <th>Ngôn ngữ</th>
-                  <th>Ngày nhận sách</th>
+                  <th>Ngày hệ thống nhận sách</th>
                 </tr>
               </thead>
               <tbody>

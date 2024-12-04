@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import Magnifier from '../../../images/icon/magnifier.png';
 import Plus from "../../../images/icon/plus.png";
+import returnBook from "../../../images/icon/towel.png";
 
 interface BorrowBook {
   borrowBooks_id: string;  // Giữ lại numberVotes như là ID
@@ -142,12 +143,22 @@ export default function BorrowBooks() {
               </div>
             </div>
           </div>
-          <button
-            className='borrowBooksEditborrowBooks'
-            onClick={handleEditBook}
-          >
-            <div className='borrowBooksNameEdit'>Chỉnh sửa thông tin</div>
-          </button>
+          <div style={{display:'flex'}}>
+            <Link to='/Menu/ReturnBooks' style={{ textDecoration: 'none' }}>
+              <button className='borrowBooksEditborrowBooks' style={{width:'135px', marginRight:'70px'}}>
+                <div style={{display:'flex'}}>
+                  <img src={returnBook} alt="Borrow Books Icon" className='IconOption' />
+                  <div className='borrowBooksNameEdit'> Trả sách </div>
+                </div>
+              </button>
+            </Link>
+            <button
+              className='borrowBooksEditborrowBooks'
+              onClick={handleEditBook}
+            >
+              <div className='borrowBooksNameEdit'>Chỉnh sửa thông tin</div>
+            </button>
+          </div>
         </div>
 
         <div className='FrameborrowBookstableContainer'>

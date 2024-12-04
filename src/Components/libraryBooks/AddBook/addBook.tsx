@@ -245,7 +245,7 @@ export default function AddBook() {
                 <input name="author" value={formValues.author} onChange={handleChange} placeholder='Tên tác giả' />
               </div>
               <div className='inputInfoAddBook' style={{marginTop:'0px'}}>
-                <div>Ngày tiếp nhận</div>
+                <div>Ngày hệ thống nhận sách</div>
                 <DatePicker
                   selected={formValues.receiveDate}
                   onChange={handleDateChange}

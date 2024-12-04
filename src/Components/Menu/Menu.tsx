@@ -116,16 +116,6 @@ export default function Menu() {
         </Link>
 
         <Link
-          to="ReturnBooks"
-          className={`ButtonMenu ${activeMenu === "returnBook" ? "activeMenu" : ""}`}
-          onClick={() => handleMenuClick("returnBook")}
-        >
-          <div className="vertical-bar"></div>
-          <img src={returnBook} alt="Borrow Books Icon" className='IconOption' />
-          <div className='NameOptionIcon'>Trả sách</div>
-        </Link>
-
-        <Link
           to="Report"
           className={`ButtonMenu ${activeMenu === "Report" ? "activeMenu" : ""}`}
           onClick={() => handleMenuClick("Report")}

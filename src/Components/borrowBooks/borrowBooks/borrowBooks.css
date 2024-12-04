@@ -275,6 +275,12 @@ borrowBookssearchIcon img {
     }
 }
 
+.IconOption {
+    width: 13px;
+    height: 13px;
+    margin: 6px 0px 5px 10px;
+}
+
 .borrowBooksEditborrowBooks:hover {
     background-color: #2864F6;
     opacity: 0.8;

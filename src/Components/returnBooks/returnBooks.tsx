@@ -254,7 +254,7 @@ export default function ReturnBooks() {
                   <th>Ngày mượn sách</th>
                   <th>Ngày trả sách</th>
                   <th>Số ngày trả trễ</th>
-                  <th>Phí phạt</th>
+                  <th>Số tiền phạt</th>
                   <th>Trạng thái</th>
                 </tr>
               </thead>

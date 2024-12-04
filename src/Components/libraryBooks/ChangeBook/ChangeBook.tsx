@@ -296,7 +296,7 @@ export default function ChangeBook() {
                 <input name="author" value={formValues.author} placeholder='Tên tác giả' onChange={handleChange} />
               </div>
               <div className='inputInfoChangeBook' style={{marginTop:'0px'}}>
-                <div>Ngày tiếp nhận</div>
+                <div>Ngày hệ thống nhận sách</div>
                 <DatePicker
                   selected={formValues.receiveDate}
                   onChange={handleDateChange}
