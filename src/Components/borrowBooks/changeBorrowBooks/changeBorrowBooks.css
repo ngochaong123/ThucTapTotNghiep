@@ -126,22 +126,38 @@
     margin: 0px 0px 10px 80px;
 }
 
-.SaveButtonchangeBorrowBooks{
-    margin-right: 80px;
+
+.SaveButtonchangeBorrowBooks,
+.ResetButtonchangeBorrowBooks{
+    width: 100px;
 }
 
-.SaveButtonchangeBorrowBooks{
-    width: 100px;
+.ResetButtonchangeBorrowBooks{
+    margin-left: 80px;
 }
 
 .SaveButtonchangeBorrowBooks{
     background-color: #2864F6;
 }
 
+.ResetButtonchangeBorrowBooks{
+    background-color: red;
+}
+
 .SaveButtonchangeBorrowBooks:hover{
     opacity: 0.7;
 }
 
+.ResetButtonchangeBorrowBooks:hover{
+    background-color: red;
+    opacity: 0.7;
+}
+
 .SaveButtonchangeBorrowBooks:active{
+    opacity: 0.6;
+}
+
+.ResetButtonchangeBorrowBooks:active{
+    background-color: red;
     opacity: 0.6;
 }

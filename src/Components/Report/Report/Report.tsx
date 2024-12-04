@@ -59,7 +59,7 @@ const Report: React.FC = () => {
   return (
     <div style={{ marginBottom: '15px' }}>
       <div className='headerReport'>
-        <h1>Biểu đồ phân tích</h1>
+        <h1>Báo cáo và thống kê</h1>
         <button className='ButtonHeaderReport' onClick={handleDownloadExcel}>
           <Image src={downloadIcon} alt="Download" />
           <div>Tải dữ liệu</div>

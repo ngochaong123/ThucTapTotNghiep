@@ -340,6 +340,7 @@ export default function ChangeBorrowBooks() {
         > 
           Lưu 
         </button>
+        <button className='ResetButtonchangeBorrowBooks' onClick={handleDelete}> Xóa </button>
       </div>
 
       <ToastContainer />

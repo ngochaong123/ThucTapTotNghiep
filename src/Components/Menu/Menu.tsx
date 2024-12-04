@@ -122,7 +122,7 @@ export default function Menu() {
         >
           <div className="vertical-bar"></div>
           <img src={Report} alt="Report Icon" className='IconOption' />
-          <div className='NameOptionIcon'>Báo cáo</div>
+          <div className='NameOptionIcon'>Báo cáo và thống kê</div>
         </Link>
 
         <Link

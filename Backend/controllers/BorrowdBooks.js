@@ -256,4 +256,43 @@ const ChangeBorrowBook = (req, res) => {
     });
 }; 
 
-module.exports = { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook};
+const deleteBorrowBook = (req, res) => {
+    const { borrowBooks_id } = req.params;
+
+    // Kiểm tra nếu borrowBooks_id tồn tại
+    const checkQuery = 'SELECT * FROM borrowBooks WHERE borrowBooks_id = ?';
+    db.query(checkQuery, [borrowBooks_id], (err, results) => {
+        if (err) {
+            console.error("Lỗi kiểm tra borrowBooks:", err);
+            return res.status(500).json({ message: "Lỗi kiểm tra dữ liệu." });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "Không tìm thấy sách với ID này." });
+        }
+
+        // Xóa bản ghi liên quan trong bảng returnBook
+        const deleteReturnBookQuery = 'DELETE FROM returnBook WHERE borrowBooks_id = ?';
+        db.query(deleteReturnBookQuery, [borrowBooks_id], (err) => {
+            if (err) {
+                console.error("Lỗi xóa returnBook:", err);
+                return res.status(500).json({ message: "Không thể xóa sách liên quan." });
+            }
+
+            // Xóa bản ghi trong bảng borrowBooks
+            const deleteBorrowBookQuery = 'DELETE FROM borrowBooks WHERE borrowBooks_id = ?';
+            db.query(deleteBorrowBookQuery, [borrowBooks_id], (err) => {
+                if (err) {
+                    console.error("Lỗi xóa borrowBooks:", err);
+                    return res.status(500).json({ message: "Không thể xóa sách." });
+                }
+
+                // Thành công
+                return res.status(200).json({ message: "Xóa sách thành công." });
+            });
+        });
+    });
+};
+
+
+module.exports = { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook, deleteBorrowBook};

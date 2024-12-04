@@ -2,7 +2,7 @@ const express = require('express');
 const { login, register } = require('../controllers/authController');
 const { getAllBooks, searchBooks, addBook, editBook, DeleteBook, categories, location, language, bookUpload } = require('../controllers/LibriaryBook');
 const { getAllMembers, searchMembers, addMember, editMember, DeleteMember, memberUpload } = require('../controllers/Member');
-const { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook} = require('../controllers/BorrowdBooks');
+const { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook, deleteBorrowBook} = require('../controllers/BorrowdBooks');
 const { getUser, editUser, uploadUser } = require('../controllers/User');
 const { OverduePenaltyChart, quantityBooksChart, genderRatio, borrowedBooksByCategory, registrationTrends} = require('../controllers/chart');
 const { downloadExcel } = require('../controllers/DowloandData');
@@ -37,6 +37,7 @@ router.get('/getMemberByCode/:member_code',getMemberByCode);
 router.get('/getBookByCode/:book_code',getBookByCode);
 router.post('/addborrowBook',addborrowBook); 
 router.post('/ChangeBorrowBook',ChangeBorrowBook);
+router.delete('/deleteBorrowBook/:borrowBooks_id',deleteBorrowBook);
 
 // Route trả sách 
 router.get('/getAllreturnBooks',getAllreturnBooks);

@@ -283,7 +283,7 @@ export default function ChangeInfor() {
 
       <div className='ButtonAddMember'>
         <button className='SaveButtonMember' onClick={handleSubmit}> Lưu </button>
-        <button className='DeleteButtonChangeMember' onClick={DeleteMember}> Xóa thành viên </button>
+        <button className='DeleteButtonChangeMember' onClick={DeleteMember}> Xóa độc giả </button>
       </div>
 
       <ToastContainer />
