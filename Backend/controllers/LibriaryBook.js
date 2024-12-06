@@ -59,27 +59,6 @@ const getAllBooks = (req, res) => {
     });
 };
 
-// Hàm tìm kiếm sách
-const searchBooks = (req, res) => {
-    const { keyword } = req.query; // Lấy tham số keyword từ query
-    console.log("req.body: ", req.body);
-    console.log("req.file: ", req.file);
-
-    const sql = `SELECT * FROM books WHERE book_name LIKE ? OR author LIKE ?`; // Câu truy vấn tìm kiếm
-    const searchKeyword = `%${keyword}%`; // Tạo từ khóa tìm kiếm
-
-    db.query(sql, [searchKeyword, searchKeyword], (err, results) => {
-        if (err) {
-            console.error('Error searching books: ', err);
-            return res.status(500).json({ error: 'Error searching books' });
-        }
-        results.forEach(book => {
-            book.image_link = `/Book/${book.image_link}`; // Cập nhật link hình ảnh
-        });
-        res.json(results); // Trả về kết quả tìm kiếm
-    });
-};
-
 // Hàm thêm sách
 const addBook = (req, res) => {
     if (!validateBookData(req.body)) { // Kiểm tra dữ liệu đầu vào
@@ -276,5 +255,4 @@ const language = (req, res) => {
 };
  
 // Xuất các hàm và middleware
-module.exports = { getAllBooks, searchBooks, addBook, editBook, DeleteBook, categories, location, language, bookUpload };
-
+module.exports = { getAllBooks, addBook, editBook, DeleteBook, categories, location, language, bookUpload };

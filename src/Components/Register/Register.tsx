@@ -64,7 +64,7 @@ const Register: React.FC = () => {
       if (response.status === 201) {
         toast.success(response.data.message);
         console.log("Response Status:", response.status);
-        setTimeout(() => navigate('/login'), 3000); // Điều hướng đến trang đăng nhập sau khi đăng ký thành công
+        setTimeout(() => navigate('/login'), 1000); // Điều hướng đến trang đăng nhập sau khi đăng ký thành công
       } else {
         toast.error(response.data.message || "Đăng ký thất bại!");
       }

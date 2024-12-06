@@ -103,21 +103,29 @@ export default function AddMember() {
 
   const handleSubmit = async () => {
     const formData = new FormData();
-
+  
+    // Kiểm tra sự hợp lệ của form
     if (!isFormValid) {
       toast.error('Vui lòng điền tất cả các trường bắt buộc và đảm bảo tuổi dưới 100!');
       return;
     }
-
+  
+    // Kiểm tra số điện thoại (chỉ chứa số và độ dài hợp lý)
+    const phoneRegex = /^[0-9]+$/;
+    if (!phoneRegex.test(formValues.phone)) {
+      toast.error('Số điện thoại không hợp lệ. Vui lòng nhập lại.');
+      return;
+    }
+  
     formData.append('member_code', formValues.member_code);
     formData.append('name', formValues.name);
     formData.append('phone', formValues.phone);
     formData.append('email', formValues.email);
     formData.append('gender', formValues.gender);
     formData.append('age', formValues.age);
-
+  
     const avatarInput = document.getElementById('avatarInput') as HTMLInputElement | null;
-
+  
     confirmAlert({
       title: 'Xác nhận thêm thành viên',
       message: 'Bạn có chắc chắn muốn thêm thành viên này không?',
@@ -133,18 +141,18 @@ export default function AddMember() {
               if (avatarInput && avatarInput.files && avatarInput.files.length > 0) {
                 formData.append('avatar_link', avatarInput.files[0]);
               }
-
+  
               await axios.post('http://localhost:5000/addMember', formData, {
                 headers: {
                   'Content-Type': 'multipart/form-data',
                 },
               });
-
+  
               toast.success('Lưu thành viên thành công!');
               setTimeout(() => {
                 navigate('/menu/Member', { replace: true });
-              }, 6000);
-
+              }, 3000);
+  
               setFormValues({
                 member_code: '',
                 name: '',
@@ -156,7 +164,7 @@ export default function AddMember() {
               });
               setAvatarPreview(DefaultAvatar);
               console.log("Form đã được đặt lại.");
-
+  
             } catch (error) {
               console.error('Đã xảy ra lỗi khi lưu thành viên:', error);
               toast.error('Đã xảy ra lỗi, vui lòng thử lại!');
@@ -166,6 +174,7 @@ export default function AddMember() {
       ],
     });
   };
+  
 
   return (
     <div className='FrameContanieraddMember'>
@@ -215,10 +224,15 @@ export default function AddMember() {
         </div>
         
         <div className='containeraddMemeberleft'>
-          <div className='inputInfoMember'>
-            <div>Số điện thoại </div>
-            <input name="phone" value={formValues.phone} onChange={handleChange} placeholder='Số điện thoại' />
+        <div className='inputInfoMember'>
+          <div>Số điện thoại </div>
+            <input 
+              name="phone" 
+              value={formValues.phone} 
+              onChange={handleChange} 
+            />
           </div>
+
           <div className='inputInfoMember'>
             <div>Email </div>
             <input name="email" value={formValues.email} onChange={handleChange} placeholder='Email' />

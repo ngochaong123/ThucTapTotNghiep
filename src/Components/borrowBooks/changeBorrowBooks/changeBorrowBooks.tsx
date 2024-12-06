@@ -180,7 +180,7 @@ export default function ChangeBorrowBooks() {
                 // Trì hoãn 6 giây trước khi chuyển hướng
                 setTimeout(() => {
                   navigate('/menu/borrowBooks', { replace: true });
-                }, 6000); // 6000ms = 6 giây
+                }, 3000); // 3000ms = 3 giây
 
                 setOriginalValues(formValues);
               } else {
@@ -243,7 +243,7 @@ export default function ChangeBorrowBooks() {
               // Trì hoãn 6 giây trước khi chuyển hướng
               setTimeout(() => {
                 navigate('/menu/borrowBooks', { replace: true });
-              }, 6000); // 6000ms = 6 giây
+              }, 3000); // 3000ms = 3 giây
 
             } catch (error) {
               console.error("Lỗi hủy sách:", error);
@@ -340,7 +340,7 @@ export default function ChangeBorrowBooks() {
         > 
           Lưu 
         </button>
-        <button className='ResetButtonchangeBorrowBooks' onClick={handleDelete}> Xóa </button>
+        <button className='ResetButtonchangeBorrowBooks' onClick={handleDelete}> Hủy mượn sách </button>
       </div>
 
       <ToastContainer />

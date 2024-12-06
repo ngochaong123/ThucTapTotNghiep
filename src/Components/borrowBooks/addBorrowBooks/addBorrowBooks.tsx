@@ -149,7 +149,7 @@ export default function AddBorrowBooks() {
 
                 setTimeout(() => {
                   navigate('/menu/borrowBooks', { replace: true });
-                }, 6000); // 6000ms = 6 giây
+                }, 3000); // 3000ms = 3 giây
 
               } else {
                 toast.error("Đã xảy ra lỗi khi lưu thông tin.");

@@ -20,11 +20,12 @@ interface Book {
 export default function LibraryBooks() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
-  const [categories, setCategories] = useState<string[]>([]); // Thêm trạng thái categories
+  const [filteredBooks, setFilteredBooks] = useState<Book[]>([]); // Thêm trạng thái cho sách đã lọc
+  const [categories, setCategories] = useState<string[]>([]);
   const [selectedBook, setSelectedBook] = useState<string | null>(null);
   const filterRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const [keyword, setKeyword] = useState(''); 
+  const [keyword, setKeyword] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const navigate = useNavigate();
 
@@ -33,6 +34,7 @@ export default function LibraryBooks() {
       try {
         const response = await axios.get('http://localhost:5000/Book');
         setBooks(response.data);
+        setFilteredBooks(response.data); // Gán giá trị ban đầu cho filteredBooks
       } catch (error) {
         console.error('Error fetching books:', error);
       }
@@ -40,7 +42,7 @@ export default function LibraryBooks() {
 
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/categories'); // Gọi API lấy thể loại
+        const response = await axios.get('http://localhost:5000/categories');
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -48,7 +50,7 @@ export default function LibraryBooks() {
     };
 
     fetchBooks();
-    fetchCategories(); // Lấy danh sách thể loại
+    fetchCategories();
   }, []);
 
   const handleSelectBook = (bookCode: string) => {
@@ -73,20 +75,17 @@ export default function LibraryBooks() {
     };
   }, []);
 
-  const searchBooks = async (keyword: string) => {
-    try {
-      const response = await axios.get(`http://localhost:5000/search?keyword=${keyword}`);
-      setBooks(response.data);
-    } catch (error) {
-      console.error('Error searching books:', error);
-    }
-  };
-
+  // Lọc cục bộ theo từ khóa
   useEffect(() => {
-    if (keyword) {
-      searchBooks(keyword);
-    }
-  }, [keyword]);
+    const lowercasedKeyword = keyword.toLowerCase();
+    const filtered = books.filter(
+      (book) =>
+        book.book_code.toLowerCase().includes(lowercasedKeyword) ||
+        book.book_name.toLowerCase().includes(lowercasedKeyword) ||
+        book.author.toLowerCase().includes(lowercasedKeyword)
+    );
+    setFilteredBooks(filtered);
+  }, [keyword, books]);
 
   const handleCategoryChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const category = e.target.value;
@@ -96,12 +95,14 @@ export default function LibraryBooks() {
       try {
         const response = await axios.get(`http://localhost:5000/Book?category=${encodeURIComponent(category)}`);
         setBooks(response.data);
+        setFilteredBooks(response.data); // Cập nhật danh sách sau khi lọc
       } catch (error) {
         console.error('Error fetching books by category:', error);
       }
     } else {
       const response = await axios.get('http://localhost:5000/Book');
       setBooks(response.data);
+      setFilteredBooks(response.data); // Khôi phục danh sách đầy đủ
     }
   };
 
@@ -190,7 +191,7 @@ export default function LibraryBooks() {
                 </tr>
               </thead>
               <tbody>
-                {books.map((book) => {
+                {filteredBooks.map((book) => {
                   return (
                     <tr key={book.book_code}>
                       <td>

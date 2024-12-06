@@ -25,31 +25,26 @@ export default function Member() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
-  const [selectedMember, setSelectedMember] = useState<string | null>(null); // Chỉ lưu một member duy nhất
+  const [selectedMember, setSelectedMember] = useState<string | null>(null);
+  const [filteredMembers, setFilteredMembers] = useState<Member[]>([]);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const filterRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const [searchKeyword, setSearchKeyword] = useState('');
   const navigate = useNavigate();
 
+  // Fetch members from API
   useEffect(() => {
     const fetchMembers = async () => {
       try {
         const response = await axios.get('http://localhost:5000/Members');
         setMembers(response.data);
+        setFilteredMembers(response.data);
       } catch (error) {
         console.error('Error fetching members:', error);
       }
     };
     fetchMembers();
   }, []);
-
-  const handleSelectMember = (e: React.ChangeEvent<HTMLInputElement>, member_code: string) => {
-    if (e.target.checked) {
-      setSelectedMember(member_code); // Chọn member
-    } else {
-      setSelectedMember(null); // Bỏ chọn
-    }
-  };
 
   const toggleFilterMenu = () => {
     setShowFilterMenu((prev) => !prev);
@@ -76,18 +71,28 @@ export default function Member() {
     try {
       const formattedDate = date.toISOString().split('T')[0];
       const response = await axios.get(`http://localhost:5000/Members?registrationDate=${formattedDate}`);
-      setMembers(response.data);
+      setFilteredMembers(response.data);
     } catch (error) {
       console.error('Error fetching members by date:', error);
     }
   };
 
-  const fetchMembersByKeyword = async (keyword: string) => {
-    try {
-      const response = await axios.get(`http://localhost:5000/searchMembers?keyword=${keyword}`);
-      setMembers(response.data);
-    } catch (error) {
-      console.error('Error fetching members by keyword:', error);
+  const fetchMembersByKeyword = (keyword: string) => {
+    const filtered = members.filter(
+      (member) =>
+        member.member_code.toLowerCase().includes(keyword.toLowerCase()) ||
+        member.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        member.email.toLowerCase().includes(keyword.toLowerCase()) ||
+        member.phone.includes(keyword)
+    );
+    setFilteredMembers(filtered);
+  };
+
+  const handleSelectMember = (e: React.ChangeEvent<HTMLInputElement>, member_code: string) => {
+    if (e.target.checked) {
+      setSelectedMember(member_code);
+    } else {
+      setSelectedMember(null);
     }
   };
 
@@ -185,7 +190,7 @@ export default function Member() {
                 </tr>
               </thead>
               <tbody>
-                {members.map((member) => (
+                {filteredMembers.map((member) => (
                   <tr key={member.member_code}>
                     <td>
                       <input

@@ -208,7 +208,7 @@ export default function AddBook() {
               // Trì hoãn 6 giây trước khi chuyển hướng
               setTimeout(() => {
                 navigate('/menu/LibraryBook', { replace: true });
-              }, 6000); // 6000ms = 6 giây
+              }, 3000); // 3000ms = 3 giây
           
             } catch (error) {
               console.error('Đã xảy ra lỗi khi lưu sách:', error);

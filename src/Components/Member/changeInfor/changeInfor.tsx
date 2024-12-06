@@ -114,7 +114,7 @@ export default function ChangeInfor() {
               toast.success('Xóa thành viên thành công!');
               setTimeout(() => {
                 navigate('/menu/Member', { replace: true });
-              }, 6000);
+              }, 3000);
 
               setIsChanged(false); 
             } catch (error) {
@@ -189,7 +189,7 @@ export default function ChangeInfor() {
               toast.success(response.data.message);
               setTimeout(() => {
                 navigate('/menu/Member', { replace: true });
-              }, 6000);
+              }, 3000);
 
               setIsChanged(false);
             } catch (error) {
@@ -283,7 +283,7 @@ export default function ChangeInfor() {
 
       <div className='ButtonAddMember'>
         <button className='SaveButtonMember' onClick={handleSubmit}> Lưu </button>
-        <button className='DeleteButtonChangeMember' onClick={DeleteMember}> Xóa độc giả </button>
+        <button className='DeleteButtonChangeMember' onClick={DeleteMember}> Hủy độc giả </button>
       </div>
 
       <ToastContainer />

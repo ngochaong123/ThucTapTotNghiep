@@ -79,13 +79,26 @@ export default function User() {
         },
         {
           label: 'Xác nhận',
-          onClick: handleSaveUserData
+            onClick: async () => {
+              await handleSaveUserData(); // Gọi hàm lưu dữ liệu
+              setTimeout(() => {
+                  window.location.reload(); // Reset trang sau 3 giây
+              }, 1000); // 1000ms = 1 giây
+          }
         }
       ]
     });
   };
 
   const handleSaveUserData = async () => {
+
+    // Kiểm tra "Căn cước công dân" (chỉ chứa 12 số)
+    const userCodeRegex = /^\d{12}$/; // "Căn cước công dân" phải có đúng 12 số
+    if (!userCodeRegex.test(formValues.user_code)) {
+      toast.error('Căn cước công dân không hợp lệ. Vui lòng nhập lại (12 số).');
+      return;
+    }
+
     // Kiểm tra xem mật khẩu có hợp lệ trước khi lưu
     if (!isValidPassword(formValues.password)) {
         toast.error('Mật khẩu không hợp lệ! Nó phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.');
@@ -98,6 +111,13 @@ export default function User() {
     if (!isFormChanged && !avatarFile) {
         toast.info('Không có sự thay đổi nào để lưu.'); 
         return;
+    }
+
+    // Kiểm tra số điện thoại (chỉ chứa số và độ dài hợp lý)
+    const phoneRegex = /^[0-9]+$/;
+    if (!phoneRegex.test(formValues.phone_number)) {
+      toast.error('Số điện thoại không hợp lệ. Vui lòng nhập lại.');
+      return;
     }
 
     try {

@@ -67,26 +67,6 @@ const getAllMembers = (req, res) => {
     });
 };
 
-// Hàm tìm kiếm thành viên theo từ khóa
-const searchMembers = (req, res) => {
-    const { keyword } = req.query;
-    const sql = 'SELECT * FROM members WHERE member_code LIKE ? OR name LIKE ? OR phone LIKE ? OR age LIKE ? OR email LIKE ? OR country LIKE ?';
-    const params = [`%${keyword}%`,`%${keyword}%`, `%${keyword}%`, `%${keyword}%`, `%${keyword}%`, `%${keyword}%`];
-
-    db.query(sql, params, (err, results) => {
-        if (err) {
-            console.error('Error searching members: ', err);
-            return res.status(500).json({ error: 'Lỗi tìm kiếm thành viên' });
-        }
-
-        results.forEach(member => {
-            member.avatar_link = `/Members/${member.avatar_link}`; // Thiết lập đường dẫn cho ảnh đại diện
-        });
-
-        res.json(results);
-    });
-};
-
 const addMember = (req, res) => {
     const { member_code, name, age, gender, email, phone } = req.body;
     const avatar_link = req.file ? req.file.filename : null; // Kiểm tra nếu file ảnh đã được tải lên
@@ -234,5 +214,5 @@ const editMember = (req, res) => {
 
 
 // Export hàm xử lý
-module.exports = { getAllMembers, searchMembers, addMember, editMember, DeleteMember, memberUpload };
+module.exports = { getAllMembers, addMember, editMember, DeleteMember, memberUpload };
 

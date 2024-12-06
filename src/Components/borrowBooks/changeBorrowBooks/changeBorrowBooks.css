@@ -127,13 +127,13 @@
 }
 
 
-.SaveButtonchangeBorrowBooks,
-.ResetButtonchangeBorrowBooks{
+.SaveButtonchangeBorrowBooks{
     width: 100px;
 }
 
 .ResetButtonchangeBorrowBooks{
     margin-left: 80px;
+    width: 120px;
 }
 
 .SaveButtonchangeBorrowBooks{
