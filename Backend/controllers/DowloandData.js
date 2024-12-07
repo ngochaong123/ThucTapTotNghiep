@@ -66,7 +66,6 @@ const downloadExcel = async (req, res) => {
             { header: 'Quantity', key: 'quantity', width: 10 },
             { header: 'Borrow Date', key: 'borrowDate', width: 15 },
             { header: 'Return Date', key: 'returnDate', width: 15 },
-            { header: 'Late Payment Days', key: 'latePaymDate', width: 20 }
         ];
         worksheetBorrowBooks.addRows(borrowBooks);
 
@@ -77,6 +76,7 @@ const downloadExcel = async (req, res) => {
             { header: 'BorrowBooks ID', key: 'borrowBooks_id', width: 20 },
             { header: 'Fee', key: 'Fee', width: 10 },
             { header: 'Penalty Fees', key: 'PenaltyFees', width: 15 },
+            { header: 'Late Payment Days', key: 'latePaymDate', width: 20 },
             { header: 'Status', key: 'Status', width: 15 }
         ];
         worksheetReturnBook.addRows(returnBook);

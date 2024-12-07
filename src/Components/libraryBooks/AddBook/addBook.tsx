@@ -175,12 +175,25 @@ export default function AddBook() {
           label: 'Xác nhận',
           onClick: async () => {
             const formData = new FormData();
-          
+  
             if (!isFormValid) {
               toast.error('Vui lòng điền tất cả các trường bắt buộc!');
               return;
             }
-          
+
+            // Kiểm tra số lượng (chỉ chứa số và phải lớn hơn 0)
+            const quantityRegex = /^[1-9][0-9]*$/;
+            if (!quantityRegex.test(formValues.quantity)) {
+              toast.error('Số lượng sách không hợp lệ. Vui lòng nhập số nguyên dương.');
+              return;
+            }
+  
+            const avatarInput = document.getElementById('avatarInput') as HTMLInputElement | null;
+            if (!avatarInput || !avatarInput.files || avatarInput.files.length === 0) {
+              toast.error('Vui lòng thêm ảnh sách!');
+              return;
+            }
+  
             formData.append('book_name', formValues.book_name);
             formData.append('book_code', formValues.book_code);
             formData.append('author', formValues.author);
@@ -189,27 +202,21 @@ export default function AddBook() {
             formData.append('location', formValues.location);
             formData.append('language', formValues.language);
             formData.append('received_date', formValues.receiveDate?.toISOString().split('T')[0] || '');
-          
-            const avatarInput = document.getElementById('avatarInput') as HTMLInputElement | null;
-          
+            formData.append('image_link', avatarInput.files[0]);
+  
             try {
-              if (avatarInput && avatarInput.files && avatarInput.files.length > 0) {
-                formData.append('image_link', avatarInput.files[0]);
-              }
-          
               const response = await axios.post('http://localhost:5000/addBook', formData, {
                 headers: {
                   'Content-Type': 'multipart/form-data',
                 },
               });
-              
+  
               toast.success('Lưu sách thành công!');
   
-              // Trì hoãn 6 giây trước khi chuyển hướng
+              // Trì hoãn 3 giây trước khi chuyển hướng
               setTimeout(() => {
                 navigate('/menu/LibraryBook', { replace: true });
-              }, 3000); // 3000ms = 3 giây
-          
+              }, 3000);
             } catch (error) {
               console.error('Đã xảy ra lỗi khi lưu sách:', error);
               toast.error('Đã xảy ra lỗi, vui lòng thử lại!');

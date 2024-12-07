@@ -13,7 +13,7 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,          
     email VARCHAR(100) NOT NULL UNIQUE,
     age INT,                                 
-    phone_number VARCHAR(15),                
+    phone_number VARCHAR(15) UNIQUE,                
     gender VARCHAR(50),                     
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     avatar_user VARCHAR(255)
@@ -36,8 +36,8 @@ CREATE TABLE books (
 CREATE TABLE members (
     member_code VARCHAR(20) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    phone VARCHAR(15) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone VARCHAR(15) NOT NULL UNIQUE,
     registration_date DATE NOT NULL,
     age INT NOT NULL,
     avatar_link VARCHAR(255),
@@ -51,7 +51,6 @@ CREATE TABLE borrowBooks (
     quantity INT NOT NULL CHECK (quantity > 0),
     borrowDate DATE NOT NULL,
     returnDate DATE DEFAULT NULL,
-    latePaymDate INT DEFAULT NULL,
     FOREIGN KEY (member_code) REFERENCES members(member_code),
     FOREIGN KEY (book_code) REFERENCES books(book_code)
 );
@@ -61,33 +60,10 @@ CREATE TABLE returnBook (
     borrowBooks_id VARCHAR(20) NOT NULL,
 	Fee INT DEFAULT 0,
     PenaltyFees INT DEFAULT 0,
+	latePaymDate INT DEFAULT NULL,
     Status VARCHAR(20) DEFAULT 'Đang mượn',
     FOREIGN KEY (borrowBooks_id) REFERENCES borrowBooks(borrowBooks_id)
 );
-
-DELIMITER //
-
-CREATE TRIGGER before_insert_borrowBooks
-BEFORE INSERT ON borrowBooks
-FOR EACH ROW
-BEGIN
-    IF NEW.returnDate IS NOT NULL THEN
-        -- Tính số ngày giữa ngày trả và ngày hiện tại
-        SET NEW.latePaymDate = DATEDIFF(CURDATE(), NEW.returnDate);
-        
-        -- Nếu latePaymDate là số âm, đặt giá trị là 0
-        IF NEW.latePaymDate < 0 THEN
-            SET NEW.latePaymDate = 0;
-        END IF;
-    ELSE
-        -- Nếu chưa trả, latePaymDate là 0
-        SET NEW.latePaymDate = 0;
-    END IF;
-END;
-//
-DELIMITER ;
-
-DELIMITER ;
 
 -- Thêm dữ liệu sách (books)
 INSERT INTO books (book_code, book_name, image_link, quantity, category, author, location, language, received_date)

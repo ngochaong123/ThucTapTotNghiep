@@ -97,6 +97,15 @@ const OverduePenaltyChart: React.FC = () => {
     return monthsInVietnamese[month] || month;
   };
 
+  // Hàm sắp xếp tháng từ 1 đến 12
+  const sortByMonthOrder = (data: ChartDataItem[]): ChartDataItem[] => {
+    const monthOrder = [
+      'January', 'February', 'March', 'April', 'May', 'June', 
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return data.sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month));
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -107,8 +116,11 @@ const OverduePenaltyChart: React.FC = () => {
         const data: ChartDataItem[] = await response.json();
 
         if (data && data.length > 0) {
-          const months = data.map((item) => translateMonthToVietnamese(item.month));
-          const penaltyFees = data.map((item) => item.penaltyFees);
+          // Sắp xếp dữ liệu tháng theo thứ tự từ 1 đến 12
+          const sortedData = sortByMonthOrder(data);
+
+          const months = sortedData.map((item) => translateMonthToVietnamese(item.month));
+          const penaltyFees = sortedData.map((item) => item.penaltyFees);
 
           setChartData((prevState) => ({
             ...prevState,

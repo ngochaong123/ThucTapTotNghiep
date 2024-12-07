@@ -148,7 +148,7 @@ const DeleteMember = async (req, res) => {
 
 const editMember = (req, res) => {
     const { member_code } = req.params;
-    const { name, age, gender, email, phone } = req.body; // Đổi 'country' thành 'gender'
+    const { name, age, gender, email, phone } = req.body;
     const new_avatar_link = req.file ? req.file.filename : null;
 
     // Kiểm tra các trường cần thiết
@@ -199,11 +199,15 @@ const editMember = (req, res) => {
                 return res.status(404).json({ message: 'Không tìm thấy thành viên với mã này.' });
             }
 
-            // Xóa ảnh cũ nếu có ảnh mới
-            if (new_avatar_link) {
+            // Xóa ảnh cũ nếu cập nhật thành công và có ảnh mới
+            if (new_avatar_link && old_avatar_link) {
                 const oldAvatarPath = path.join(__dirname, '..', 'Public', 'Members', old_avatar_link);
                 fs.unlink(oldAvatarPath, (unlinkErr) => {
-                    if (unlinkErr) console.error('Error deleting old avatar:', unlinkErr);
+                    if (unlinkErr) {
+                        console.error('Error deleting old avatar:', unlinkErr);
+                    } else {
+                        console.log('Old avatar deleted successfully.');
+                    }
                 });
             }
 

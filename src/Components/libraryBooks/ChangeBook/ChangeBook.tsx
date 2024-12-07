@@ -176,6 +176,13 @@ export default function ChangeBook() {
               newDate.setDate(newDate.getDate() + 1);
               formData.append('received_date', newDate.toISOString().split('T')[0]);
             }
+
+            // Kiểm tra số lượng (chỉ chứa số và phải lớn hơn 0)
+            const quantityRegex = /^[1-9][0-9]*$/;
+            if (!quantityRegex.test(formValues.quantity)) {
+              toast.error('Số lượng sách không hợp lệ. Vui lòng nhập số nguyên dương.');
+              return;
+            }
   
             const avatarInput = document.getElementById("avatarInput") as HTMLInputElement;
             if (avatarInput.files && avatarInput.files[0]) {

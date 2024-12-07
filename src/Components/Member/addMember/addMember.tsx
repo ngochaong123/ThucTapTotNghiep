@@ -116,6 +116,20 @@ export default function AddMember() {
       toast.error('Số điện thoại không hợp lệ. Vui lòng nhập lại.');
       return;
     }
+
+    // Kiểm tra định dạng email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formValues.email)) {
+      toast.error('Email không hợp lệ. Vui lòng nhập lại.');
+      return;
+    }
+
+    // Kiểm tra xem ảnh đã được tải lên hay chưa
+    const avatarInput = document.getElementById('avatarInput') as HTMLInputElement | null;
+    if (!avatarInput || !avatarInput.files || avatarInput.files.length === 0) {
+      toast.error('Vui lòng tải ảnh đại diện lên!');
+      return;
+    }
   
     formData.append('member_code', formValues.member_code);
     formData.append('name', formValues.name);
@@ -123,8 +137,6 @@ export default function AddMember() {
     formData.append('email', formValues.email);
     formData.append('gender', formValues.gender);
     formData.append('age', formValues.age);
-  
-    const avatarInput = document.getElementById('avatarInput') as HTMLInputElement | null;
   
     confirmAlert({
       title: 'Xác nhận thêm thành viên',
@@ -175,7 +187,6 @@ export default function AddMember() {
     });
   };
   
-
   return (
     <div className='FrameContanieraddMember'>
       <h1> Thêm thông tin độc giả </h1>
@@ -230,6 +241,7 @@ export default function AddMember() {
               name="phone" 
               value={formValues.phone} 
               onChange={handleChange} 
+              placeholder='Số điện thoại'
             />
           </div>
 

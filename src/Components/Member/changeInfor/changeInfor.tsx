@@ -111,7 +111,7 @@ export default function ChangeInfor() {
               });
               setImagePreview(DefaultAvatar);
 
-              toast.success('Xóa thành viên thành công!');
+              toast.success('Hủy thành viên thành công!');
               setTimeout(() => {
                 navigate('/menu/Member', { replace: true });
               }, 3000);
@@ -138,10 +138,24 @@ export default function ChangeInfor() {
       toast.error("Vui lòng điền tất cả các trường bắt buộc.");
       return;
     }
+
+    // Kiểm tra số điện thoại (chỉ chứa số và độ dài hợp lý)
+    const phoneRegex = /^[0-9]+$/;
+    if (!phoneRegex.test(formValues.phone)) {
+      toast.error('Số điện thoại không hợp lệ. Vui lòng nhập lại.');
+      return;
+    }
   
     // Kiểm tra tuổi hợp lệ
     if (formValues.age < 18 || formValues.age > 100) {
       toast.error("Tuổi phải nằm trong khoảng từ 18 đến 100.");
+      return;
+    }
+
+    // Kiểm tra định dạng email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formValues.email)) {
+      toast.error('Email không hợp lệ. Vui lòng nhập lại.');
       return;
     }
   
@@ -194,7 +208,7 @@ export default function ChangeInfor() {
               setIsChanged(false);
             } catch (error) {
               console.error("Lỗi cập nhật thành viên:", error);
-              toast.error("Có lỗi xảy ra khi thêm thành viên.");
+              toast.error("Có lỗi xảy ra khi chỉnh sửa thông tin thành viên");
             }
           }
         }

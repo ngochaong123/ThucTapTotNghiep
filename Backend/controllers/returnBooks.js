@@ -2,48 +2,76 @@ const db = require('../Data/Database');
 const path = require('path');
 
 const getAllreturnBooks = (req, res) => {
-    const query = `
-        SELECT  
-            returnBook.returnBook_id,
-            members.member_code,  
-            members.name, 
-            members.avatar_link, 
-            books.book_code,
-            books.category, 
-            books.image_link, 
-            books.book_name, 
-            borrowBooks.quantity, 
-            borrowBooks.borrowDate, 
-            borrowBooks.returnDate,      
-            returnBook.PenaltyFees,
-            borrowBooks.latePaymDate,    
-            returnBook.Status           
-        FROM 
-            borrowBooks 
-        JOIN 
-            members ON borrowBooks.member_code = members.member_code
-        JOIN 
-            books ON borrowBooks.book_code = books.book_code
-        JOIN 
-            returnBook ON borrowBooks.borrowBooks_id = returnBook.borrowBooks_id   
-        ORDER BY 
-            members.member_code;
-    `;
+  // Cập nhật trạng thái, tính PenaltyFees và latePaymDate trước khi lấy dữ liệu
+  const updateStatusAndFeesQuery = `
+      UPDATE returnBook rb
+      JOIN borrowBooks bb ON rb.borrowBooks_id = bb.borrowBooks_id
+      SET 
+          rb.Status = CASE
+              WHEN bb.returnDate < CURDATE() THEN 'Trễ hạn'
+              ELSE 'Đang mượn'
+          END,
+          rb.PenaltyFees = CASE
+              WHEN bb.returnDate < CURDATE() THEN GREATEST(DATEDIFF(CURDATE(), bb.returnDate) * 5000, 0)
+              ELSE 0
+          END,
+          rb.latePaymDate = CASE
+              WHEN bb.returnDate < CURDATE() THEN DATEDIFF(CURDATE(), bb.returnDate)
+              ELSE 0
+          END
+      WHERE bb.returnDate IS NOT NULL;
+  `;
 
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error('Error fetching borrowed books:', err);
-            return res.status(500).json({ error: 'Error fetching borrowed books' });
-        }
-        
-        // Chỉ thay đổi đường dẫn hình ảnh
-        results.forEach(returnBooks => {
-            returnBooks.image_link = `/Book/${returnBooks.image_link}`;  // Đảm bảo đường dẫn đúng
-            returnBooks.avatar_link = `/Members/${returnBooks.avatar_link}`;
-        });
+  db.query(updateStatusAndFeesQuery, (updateErr) => {
+      if (updateErr) {
+          console.error('Error updating returnBook Status, PenaltyFees, and latePaymDate:', updateErr);
+          return res.status(500).json({ error: 'Error updating returnBook Status, PenaltyFees, and latePaymDate' });
+      }
 
-        res.json(results);  // Trả về kết quả dưới dạng JSON
-    });
+      // Truy vấn dữ liệu sau khi cập nhật
+      const query = `
+          SELECT  
+              returnBook.returnBook_id,
+              members.member_code,  
+              members.name, 
+              members.avatar_link, 
+              books.book_code,
+              books.category, 
+              books.image_link, 
+              books.book_name, 
+              borrowBooks.quantity, 
+              borrowBooks.borrowDate, 
+              borrowBooks.returnDate,      
+              returnBook.PenaltyFees,
+              returnBook.latePaymDate,    
+              returnBook.Status           
+          FROM 
+              borrowBooks 
+          JOIN 
+              members ON borrowBooks.member_code = members.member_code
+          JOIN 
+              books ON borrowBooks.book_code = books.book_code
+          JOIN 
+              returnBook ON borrowBooks.borrowBooks_id = returnBook.borrowBooks_id   
+          ORDER BY 
+              members.member_code;
+      `;
+
+      db.query(query, (err, results) => {
+          if (err) {
+              console.error('Error fetching borrowed books:', err);
+              return res.status(500).json({ error: 'Error fetching borrowed books' });
+          }
+
+          // Chỉ thay đổi đường dẫn hình ảnh
+          results.forEach(returnBooks => {
+              returnBooks.image_link = `/Book/${returnBooks.image_link}`;  // Đảm bảo đường dẫn đúng
+              returnBooks.avatar_link = `/Members/${returnBooks.avatar_link}`;
+          });
+
+          res.json(results);  // Trả về kết quả dưới dạng JSON
+      });
+  });
 };
 
 const getStatuses = (req, res) => {
@@ -69,7 +97,7 @@ const calculatePenaltyForAll = async (req, res) => {
   try {
     // Truy vấn tất cả các sách trong bảng returnBook
     const query = `
-      SELECT b.borrowBooks_id, b.latePaymDate, r.returnBook_id, r.Status
+      SELECT b.borrowBooks_id, r.latePaymDate, r.returnBook_id, r.Status
       FROM borrowBooks b
       INNER JOIN returnBook r ON b.borrowBooks_id = r.borrowBooks_id
     `;

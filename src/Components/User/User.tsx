@@ -120,6 +120,13 @@ export default function User() {
       return;
     }
 
+    // Kiểm tra định dạng email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formValues.email)) {
+      toast.error('Email không hợp lệ. Vui lòng nhập lại.');
+      return;
+    }
+
     try {
         const formData = new FormData();
         
