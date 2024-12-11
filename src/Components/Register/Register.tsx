@@ -18,52 +18,53 @@ const Register: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  // Kiểm tra tính hợp lệ của tên người dùng
-  const isValidUsername = (username: string) => {
+  const validateRegistration = (username: string, password: string, confirmPassword: string, acceptedTerms: boolean) => {
     const usernameRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])/;
-    return usernameRegex.test(username);
-  };
-
-  // Kiểm tra tính hợp lệ của mật khẩu
-  const isValidPassword = (password: string) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return passwordRegex.test(password);
-  };
-
-  // Xử lý sự kiện khi người dùng nhấn nút đăng ký
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Kiểm tra các điều kiện đầu vào
-    if (!isValidUsername(username)) {
-      toast.error('Tên người dùng không hợp lệ.');
-      return;
+  
+    if (!usernameRegex.test(username)) {
+      toast.error('Tên người dùng phải chứa cả chữ và số.');
+      return false;
     }
-    if (!isValidPassword(password)) {
+  
+    if (!passwordRegex.test(password)) {
       toast.error('Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.');
-      return;
+      return false;
     }
+  
     if (password !== confirmPassword) {
-      toast.error('Mật khẩu xác nhận không khớp.');
-      return;
+      toast.error('Xác nhận mật khẩu không khớp.');
+      return false;
     }
+  
     if (!acceptedTerms) {
       toast.error('Bạn phải chấp nhận các điều khoản.');
+      return false;
+    }
+  
+    return true;
+  };
+  
+  // Xử lý sự kiện khi người dùng nhấn nút đăng ký
+  const RegisterAccount = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    // Kiểm tra tính hợp lệ
+    if (!validateRegistration(username, password, confirmPassword, acceptedTerms)) {
       return;
     }
-
+  
     try {
       // Gửi yêu cầu đăng ký đến server
       const response = await axios.post("http://localhost:5000/Register", {
-        username: username,
-        email: email,
-        password: password,
+        username,
+        email,
+        password,
       });
-
+  
       // Kiểm tra kết quả trả về từ server
       if (response.status === 201) {
         toast.success(response.data.message);
-        console.log("Response Status:", response.status);
         setTimeout(() => navigate('/login'), 1000); // Điều hướng đến trang đăng nhập sau khi đăng ký thành công
       } else {
         toast.error(response.data.message || "Đăng ký thất bại!");
@@ -72,18 +73,17 @@ const Register: React.FC = () => {
       console.error("Error during registration:", error);
       toast.error("Lỗi kết nối server!"); // Hiển thị thông báo lỗi nếu không kết nối được với server
     }
-  }; 
+  };
 
   return (
     <div className="register-page">
-      <ToastContainer />
       <div className="logo-container-register">
         <img src={Logo} className="logo-register-page" alt="Logo" />
         <div className="NameLogoRegister">QUẢN LÝ THƯ VIỆN</div>
       </div>
 
       <div className="register-container">
-        <form className="register-form" onSubmit={handleSubmit}>
+        <form className="register-form" onSubmit={RegisterAccount}>
           <h2 style={{ fontSize: "20px", textAlign:'center' }}>Đăng ký tài khoản thư viện</h2>
 
           {error && <p className="error-message">{error}</p>}
@@ -169,6 +169,7 @@ const Register: React.FC = () => {
           <a href="/login" className="link">Đăng nhập</a>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

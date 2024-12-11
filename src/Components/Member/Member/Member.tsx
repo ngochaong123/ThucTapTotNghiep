@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Member.css';
 import { Outlet, Link, useNavigate } from "react-router-dom";
+import { toast,ToastContainer  } from 'react-toastify';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -98,20 +99,22 @@ export default function Member() {
 
   const handleEditMember = () => {
     if (!selectedMember) {
-      alert('Vui lòng chọn một độc giả trước khi chỉnh thông tin!');
+      // Thông báo cảnh báo khi chưa chọn độc giả
+      toast.warn('Vui lòng chọn một độc giả trước khi chỉnh sửa thông tin!');
     } else {
       const selectedMemberData = members.find(member => member.member_code === selectedMember);
       if (selectedMemberData) {
+        // Điều hướng đến trang chỉnh sửa thông tin
         navigate(`/Menu/changeMemberInfor?member_code=${selectedMemberData.member_code}`, { state: selectedMemberData });
       }
     }
-  };
+  }
 
   return (
     <div>
       <div className='MemberCurrentInformation'>
         <div className='MemberheaderMember'>
-          <h1 className='Membertile'> Danh sách độc giả </h1>
+          <h1 className='Membertile'>Quản lý độc giả </h1>
           <Link to='/Menu/AddMember' style={{ textDecoration: 'none' }}>
             <button className='MemberAddMember'>
               <div style={{ display: 'flex' }}>
@@ -170,7 +173,7 @@ export default function Member() {
           </div>
 
           <button className='MemberEditMember' onClick={handleEditMember}>
-            <div className='MemberNameEdit'> Chỉnh sửa thông tin </div>
+            <div className='MemberNameEdit'> Chỉnh sửa thông tin độc giả </div>
           </button>
         </div>
 
@@ -218,6 +221,7 @@ export default function Member() {
           </div>
         </div>
       </div>
+      <ToastContainer />
       <Outlet />
     </div>
   );

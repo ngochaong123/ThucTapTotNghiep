@@ -3,48 +3,57 @@ import axios from 'axios';
 import './Login.css';  
 import Logo from '../../images/logo.jpg';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { toast,ToastContainer  } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [rememberMe, setRememberMe] = useState<boolean>(false); // State cho "Remember Me"
+  const [rememberPassword, setrememberPassword] = useState<boolean>(false); // State cho "Remember Me"
   const [error, setError] = useState<string>(''); 
   const [showPassword, setShowPassword] = useState<boolean>(false); 
   const navigate = useNavigate(); 
 
   // Hàm kiểm tra tính hợp lệ của tên người dùng
-  const isValidUsername = (username: string) => {
+  const isValidCredentials = (username: string, password: string) => {
     const usernameRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])/;
-    return usernameRegex.test(username);
-  };
-
-  // Hàm kiểm tra tính hợp lệ của mật khẩu
-  const isValidPassword = (password: string) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return passwordRegex.test(password);
+
+    if (!usernameRegex.test(username)) {
+      toast.error("Tên người dùng phải chứa cả chữ và số.");
+      return false;
+    }
+
+    if (!passwordRegex.test(password)) {
+      toast.error(
+        "Mật khẩu phải chứa ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt."
+      );
+      return false;
+    }
+
+    return true;
   };
 
   // Hàm xử lý đăng nhập
-  const handleSubmit = async (e: React.FormEvent) => {
+  const LoginAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-  
-    if (!isValidUsername(username) || !isValidPassword(password)) {
-      alert("Tên người dùng hoặc mật khẩu không hợp lệ.");
+
+    if (!isValidCredentials(username, password)) {
       return;
     }
-  
+
     try {
       const response = await axios.post('http://localhost:5000/login', {
         username,
         password,
       });
-  
-      if (response.data.success) {  
+
+      if (response.data.success) {
         // Lưu thông tin vào localStorage nếu "Ghi nhớ tài khoản" được chọn
-        if (rememberMe) {
+        if (rememberPassword) {
           localStorage.setItem('username', username);
-          localStorage.setItem('password', password); // Hoặc lưu token nếu có
+          localStorage.setItem('password', password);
         } else {
           localStorage.removeItem('username');
           localStorage.removeItem('password');
@@ -52,11 +61,11 @@ const Login: React.FC = () => {
         navigate('/menu');
       } else {
         console.log("Đăng nhập không thành công:", response.data);
-        alert("Tên đăng nhập hoặc mật khẩu không đúng.");
+        toast.error("Tên đăng nhập hoặc mật khẩu không đúng.");
       }
     } catch (error: any) {
-      console.log("API Error:", error);
-      alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+      console.error("API Error:", error);
+      toast.error('Đã xảy ra lỗi. Vui lòng thử lại sau.');
     }
   };
 
@@ -71,7 +80,7 @@ const Login: React.FC = () => {
       setPassword(savedPassword);
     }
     if (savedUsername && savedPassword) {
-      setRememberMe(true); // Nếu có thông tin đăng nhập đã lưu, bật "Ghi nhớ tài khoản"
+      setrememberPassword(true); // Nếu có thông tin đăng nhập đã lưu, bật "Ghi nhớ tài khoản"
     }
   }, []);
 
@@ -83,7 +92,7 @@ const Login: React.FC = () => {
       </div>
 
       <div className="login-container">
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className="login-form" onSubmit={LoginAccount}>
           <h2 style={{ fontSize: "20px",textAlign:'center' }}>Đăng nhập tài khoản thư viện</h2>
 
           {error && <p className="error-message">{error}</p>} 
@@ -122,8 +131,8 @@ const Login: React.FC = () => {
             <label>
               <input
                 type="checkbox"
-                checked={rememberMe}
-                onChange={() => setRememberMe(!rememberMe)}
+                checked={rememberPassword}
+                onChange={() => setrememberPassword(!rememberPassword)}
               />
               Ghi nhớ tài khoản
             </label>
@@ -137,6 +146,7 @@ const Login: React.FC = () => {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };

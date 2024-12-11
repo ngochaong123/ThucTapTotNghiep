@@ -128,9 +128,9 @@ export default function ReturnBooks() {
     setSelectedReturnBookId(prevSelected => (prevSelected === id ? null : id));
   };
 
-  const handleReturnBook = async () => {
+  const PaymentConfirmation = async () => {
     if (!selectedReturnBookId) {
-      toast.warn('Vui lòng chọn sách để trả.', { position: 'top-right' });
+      toast.warn('Vui lòng chọn độc giả mượn sách', { position: 'top-right' });
       return;
     }
   
@@ -168,7 +168,7 @@ export default function ReturnBooks() {
                 }
               } else {
                 // Lỗi không phải từ Axios
-                toast.error('Không thể kết nối tới server. Vui lòng kiểm tra kết nối mạng.', { position: 'top-right' });
+                toast.error('Vui lòng kiểm tra kết nối mạng.', { position: 'top-right' });
               }
             }
           }
@@ -235,7 +235,7 @@ export default function ReturnBooks() {
               </span>
             </div>
           </div>
-          <button className='ReturnBooksEditReturnBooks' onClick={handleReturnBook}>
+          <button className='ReturnBooksEditReturnBooks' onClick={PaymentConfirmation}>
             <div className='ReturnBooksNameEdit'>Xác nhận trả sách</div>
           </button>
         </div>

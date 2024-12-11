@@ -16,7 +16,7 @@ interface FormValues {
   book_code: string;
   author: string;
   category: string;
-  quantity: string;
+  quantity: number;
   location: string;
   avatar: string;
   language: string;
@@ -68,7 +68,7 @@ export default function ChangeBook() {
     book_code: state?.book_code || '',
     author: state?.author || '',
     category: state?.category || '',
-    quantity: state?.quantity || '',
+    quantity: state?.quantity || 0,
     location: state?.location || '',
     avatar: state?.image_link || '',
     language: state?.language || '',
@@ -167,7 +167,7 @@ export default function ChangeBook() {
             formData.append('book_code', formValues.book_code);
             formData.append('author', formValues.author);
             formData.append('category', formValues.category);
-            formData.append('quantity', formValues.quantity);
+            formData.append('quantity', formValues.quantity.toString());
             formData.append('location', formValues.location);
             formData.append('language', formValues.language);
             
@@ -179,7 +179,7 @@ export default function ChangeBook() {
 
             // Kiểm tra số lượng (chỉ chứa số và phải lớn hơn 0)
             const quantityRegex = /^[1-9][0-9]*$/;
-            if (!quantityRegex.test(formValues.quantity)) {
+            if (!quantityRegex.test(formValues.quantity.toString())) {
               toast.error('Số lượng sách không hợp lệ. Vui lòng nhập số nguyên dương.');
               return;
             }
@@ -226,13 +226,13 @@ export default function ChangeBook() {
 
     // Hiển thị hộp thoại xác nhận
     confirmAlert({
-      title: 'Xác nhận xóa sách',
-      message: 'Bạn có chắc chắn muốn xóa sách này không?',
+      title: 'Xác nhận hủy sách',
+      message: 'Bạn có chắc chắn muốn hủy sách này không?',
       buttons: [
         {
           label: 'Hủy',
           onClick: () => {
-            console.log("Xóa sách đã bị hủy.");
+            console.log("Sách đã bị hủy.");
           }
         },
         {
@@ -248,7 +248,7 @@ export default function ChangeBook() {
                 book_code: '',
                 author: '',
                 category: '',
-                quantity: '',
+                quantity: 0,
                 location: '',
                 avatar: '',
                 language: '',

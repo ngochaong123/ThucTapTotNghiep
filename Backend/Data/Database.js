@@ -9,7 +9,7 @@ const db = mysql.createConnection({
   database: 'library_management'
 });
 
-db.connect((err) => {
+db.connect((err) => { 
   if (err) {
     console.log('Error connecting to MySQL:', err);
   } else {

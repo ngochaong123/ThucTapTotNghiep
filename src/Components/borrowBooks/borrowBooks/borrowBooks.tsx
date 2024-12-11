@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './borrowBooks.css';
 import { Outlet, Link, useNavigate } from "react-router-dom";
+import { toast,ToastContainer  } from 'react-toastify';
 import axios from 'axios';
 
 import Magnifier from '../../../images/icon/magnifier.png';
@@ -8,7 +9,7 @@ import Plus from "../../../images/icon/plus.png";
 import returnBook from "../../../images/icon/towel.png";
 
 interface BorrowBook {
-  borrowBooks_id: string;  // Giữ lại numberVotes như là ID
+  borrowBooks_id: string;  
   member_code: string;
   name: string;
   book_code: string;
@@ -17,8 +18,8 @@ interface BorrowBook {
   quantity: number;
   image_link: string;
   avatar_link: string;
-  borrowDate: string;
-  returnDate: string;
+  borrowDate: Date;
+  returnDate: Date;
 }
 
 export default function BorrowBooks() {
@@ -31,17 +32,20 @@ export default function BorrowBooks() {
 
   const navigate = useNavigate();
 
-  const handleEditBook = () => {
+  const handleEditborrowBooks = () => {
     if (selectedBorrowBookId) {
-      const bookToEdit = borrowBooks.find((book) => book.borrowBooks_id  === selectedBorrowBookId);
+      const bookToEdit = borrowBooks.find((book) => book.borrowBooks_id === selectedBorrowBookId);
   
       if (bookToEdit) {
-        navigate(`/Menu/ChangeBorrowBooks?borrowBooks_id =${bookToEdit.borrowBooks_id }`, { state: { bookData: bookToEdit } });
+        // Điều hướng đến trang chỉnh sửa
+        navigate(`/Menu/ChangeBorrowBooks?borrowBooks_id=${bookToEdit.borrowBooks_id}`, { state: { bookData: bookToEdit } });
       } else {
-        alert('Không tìm thấy sách với ID đã chọn.');
+        // Thông báo lỗi nếu không tìm thấy sách
+        toast.error('Không tìm thấy sách với ID đã chọn.');
       }
     } else {
-      alert('Vui lòng chọn một phiếu mượn sách để chỉnh sửa.');
+      // Thông báo cảnh báo nếu chưa chọn phiếu mượn sách
+      toast.warn('Vui lòng chọn một độc giả mượn sách để chỉnh sửa.');
     }
   };
 
@@ -98,7 +102,7 @@ export default function BorrowBooks() {
     <div>
       <div className='borrowBooksCurrentInformation'>
         <div className='borrowBooksheaderborrowBooks'>
-          <h1 className='borrowBookstile'>Mượn sách</h1>
+          <h1 className='borrowBookstile'>Quản lý mượn sách</h1>
           <Link to='/Menu/AddBorrowBooks' style={{ textDecoration: 'none' }}>
             <button className='borrowBooksAddborrowBooks'>
               <div style={{ display: 'flex' }}>
@@ -143,7 +147,7 @@ export default function BorrowBooks() {
               </div>
             </div>
           </div>
-          <div style={{display:'flex'}}>
+          <div style={{display:'flex', alignItems:'center'}}>
             <Link to='/Menu/ReturnBooks' style={{ textDecoration: 'none' }}>
               <button className='borrowBooksEditborrowBooks' style={{width:'135px', marginRight:'70px'}}>
                 <div style={{display:'flex'}}>
@@ -152,11 +156,8 @@ export default function BorrowBooks() {
                 </div>
               </button>
             </Link>
-            <button
-              className='borrowBooksEditborrowBooks'
-              onClick={handleEditBook}
-            >
-              <div className='borrowBooksNameEdit'>Chỉnh sửa thông tin</div>
+            <button className='borrowBooksEditborrowBooks' onClick={handleEditborrowBooks}>
+              <div className='borrowBooksNameEdit'>Chỉnh sửa thông tin độc giả mượn sách</div>
             </button>
           </div>
         </div>
@@ -209,6 +210,8 @@ export default function BorrowBooks() {
           </div>
         </div>
       </div>
+      <ToastContainer />
+      <Outlet />
     </div>
   );
 }

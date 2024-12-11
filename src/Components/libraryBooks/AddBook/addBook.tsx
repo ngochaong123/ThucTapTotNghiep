@@ -15,7 +15,7 @@ interface FormValues {
   book_code: string;
   author: string;
   category: string;
-  quantity: string;
+  quantity: number;
   location: string;
   avatar: string;
   language: string;
@@ -28,7 +28,7 @@ export default function AddBook() {
     book_code: '',
     author: '',
     category: '',
-    quantity: '',
+    quantity: 0,
     location: '',
     avatar: '',
     language: '',
@@ -107,7 +107,7 @@ export default function AddBook() {
   const handleReset = () => {
     confirmAlert({
       title: 'Xác nhận đặt lại',
-      message: 'Bạn có chắc chắn muốn đặt lại tất cả các trường không?',
+      message: 'Bạn có chắc chắn muốn đặt lại thông tin thêm sách? ',
       buttons: [
         {
           label: 'Hủy',
@@ -123,7 +123,7 @@ export default function AddBook() {
               book_code: '',
               author: '',
               category: '',
-              quantity: '',
+              quantity: 0,
               location: '',
               avatar: '',
               language: '',
@@ -181,9 +181,8 @@ export default function AddBook() {
               return;
             }
 
-            // Kiểm tra số lượng (chỉ chứa số và phải lớn hơn 0)
             const quantityRegex = /^[1-9][0-9]*$/;
-            if (!quantityRegex.test(formValues.quantity)) {
+            if (!quantityRegex.test(formValues.quantity.toString())) {
               toast.error('Số lượng sách không hợp lệ. Vui lòng nhập số nguyên dương.');
               return;
             }
@@ -198,7 +197,7 @@ export default function AddBook() {
             formData.append('book_code', formValues.book_code);
             formData.append('author', formValues.author);
             formData.append('category', formValues.category);
-            formData.append('quantity', formValues.quantity);
+            formData.append('quantity', formValues.quantity.toString());
             formData.append('location', formValues.location);
             formData.append('language', formValues.language);
             formData.append('received_date', formValues.receiveDate?.toISOString().split('T')[0] || '');

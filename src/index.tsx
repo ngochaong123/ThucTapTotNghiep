@@ -27,7 +27,7 @@ import ReturnBooks from "./Components/returnBooks/returnBooks";
 // bao cao
 import Report from "./Components/Report/Report/Report";
 // nguoi dung
-import User from "./Components/User/User";
+import Librarian from "./Components/librarian/librarian";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -71,7 +71,7 @@ root.render(
           <Route path="Report" element={<Report />} />
           
           {/* nguoi dung */}
-          <Route path="User" element={<User />} />
+          <Route path="Librarian" element={<Librarian />} />
         </Route>
         <Route path='*' element = {<Page404 />} />
       </Routes>

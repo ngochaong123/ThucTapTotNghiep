@@ -125,10 +125,10 @@ const DeleteBook = async (req, res) => {
       return res.status(404).json({ message: "Không tìm thấy sách với mã này." });
     }
 
-    res.status(200).json({ message: "Đã xóa sách và ảnh thành công." });
+    res.status(200).json({ message: "Đã hủy sách thành công." });
   } catch (error) {
     console.error("Error deleting book:", error);
-    res.status(500).json({ message: "Có lỗi xảy ra khi xóa sách và ảnh." });
+    res.status(500).json({ message: "Có lỗi xảy ra khi hủy sách và ảnh." });
   }
 };
 

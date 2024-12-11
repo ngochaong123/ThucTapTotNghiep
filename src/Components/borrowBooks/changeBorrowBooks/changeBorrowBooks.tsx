@@ -11,38 +11,52 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import axios from 'axios';
 
+// Định nghĩa kiểu dữ liệu
+interface BorrowBookFormValues {
+  borrowBooks_id: string;
+  name: string;
+  book_name: string;
+  image_link: string;
+  borrowDate: Date;
+  returnDate: Date;
+  quantity: number;
+  category: string;
+  member_code: string;
+  book_code: string;
+}
+
 export default function ChangeBorrowBooks() {
   const location = useLocation();
-  const { bookData } = location.state;
+  const { bookData } = location.state || {}; // Kiểm tra `location.state` có dữ liệu không
   const navigate = useNavigate();
 
-  const [formValues, setFormValues] = useState({
+  const [formValues, setFormValues] = useState<BorrowBookFormValues>({
     borrowBooks_id: '',
     name: '',
     book_name: '',
     image_link: '',
-    borrowDate: '',
-    returnDate: '',
-    quantity: '',
+    borrowDate: new Date(),
+    returnDate: new Date(),
+    quantity: 0,
     category: '',
     member_code: '',
     book_code: '',
   });
 
-  const [originalValues, setOriginalValues] = useState({});
+  const [originalValues, setOriginalValues] = useState<BorrowBookFormValues>({ ...formValues });
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
   const [selectedBorrowDate, setSelectedBorrowDate] = useState<Date | null>(null);
   const [selectedReturnDate, setSelectedReturnDate] = useState<Date | null>(null);
 
   useEffect(() => {
     if (bookData) {
-      const initialData = {
+      const initialData: BorrowBookFormValues = {
         borrowBooks_id: bookData.borrowBooks_id || '',
         name: bookData.name || '',
         member_code: bookData.member_code || '',
         image_link: bookData.image_link || '',
         book_code: bookData.book_code || '',
-        quantity: bookData.quantity || '',
+        quantity: bookData.quantity || 0,
         category: bookData.category || '',
         book_name: bookData.book_name || '',
         borrowDate: bookData.borrowDate || '',
@@ -65,22 +79,20 @@ export default function ChangeBorrowBooks() {
     }
   }, [bookData]);
 
-  // Hàm lấy thông tin thành viên
   const handleMemberCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const member_code = e.target.value;
-    setFormValues((prev) => ({ ...prev, member_code, name: '' })); // Đặt lại name về rỗng khi nhập mã mới
+    setFormValues((prev) => ({ ...prev, member_code, name: '' }));
     if (member_code) {
       try {
         const response = await axios.get(`http://localhost:5000/getMemberByCode/${member_code}`);
         setFormValues((prev) => ({ ...prev, name: response.data.name }));
       } catch (error) {
         console.error("Không tìm thấy thành viên", error);
-        setFormValues((prev) => ({ ...prev, name: '' })); // Đặt lại name về rỗng nếu không tìm thấy thành viên
+        setFormValues((prev) => ({ ...prev, name: '' }));
       }
     }
-  };  
+  };
 
-  // Hàm lấy thông tin sách và cập nhật ảnh khi thay đổi mã sách
   const handleBookCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const book_code = e.target.value;
     setFormValues((prev) => ({
@@ -89,9 +101,9 @@ export default function ChangeBorrowBooks() {
       book_name: '',
       category: '',
       image_link: '',
-    })); // Đặt lại các giá trị liên quan về rỗng khi nhập mã mới
-    setAvatarPreview(DefaultAvatar); // Đặt lại ảnh mặc định
-  
+    }));
+    setAvatarPreview(DefaultAvatar);
+
     if (book_code) {
       try {
         const response = await axios.get(`http://localhost:5000/getBookByCode/${book_code}`);
@@ -111,30 +123,33 @@ export default function ChangeBorrowBooks() {
           book_name: '',
           category: '',
           image_link: '',
-        })); // Đặt lại giá trị liên quan về rỗng nếu không tìm thấy sách
-        setAvatarPreview(DefaultAvatar); // Đặt lại ảnh mặc định
+        }));
+        setAvatarPreview(DefaultAvatar);
       }
     }
-  };  
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormValues({
       ...formValues,
-      [name]: value,
+      [name]: name === 'quantity' ? parseInt(value) || 0 : value, // Chuyển đổi số lượng thành số nguyên
     });
   };
 
-  const hasChanges = () => {
-    return JSON.stringify(formValues) !== JSON.stringify(originalValues) ||
-      (selectedBorrowDate && selectedBorrowDate.toISOString() !== (originalValues as any).borrowDate) ||
-      (selectedReturnDate && selectedReturnDate.toISOString() !== (originalValues as any).returnDate);
-  };
+  const hasChanges = () =>
+    JSON.stringify(formValues) !== JSON.stringify(originalValues);
 
-  const SaveWith = () => {
+  const handleSave = () => {
     // Kiểm tra nếu không có thay đổi
     if (!hasChanges()) {
       toast.info("Không có thông tin thay đổi.");
+      return;
+    }
+
+    // Kiểm tra số lượng phải là số dương
+    if (isNaN(formValues.quantity) || formValues.quantity <= 0) {
+      toast.error("Số lượng phải là một số dương.");
       return;
     }
   
@@ -203,14 +218,14 @@ export default function ChangeBorrowBooks() {
   const handleDelete = async () => {
     // Kiểm tra nếu không có mã sách
     if (!formValues.borrowBooks_id) {
-      toast.error("Vui lòng chọn sách để xóa.");
+      toast.error("Vui lòng chọn sách để hủy.");
       return;
     }
   
     // Hiển thị hộp thoại xác nhận
     confirmAlert({
-      title: 'Xác nhận xóa sách',
-      message: 'Bạn có chắc chắn muốn xóa sách này không?',
+      title: 'Xác nhận hủy sách',
+      message: 'Bạn có chắc chắn muốn hủy thông tin độc giả mượn sách này không?',
       buttons: [
         {
           label: 'Hủy',
@@ -232,11 +247,11 @@ export default function ChangeBorrowBooks() {
                 member_code: '',
                 image_link: '',
                 book_code: '',
-                quantity: '',
+                quantity: 0,
                 category: '',
                 book_name: '',
-                borrowDate: '',
-                returnDate: '',
+                borrowDate: new Date(),
+                returnDate: new Date(),
               });
               setAvatarPreview(DefaultAvatar);
 
@@ -247,7 +262,7 @@ export default function ChangeBorrowBooks() {
 
             } catch (error) {
               console.error("Lỗi hủy sách:", error);
-              toast.error("Có lỗi xảy ra khi xóa sách.");
+              toast.error("Có lỗi xảy ra khi hủy mượn sách.");
             }
           }
         }
@@ -336,7 +351,7 @@ export default function ChangeBorrowBooks() {
       <div className='ButtonAddchangeBorrowBooks'>
         <button 
           className='SaveButtonchangeBorrowBooks' 
-          onClick={SaveWith}
+          onClick={handleSave}
         > 
           Lưu 
         </button>

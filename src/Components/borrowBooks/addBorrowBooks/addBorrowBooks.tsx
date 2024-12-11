@@ -9,17 +9,30 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+// Định nghĩa kiểu dữ liệu
+interface FormValues {
+  borrowBooks_id: string;
+  name: string;
+  book_code: string;
+  quantity: number;
+  member_code: string;
+  image_link: string;
+  borrowDate: Date;
+  returnDate: Date;
+  book_name: string;
+  category: string; 
+}
 
 export default function AddBorrowBooks() {
-  const [formValues, setFormValues] = useState({
+  const [formValues, setFormValues] = useState<FormValues>({
     borrowBooks_id: '',
     name: '',
     book_code: '',
-    quantity: '',
+    quantity: 0,
     member_code: '',
     image_link: '',
-    borrowDate: '', 
-    returnDate: '',
+    borrowDate: new Date(),
+    returnDate: new Date(),
     book_name: '',
     category: '', 
   });
@@ -34,13 +47,12 @@ export default function AddBorrowBooks() {
     setImagePreview(formValues.image_link ? `http://localhost:5000${formValues.image_link}` : DefaultAvatar);
   }, [formValues.image_link]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     const { name, value } = e.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Lấy thông tin thành viên từ mã thành viên
-  const handleMemberCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMemberCodeChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const member_code = e.target.value;
     setFormValues((prev) => ({ ...prev, member_code, name: '' })); // Reset tên độc giả
     if (member_code) {
@@ -49,13 +61,12 @@ export default function AddBorrowBooks() {
         setFormValues((prev) => ({ ...prev, name: data.name }));
       } catch (error) {
         console.error("Không tìm thấy thành viên", error);
-        setFormValues((prev) => ({ ...prev, name: '' })); // Xóa giá trị tên độc giả
+        setFormValues((prev) => ({ ...prev, name: '' }));
       }
     }
   };
 
-  // Lấy thông tin sách từ mã sách
-  const handleBookCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBookCodeChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const book_code = e.target.value;
     setFormValues((prev) => ({ ...prev, book_code, book_name: '', category: '', image_link: '' })); // Reset thông tin sách
     if (book_code) {
@@ -69,12 +80,12 @@ export default function AddBorrowBooks() {
         }));
       } catch (error) {
         console.error("Không tìm thấy sách", error);
-        setFormValues((prev) => ({ ...prev, book_name: '', category: '', image_link: '' })); // Xóa thông tin sách
+        setFormValues((prev) => ({ ...prev, book_name: '', category: '', image_link: '' }));
       }
     }
   };
 
-  const handleReset = () => {
+  const handleReset = (): void => {
     confirmAlert({
       title: 'Xác nhận',
       message: 'Bạn có chắc chắn muốn đặt lại thông tin mượn sách?',
@@ -89,11 +100,11 @@ export default function AddBorrowBooks() {
               borrowBooks_id : '',
               name: '',
               book_code: '',
-              quantity: '',
+              quantity: 0,
               member_code: '',
               image_link: '',
-              borrowDate: '', 
-              returnDate: '',
+              borrowDate: new Date(),
+              returnDate: new Date(),
               book_name: '',
               category: '', 
             });
@@ -106,18 +117,20 @@ export default function AddBorrowBooks() {
     });
   }; 
 
-  // Lưu thông tin mượn sách
-  const handleSave = () => {
-    // Kiểm tra nếu không có thay đổi
+  const handleSave = (): void => {
     if (!selectedBorrowDate || !selectedReturnDate || !formValues.member_code || !formValues.book_code || !formValues.quantity) {
       toast.error("Vui lòng điền đầy đủ thông tin.");
       return;
     }
-  
-    // Xác nhận trước khi lưu
+
+    if (isNaN(formValues.quantity) || formValues.quantity <= 0) {
+      toast.error("Số lượng phải là một số dương.");
+      return;
+    }
+
     confirmAlert({
       title: 'Xác nhận lưu',
-      message: 'Bạn có chắc chắn muốn lưu thông tin này?',
+      message: 'Bạn có chắc chắn muốn lưu thông tin độc giả mượn sách',
       buttons: [
         {
           label: 'Hủy',
@@ -126,13 +139,11 @@ export default function AddBorrowBooks() {
         {
           label: 'Xác nhận',
           onClick: async () => {
-            // Kiểm tra ngày trả sách phải lớn hơn ngày mượn
-            if (selectedReturnDate <= selectedBorrowDate) {
+            if (selectedReturnDate! <= selectedBorrowDate!) {
               toast.error("Ngày trả sách phải lớn hơn ngày mượn.");
               return;
             }
-  
-            // Chuẩn bị dữ liệu gửi lên API
+
             const borrowData = {
               borrowBooks_id : formValues.borrowBooks_id,
               member_code: formValues.member_code,
@@ -141,7 +152,7 @@ export default function AddBorrowBooks() {
               borrowDate: selectedBorrowDate?.toISOString().split('T')[0],
               returnDate: selectedReturnDate?.toISOString().split('T')[0]
             };
-  
+
             try {
               const response = await axios.post('http://localhost:5000/addborrowBook', borrowData);
               if (response.status >= 200 && response.status < 300) {
@@ -149,8 +160,7 @@ export default function AddBorrowBooks() {
 
                 setTimeout(() => {
                   navigate('/menu/borrowBooks', { replace: true });
-                }, 3000); // 3000ms = 3 giây
-
+                }, 3000); 
               } else {
                 toast.error("Đã xảy ra lỗi khi lưu thông tin.");
               }

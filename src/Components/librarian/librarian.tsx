@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import './User.css';
+import './librarian.css';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { ToastContainer, toast } from 'react-toastify';
@@ -7,8 +7,20 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 import DefaultAvatar from "../../images/icon/avatar.jpg";
 
-export default function User() { 
-  const [formValues, setFormValues] = useState({
+interface FormValues {
+  full_name: string;
+  phone_number: string;
+  email: string;
+  user_code: string;
+  username: string;
+  avatar_user: string;
+  gender: string;
+  age: number; 
+  password: string;
+}
+
+export default function Librarian() { 
+  const [formValues, setFormValues] = useState<FormValues>({
     full_name: '',
     phone_number: '',
     email: '',
@@ -16,11 +28,11 @@ export default function User() {
     username: '', 
     avatar_user: '',
     gender: '',
-    age: '',
+    age: 0,
     password: '', 
   });
-  
-  const [initialFormValues, setInitialFormValues] = useState(formValues);
+
+  const [initialFormValues, setInitialFormValues] = useState<FormValues>(formValues);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -59,14 +71,18 @@ export default function User() {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    // Kiểm tra và giới hạn tuổi
+    
     if (name === 'age') {
-      if (value && (isNaN(Number(value)) || Number(value) > 100)) {
+      const ageValue = Number(value);
+      // Validate age input
+      if (value && (isNaN(ageValue) || ageValue > 100)) {
         toast.error("Vui lòng nhập tuổi hợp lệ dưới 100!");
         return;
       }
+      setFormValues({ ...formValues, [name]: ageValue });
+    } else {
+      setFormValues({ ...formValues, [name]: value });
     }
-    setFormValues({ ...formValues, [name]: value });
   };
 
   const handleSaveConfirmation = () => {
@@ -79,11 +95,11 @@ export default function User() {
         },
         {
           label: 'Xác nhận',
-            onClick: async () => {
-              await handleSaveUserData(); // Gọi hàm lưu dữ liệu
-              setTimeout(() => {
-                  window.location.reload(); // Reset trang sau 3 giây
-              }, 1000); // 1000ms = 1 giây
+          onClick: async () => {
+            await handleSaveUserData(); // Gọi hàm lưu dữ liệu
+            setTimeout(() => {
+              window.location.reload(); // Reset trang sau 3 giây
+            }, 1000); // 1000ms = 1 giây
           }
         }
       ]
@@ -91,21 +107,17 @@ export default function User() {
   };
 
   const handleSaveUserData = async () => {
-
-    // Kiểm tra "Căn cước công dân" (chỉ chứa 12 số)
-    const userCodeRegex = /^\d{12}$/; // "Căn cước công dân" phải có đúng 12 số
+    const userCodeRegex = /^\d{12}$/;
     if (!userCodeRegex.test(formValues.user_code)) {
       toast.error('Căn cước công dân không hợp lệ. Vui lòng nhập lại (12 số).');
       return;
     }
 
-    // Kiểm tra xem mật khẩu có hợp lệ trước khi lưu
     if (!isValidPassword(formValues.password)) {
         toast.error('Mật khẩu không hợp lệ! Nó phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.');
         return;
     }
 
-    // Kiểm tra xem có sự thay đổi nào trong thông tin khác ngoài ảnh đại diện không
     const isFormChanged = JSON.stringify(formValues) !== JSON.stringify(initialFormValues);
     
     if (!isFormChanged && !avatarFile) {
@@ -113,14 +125,12 @@ export default function User() {
         return;
     }
 
-    // Kiểm tra số điện thoại (chỉ chứa số và độ dài hợp lý)
     const phoneRegex = /^[0-9]+$/;
     if (!phoneRegex.test(formValues.phone_number)) {
       toast.error('Số điện thoại không hợp lệ. Vui lòng nhập lại.');
       return;
     }
 
-    // Kiểm tra định dạng email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formValues.email)) {
       toast.error('Email không hợp lệ. Vui lòng nhập lại.');
@@ -129,18 +139,15 @@ export default function User() {
 
     try {
         const formData = new FormData();
-        
-        // Thêm thông tin người dùng vào formData
         formData.append('user_code', formValues.user_code);
         formData.append('username', formValues.username);
         formData.append('full_name', formValues.full_name);
         formData.append('password', formValues.password);
         formData.append('email', formValues.email);
-        formData.append('age', formValues.age);
+        formData.append('age', formValues.age.toString());
         formData.append('phone_number', formValues.phone_number);
         formData.append('gender', formValues.gender);
         
-        // Thêm ảnh đại diện nếu có
         if (avatarFile) {
             formData.append('avatar_user', avatarFile);
         }
@@ -163,8 +170,7 @@ export default function User() {
         console.error('Error updating user data:', error);
         toast.error('Lưu thông tin thất bại!');
     }
-};
-
+  };
 
   const handleAvatarUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -207,7 +213,7 @@ export default function User() {
       username: '', 
       avatar_user: '',
       gender: '',
-      age: '',
+      age: 0,
       password: '', 
     });
     setAvatarPreview(DefaultAvatar);
@@ -217,7 +223,7 @@ export default function User() {
   return (
     <div className='FrameContanieraddUser'>
       <ToastContainer />
-      <h1> Thông tin người dùng </h1>
+      <h1> Thông tin thủ thư </h1>
       <div className='uploadAvatarUser'>
         <div className='containeruploadAvatarUser'>
           <img 
@@ -245,7 +251,7 @@ export default function User() {
       <div className='containerUser'>
         <div className='containerUserRight'> 
           <div className='inputInfoUser'>
-            <div>Tên Người dùng</div>
+            <div>Tên người dùng</div>
             <input name="full_name" value={formValues.full_name} onChange={handleChange} placeholder='Tên thành viên' />
           </div>
           <div className='inputInfoUser'>

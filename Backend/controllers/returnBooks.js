@@ -12,7 +12,7 @@ const getAllreturnBooks = (req, res) => {
               ELSE 'Đang mượn'
           END,
           rb.PenaltyFees = CASE
-              WHEN bb.returnDate < CURDATE() THEN GREATEST(DATEDIFF(CURDATE(), bb.returnDate) * 5000, 0)
+              WHEN bb.returnDate < CURDATE() THEN GREATEST(DATEDIFF(CURDATE(), bb.returnDate) * rb.Fee, 0) -- Sử dụng giá trị cố định
               ELSE 0
           END,
           rb.latePaymDate = CASE

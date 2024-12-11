@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { toast, ToastContainer  } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Report.css';
 
 // Chart imports
@@ -39,20 +41,22 @@ const Report: React.FC = () => {
   const handleDownloadExcel = async () => {
     try {
       const response = await axios.get('http://localhost:5000/downloadExcel', {
-        responseType: 'blob', // Định dạng blob để tải file
+        responseType: 'blob',
       });
   
-      // Tạo URL từ blob và kích hoạt tải file
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'library_data.xlsx'); // Tên file tải về
+      link.setAttribute('download', 'library_data.xlsx');
       document.body.appendChild(link);
       link.click();
       link.remove();
+  
+      console.log('File downloaded successfully!'); // Kiểm tra log này
+      toast.success('Tải file thành công!');
     } catch (error) {
       console.error('Error downloading the file:', error);
-      alert('Không thể tải file. Vui lòng thử lại!');
+      toast.error('Không thể tải file. Vui lòng thử lại!');
     }
   };
 
@@ -86,6 +90,7 @@ const Report: React.FC = () => {
           <BorrowedBooksByCategory />
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

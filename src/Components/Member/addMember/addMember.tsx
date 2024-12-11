@@ -15,7 +15,7 @@ interface FormValues {
   email: string;
   avatar_link: string;
   gender: string;
-  age: string; // Giữ age là chuỗi để dễ dàng xử lý trong trường hợp nhập không hợp lệ
+  age: Number; 
 }
 
 export default function AddMember() {
@@ -26,7 +26,7 @@ export default function AddMember() {
     email: '',
     avatar_link: '',
     gender: '',
-    age: '', // Khởi tạo age là chuỗi
+    age: 0,
   });
 
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
@@ -54,7 +54,7 @@ export default function AddMember() {
   const handleReset = () => {
     confirmAlert({
       title: 'Xác nhận đặt lại',
-      message: 'Bạn có chắc chắn muốn đặt lại tất cả các trường không?',
+      message: 'Bạn có chắc chắn muốn đặt thông tin thêm độc giả không?',
       buttons: [
         {
           label: 'Hủy',
@@ -70,7 +70,7 @@ export default function AddMember() {
               email: '',
               avatar_link: '',
               gender: '',
-              age: '',
+              age: 0,
             });
             setAvatarPreview(DefaultAvatar);
             console.log("Form đã được đặt lại.");
@@ -136,7 +136,7 @@ export default function AddMember() {
     formData.append('phone', formValues.phone);
     formData.append('email', formValues.email);
     formData.append('gender', formValues.gender);
-    formData.append('age', formValues.age);
+    formData.append('age', formValues.age.toString());
   
     confirmAlert({
       title: 'Xác nhận thêm thành viên',
@@ -172,7 +172,7 @@ export default function AddMember() {
                 email: '',
                 avatar_link: '',
                 gender: '',
-                age: '',
+                age: 0,
               });
               setAvatarPreview(DefaultAvatar);
               console.log("Form đã được đặt lại.");
@@ -224,7 +224,7 @@ export default function AddMember() {
             <div>Tuổi </div>
             <input 
               name="age" 
-              value={formValues.age} 
+              value={formValues.age.toString()} 
               onChange={handleChange} 
               placeholder='Tuổi' 
               type="number" 

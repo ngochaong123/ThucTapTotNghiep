@@ -12,7 +12,6 @@ import Report from "../../images/icon/report.png";
 import User from "../../images/icon/user.png";
 import loginOut from "../../images/icon/loginOut.png";
 import borrowBooks from "../../images/icon/borrow-book.png";
-import returnBook from "../../images/icon/towel.png";
 
 export default function Menu() {
   const [formValues, setFormValues] = useState({
@@ -82,7 +81,7 @@ export default function Menu() {
       <div className='SibarMenu'>
         <div className='LogoMenu'>
           <img src={LogoMenu} alt="Logo" className='Logo' />
-          <h1 style={{ color: 'white' }}>Thư viện</h1>
+          <h1 style={{ color: 'white' }}>Quản lý thư viện</h1>
         </div>
 
         <Link
@@ -92,7 +91,7 @@ export default function Menu() {
         >
           <div className="vertical-bar"></div>
           <img src={Book} alt="Book Icon" className='IconOption' />
-          <div className='NameOptionIcon'>Sách thư viện</div>
+          <div className='NameOptionIcon'>Quản lý sách thư viện</div>
         </Link>
 
         <Link
@@ -102,7 +101,7 @@ export default function Menu() {
         >
           <div className="vertical-bar"></div>
           <img src={Group} alt="Group Icon" className='IconOption' />
-          <div className='NameOptionIcon'>Độc giả</div>
+          <div className='NameOptionIcon'>Quản lý độc giả</div>
         </Link>
 
         <Link
@@ -112,7 +111,7 @@ export default function Menu() {
         >
           <div className="vertical-bar"></div>
           <img src={borrowBooks} alt="Borrow Books Icon" className='IconOption' />
-          <div className='NameOptionIcon'>Mượn sách</div>
+          <div className='NameOptionIcon'>Quản lý mượn sách</div>
         </Link>
 
         <Link
@@ -126,9 +125,9 @@ export default function Menu() {
         </Link>
 
         <Link
-          to="User"
-          className={`ButtonMenu ${activeMenu === "User" ? "activeMenu" : ""}`}
-          onClick={() => handleMenuClick("User")}
+          to="Librarian"
+          className={`ButtonMenu ${activeMenu === "Librarian" ? "activeMenu" : ""}`}
+          onClick={() => handleMenuClick("Librarian")}
         >
           <div className="vertical-bar"></div>
           <img 
@@ -137,13 +136,13 @@ export default function Menu() {
             className='avatarMenu' 
           />
           <div className='NameOptionIcon'>
-            {formValues.full_name ? `${formValues.full_name}` : 'Tài khoản cá nhân'}
+            {formValues.full_name ? `${formValues.full_name}` : 'Quản lý thông tin thư thư'}
           </div>
         </Link>
 
         <div
           className={`ButtonloginOut`}
-          onClick={handleLogout}  // Call handleLogout when clicked
+          onClick={handleLogout} 
         >
           <div className="vertical-bar"></div>
           <img src={loginOut} alt="Logout Icon" className='IconOption' />

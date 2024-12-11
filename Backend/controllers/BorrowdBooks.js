@@ -288,11 +288,10 @@ const deleteBorrowBook = (req, res) => {
                 }
 
                 // Thành công
-                return res.status(200).json({ message: "Xóa sách thành công." });
+                return res.status(200).json({ message: "Hủy sách sách thành công." });
             });
         });
     });
 };
-
 
 module.exports = { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook, deleteBorrowBook};

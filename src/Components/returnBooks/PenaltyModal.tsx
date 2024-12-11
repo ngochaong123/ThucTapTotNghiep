@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 interface PenaltyModalProps {
   isOpen: boolean;
@@ -30,22 +31,27 @@ const PenaltyModal: React.FC<PenaltyModalProps> = ({ isOpen, onRequestClose, onS
         const response = await axios.post('http://localhost:5000/calculatePenaltyForAll', {
           dailyPenaltyRate,
         });
-
+  
         if (response.status === 200) {
           const { updatedBooks } = response.data;
           onSave(updatedBooks); // Truyền danh sách các sách với phí phạt đã tính vào hàm onSave
-          
+  
+          // Hiển thị thông báo lưu thành công
+          toast.success('Chỉnh sửa phí phạt thành công');
+  
           // Reset trang sau khi lưu
-          window.location.reload();  // Tải lại trang
-
+          setTimeout(() => {
+            window.location.reload(); // Tải lại trang
+          }, 2000); // Đợi 2 giây để hiển thị thông báo trước khi tải lại trang
+  
           onRequestClose(); // Đóng modal sau khi lưu
         }
       } catch (error) {
         console.error('Lỗi khi tính phí phạt:', error);
-        alert('Có lỗi xảy ra khi tính phí phạt.');
+        toast.error('Có lỗi xảy ra khi tính phí phạt.');
       }
     } else {
-      alert('Vui lòng nhập phí phạt hợp lệ!');
+      toast.warn('Vui lòng nhập phí phạt hợp lệ!');
     }
   };
 

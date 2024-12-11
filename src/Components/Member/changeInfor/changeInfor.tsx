@@ -9,30 +9,45 @@ import { useLocation } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
+interface MemberInfo {
+  member_code: string;
+  name: string;
+  phone: string;
+  email: string;
+  avatar_link: string;
+  gender: string;
+  age: number;
+}
+
 export default function ChangeInfor() {
   const location = useLocation();
-  const memberData = location.state;
+  const memberData = location.state as MemberInfo;
   const navigate = useNavigate();
   
-  const [formValues, setFormValues] = useState({
-    member_code: memberData ? memberData.member_code : '',
-    name: memberData ? memberData.name : '',
-    phone: memberData ? memberData.phone : '',
-    email: memberData ? memberData.email : '',
-    avatar_link: memberData ? memberData.avatar_link : '',
-    gender: memberData ? memberData.gender : '',
-    age: memberData ? memberData.age : '',
+  const [formValues, setFormValues] = useState<MemberInfo>({
+    member_code: '',
+    name: '',
+    phone: '',
+    email: '',
+    avatar_link: '',
+    gender: '',
+    age: 0,
   });
 
-  const [countries, setCountries] = useState<string[]>([]);
-  const [imagePreview, setImagePreview] = useState<string>(`http://localhost:5000${formValues.avatar_link}`);
+  const [imagePreview, setImagePreview] = useState<string>(DefaultAvatar);
   const [isChanged, setIsChanged] = useState(false);
+
+  useEffect(() => {
+    if (memberData) {
+      setFormValues(memberData);
+      setImagePreview(`http://localhost:5000${memberData.avatar_link || ''}`);
+    }
+  }, [memberData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value, type } = e.target;
 
     if (name === 'age') {
-      // Chỉ cho phép nhập số và kiểm tra điều kiện tuổi
       if (value && (isNaN(Number(value)) || Number(value) > 100)) {
         toast.error("Vui lòng nhập tuổi hợp lệ dưới 100!");
         return;
@@ -77,20 +92,17 @@ export default function ChangeInfor() {
 
   const DeleteMember = async () => {
     if (!formValues.member_code) {
-      toast.error("Vui lòng chọn thành viên để xóa.");
+      toast.error("Vui lòng chọn thành viên để hủy.");
       return;
     }
   
-    // Hiển thị hộp thoại xác nhận với react-confirm-alert
     confirmAlert({
-      title: 'Xác nhận xóa thành viên',
-      message: 'Bạn có chắc chắn muốn xóa thành viên này không?',
+      title: 'Xác nhận hủy thành viên',
+      message: 'Bạn có chắc chắn muốn hủy thành viên này không?',
       buttons: [
         {
           label: 'Hủy',
-          onClick: () => {
-            console.log("Xóa thành viên đã bị hủy.");
-          }
+          onClick: () => console.log("Hủy hành động xóa.")
         },
         {
           label: 'Xác nhận',
@@ -98,8 +110,7 @@ export default function ChangeInfor() {
             try {
               const response = await axios.delete(`http://localhost:5000/deleteMember/${formValues.member_code}`);
               toast.success(response.data.message);
-  
-              // Đặt lại các giá trị form và ảnh xem trước
+
               setFormValues({
                 member_code: '',
                 name: '',
@@ -107,7 +118,7 @@ export default function ChangeInfor() {
                 email: '',
                 avatar_link: '',
                 gender: '',
-                age: '',
+                age: 0,
               });
               setImagePreview(DefaultAvatar);
 
@@ -116,19 +127,15 @@ export default function ChangeInfor() {
                 navigate('/menu/Member', { replace: true });
               }, 3000);
 
-              setIsChanged(false); 
+              setIsChanged(false);
             } catch (error) {
-              console.error("lỗi xóa thành viên", error);
+              console.error("Lỗi xóa thành viên:", error);
               toast.error("Có lỗi xảy ra khi xóa thành viên.");
             }
           }
         }
       ]
     });
-  };
-
-  const triggerFileInput = () => {
-    document.getElementById("avatarInput")?.click();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -139,23 +146,20 @@ export default function ChangeInfor() {
       return;
     }
 
-    // Kiểm tra số điện thoại (chỉ chứa số và độ dài hợp lý)
     const phoneRegex = /^[0-9]+$/;
     if (!phoneRegex.test(formValues.phone)) {
-      toast.error('Số điện thoại không hợp lệ. Vui lòng nhập lại.');
+      toast.error('Số điện thoại không hợp lệ.');
       return;
     }
   
-    // Kiểm tra tuổi hợp lệ
     if (formValues.age < 18 || formValues.age > 100) {
       toast.error("Tuổi phải nằm trong khoảng từ 18 đến 100.");
       return;
     }
 
-    // Kiểm tra định dạng email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formValues.email)) {
-      toast.error('Email không hợp lệ. Vui lòng nhập lại.');
+      toast.error('Email không hợp lệ.');
       return;
     }
   
@@ -164,58 +168,37 @@ export default function ChangeInfor() {
       return;
     }
   
-    // Hiển thị hộp thoại xác nhận với react-confirm-alert
     confirmAlert({
       title: 'Xác nhận lưu thay đổi',
       message: 'Bạn có chắc chắn muốn lưu các thay đổi này không?',
       buttons: [
         {
           label: 'Hủy',
-          onClick: () => {
-            console.log("Lưu thay đổi đã bị hủy.");
-          }
+          onClick: () => console.log("Hủy lưu thay đổi.")
         },
         {
           label: 'Xác nhận',
           onClick: async () => {
-            const formData = new FormData();
-            formData.append('name', formValues.name);
-            formData.append('member_code', formValues.member_code);
-            formData.append('phone', formValues.phone);
-            formData.append('email', formValues.email);
-            formData.append('gender', formValues.gender);
-            formData.append('age', formValues.age);
-  
-            const avatarInput = document.getElementById("avatarInput") as HTMLInputElement;
-            if (avatarInput.files && avatarInput.files[0]) {
-              const file = avatarInput.files[0];
-              const newFileName = `${formValues.member_code}_${Date.now()}_${file.name}`;
-              formData.append('avatar_link', file, newFileName);
-            }
-  
             try {
-              const response = await axios.put(`http://localhost:5000/editMember/${formValues.member_code}`, formData, {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                },
-              });
-
+              const response = await axios.put(`http://localhost:5000/editMember/${formValues.member_code}`, formValues);
               toast.success(response.data.message);
               setTimeout(() => {
                 navigate('/menu/Member', { replace: true });
               }, 3000);
-
               setIsChanged(false);
             } catch (error) {
-              console.error("Lỗi cập nhật thành viên:", error);
-              toast.error("Có lỗi xảy ra khi chỉnh sửa thông tin thành viên");
+              console.error("Lỗi cập nhật thông tin độc giả:", error);
+              toast.error("Có lỗi xảy ra khi chỉnh sửa thông tin độc giả.");
             }
           }
         }
       ]
     });
   };
-  
+
+  const triggerFileInput = () => {
+    document.getElementById("avatarInput")?.click();
+  };
 
   return (
     <div className='FrameContanierChangeMember'>

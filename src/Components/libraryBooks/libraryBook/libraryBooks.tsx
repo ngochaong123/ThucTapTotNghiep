@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import './libraryBooks.css';
 import { Outlet, Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import Magnifier from '../../../images/icon/magnifier.png';
 import Plus from '../../../images/icon/plus.png';
@@ -76,7 +77,7 @@ export default function LibraryBooks() {
   }, []);
 
   // Lọc cục bộ theo từ khóa
-  useEffect(() => {
+  const handleSearch = (keyword: string) => {
     const lowercasedKeyword = keyword.toLowerCase();
     const filtered = books.filter(
       (book) =>
@@ -85,6 +86,10 @@ export default function LibraryBooks() {
         book.author.toLowerCase().includes(lowercasedKeyword)
     );
     setFilteredBooks(filtered);
+  };
+
+  useEffect(() => {
+    handleSearch(keyword);
   }, [keyword, books]);
 
   const handleCategoryChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -110,10 +115,12 @@ export default function LibraryBooks() {
     if (selectedBook) {
       const bookToEdit = books.find((book) => book.book_code === selectedBook);
       if (bookToEdit) {
+        // Điều hướng đến trang chỉnh sửa
         navigate(`/menu/changeBookInfor?book_code=${bookToEdit.book_code}`, { state: bookToEdit });
       }
     } else {
-      alert('Vui lòng chọn một quốn sách để chỉnh sửa thông tin.');
+      // Hiển thị thông báo cảnh báo
+      toast.warn('Vui lòng chọn một quyển sách để chỉnh sửa thông tin.');
     }
   };
 
@@ -121,7 +128,7 @@ export default function LibraryBooks() {
     <div>
       <div className='LibraryCurrentInformation'>
         <div className='LibraryheaderLibrary'>
-          <h1 className='LibrarytileBook'> Sách thư viện </h1>
+          <h1 className='LibrarytileBook'>Quản lý sách thư viện </h1>
           <Link to='/Menu/AddBook' style={{ textDecoration: 'none' }}>
             <button className='LibraryAddLibrary'>
               <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -152,7 +159,7 @@ export default function LibraryBooks() {
             </div>
 
             <div>
-              <div className='LibraryNameChooseBook'> Tìm kiếm </div>
+              <div className='LibraryNameChooseBook'>Tìm kiếm</div>
               <div className="LibrarySearchBook">
                 <div className="LibrarysearchIcon">
                   <img src={Magnifier} alt="Search Icon" />
@@ -169,7 +176,7 @@ export default function LibraryBooks() {
           </div>
 
           <button className='LibraryEditbrary' onClick={handleEditBook}>
-            <div className='LibraryNameEdit'> Chỉnh sửa thông tin </div>
+            <div className='LibraryNameEdit'> Chỉnh sửa thông tin sách </div>
           </button>
         </div>
 
@@ -220,6 +227,7 @@ export default function LibraryBooks() {
           </div>
         </div>
       </div>
+      <ToastContainer />
       <Outlet />
     </div>
   );
