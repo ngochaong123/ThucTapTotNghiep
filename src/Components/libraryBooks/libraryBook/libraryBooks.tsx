@@ -7,6 +7,7 @@ import Magnifier from '../../../images/icon/magnifier.png';
 import Plus from '../../../images/icon/plus.png';
 
 interface Book {
+  id: number,
   book_code: string;
   book_name: string;
   author: string;

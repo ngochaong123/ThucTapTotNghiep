@@ -10,6 +10,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 interface MemberInfo {
+  id: number,
   member_code: string;
   name: string;
   phone: string;
@@ -25,6 +26,7 @@ export default function ChangeInfor() {
   const navigate = useNavigate();
   
   const [formValues, setFormValues] = useState<MemberInfo>({
+    id: 0,
     member_code: '',
     name: '',
     phone: '',
@@ -92,51 +94,52 @@ export default function ChangeInfor() {
 
   const DeleteMember = async () => {
     if (!formValues.member_code) {
-      toast.error("Vui lòng chọn thành viên để hủy.");
-      return;
+        toast.error("Vui lòng chọn thành viên để hủy.");
+        return;
     }
-  
+
     confirmAlert({
-      title: 'Xác nhận hủy thành viên',
-      message: 'Bạn có chắc chắn muốn hủy thành viên này không?',
-      buttons: [
-        {
-          label: 'Hủy',
-          onClick: () => console.log("Hủy hành động xóa.")
-        },
-        {
-          label: 'Xác nhận',
-          onClick: async () => {
-            try {
-              const response = await axios.delete(`http://localhost:5000/deleteMember/${formValues.member_code}`);
-              toast.success(response.data.message);
+        title: 'Xác nhận hủy thành viên',
+        message: 'Bạn có chắc chắn muốn hủy thành viên này không?',
+        buttons: [
+            {
+                label: 'Hủy',
+                onClick: () => console.log("Hủy hành động xóa.")
+            },
+            {
+                label: 'Xác nhận',
+                onClick: async () => {
+                    try {
+                        const response = await axios.delete(`http://localhost:5000/deleteMember/${formValues.member_code}`);
+                        toast.success(response.data.message);
 
-              setFormValues({
-                member_code: '',
-                name: '',
-                phone: '',
-                email: '',
-                avatar_link: '',
-                gender: '',
-                age: 0,
-              });
-              setImagePreview(DefaultAvatar);
+                        // Reset form và avatar
+                        setFormValues({
+                            id: 0,
+                            member_code: '',
+                            name: '',
+                            phone: '',
+                            email: '',
+                            avatar_link: '',
+                            gender: '',
+                            age: 0,
+                        });
+                        setImagePreview(DefaultAvatar);
+                        setTimeout(() => {
+                            navigate('/menu/Member', { replace: true });
+                        }, 3000);
 
-              toast.success('Hủy thành viên thành công!');
-              setTimeout(() => {
-                navigate('/menu/Member', { replace: true });
-              }, 3000);
-
-              setIsChanged(false);
-            } catch (error) {
-              console.error("Lỗi xóa thành viên:", error);
-              toast.error("Có lỗi xảy ra khi xóa thành viên.");
+                        setIsChanged(false);
+                    } catch (error) {
+                        console.error("Lỗi xóa thành viên:", error);
+                        toast.error("Có lỗi xảy ra khi xóa thành viên.");
+                    }
+                }
             }
-          }
-        }
-      ]
+        ]
     });
-  };
+};
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -180,7 +183,7 @@ export default function ChangeInfor() {
           label: 'Xác nhận',
           onClick: async () => {
             try {
-              const response = await axios.put(`http://localhost:5000/editMember/${formValues.member_code}`, formValues);
+              const response = await axios.put(`http://localhost:5000/editMember/${formValues.id}`, formValues);
               toast.success(response.data.message);
               setTimeout(() => {
                 navigate('/menu/Member', { replace: true });

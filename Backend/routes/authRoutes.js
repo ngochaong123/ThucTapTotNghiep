@@ -21,13 +21,13 @@ router.get('/location', location);
 router.get('/language', language); 
 router.post('/addBook', bookUpload.single('image_link'), addBook);
 router.delete('/deleteBook/:book_code', DeleteBook);
-router.put('/editBook/:book_code', bookUpload.single('image_link'), editBook); 
+router.put('/editBook/:id', bookUpload.single('image_link'), editBook); 
 
-// Route cho quản lý thành viên
+// Route cho quản lý độc giả
 router.get('/Members', getAllMembers); 
 router.post('/addMember', memberUpload.single('avatar_link'), addMember);
 router.delete('/deleteMember/:member_code', DeleteMember);
-router.put('/editMember/:member_code', memberUpload.single('avatar_link'), editMember); 
+router.put('/editMember/:id', memberUpload.single('avatar_link'), editMember); 
 
 //Route cho mượn sách
 router.get('/BorrowBooks',getAllBorrowBooks);

@@ -12,6 +12,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 interface FormValues {
+  id: number;
   book_name: string;
   book_code: string;
   author: string;
@@ -32,38 +33,21 @@ export default function ChangeBook() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Gọi API để lấy thể loại sách
     axios.get('http://localhost:5000/categories')
-      .then(response => {
-        setCategories(response.data);
-      })
-      .catch(error => {
-        console.error('Lỗi khi lấy thể loại:', error);
-        toast.error('Lỗi khi tải thể loại sách.');
-      });
+      .then(response => setCategories(response.data))
+      .catch(error => toast.error('Lỗi khi tải thể loại sách.'));
 
-    // Gọi API để lấy ngôn ngữ
     axios.get('http://localhost:5000/language')
-      .then(response => {
-        setLanguages(response.data);
-      })
-      .catch(error => {
-        console.error('Lỗi khi lấy ngôn ngữ:', error);
-        toast.error('Lỗi khi tải ngôn ngữ.');
-      });
+      .then(response => setLanguages(response.data))
+      .catch(error => toast.error('Lỗi khi tải ngôn ngữ.'));
 
-    // Gọi API để lấy vị trí sách
     axios.get('http://localhost:5000/location')
-      .then(response => {
-        setLocations(response.data);
-      })
-      .catch(error => {
-        console.error('Lỗi khi lấy vị trí:', error);
-        toast.error('Lỗi khi tải vị trí sách.');
-      });
+      .then(response => setLocations(response.data))
+      .catch(error => toast.error('Lỗi khi tải vị trí sách.'));
   }, []);
 
   const [formValues, setFormValues] = useState<FormValues>({
+    id: state?.id || '',
     book_name: state?.book_name || '',
     book_code: state?.book_code || '',
     author: state?.author || '',
@@ -75,55 +59,40 @@ export default function ChangeBook() {
     receiveDate: state?.received_date ? new Date(state.received_date) : null,
   });
 
-  const [isChanged, setIsChanged] = useState(false); 
+  const [isChanged, setIsChanged] = useState(false);
   const [imagePreview, setImagePreview] = useState<string>(`http://localhost:5000${formValues.avatar}`);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value, type } = e.target;
 
     if (type === 'file') {
-        const fileInput = e.target as HTMLInputElement;
+      const fileInput = e.target as HTMLInputElement;
 
-        if (fileInput.files && fileInput.files.length > 0) {
-            const file = fileInput.files[0];
+      if (fileInput.files && fileInput.files.length > 0) {
+        const file = fileInput.files[0];
 
-            // Kiểm tra kích thước tệp
-            if (file.size > 1 * 1024 * 1024) { // 1MB
-                toast.error("Ảnh phải nhỏ hơn 1MB.");
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const result = reader.result; // Lưu giá trị vào biến tạm
-
-                setFormValues((prevValues) => ({
-                    ...prevValues,
-                    avatar: result as string,
-                }));
-
-                // Kiểm tra nếu result không phải là null
-                if (typeof result === 'string') {
-                    setImagePreview(result); // Cập nhật ảnh preview
-                }
-                setIsChanged(true);
-            };
-            reader.readAsDataURL(file);
+        if (file.size > 1 * 1024 * 1024) {
+          toast.error("Ảnh phải nhỏ hơn 1MB.");
+          return;
         }
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result;
+          setFormValues(prevValues => ({ ...prevValues, avatar: result as string }));
+          if (typeof result === 'string') setImagePreview(result);
+          setIsChanged(true);
+        };
+        reader.readAsDataURL(file);
+      }
     } else {
-        setFormValues((prevValues) => ({
-            ...prevValues,
-            [name]: value,
-        }));
-        setIsChanged(true);
+      setFormValues(prevValues => ({ ...prevValues, [name]: value }));
+      setIsChanged(true);
     }
-};
+  };
 
   const handleDateChange = (date: Date | null) => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      receiveDate: date,
-    }));
+    setFormValues(prevValues => ({ ...prevValues, receiveDate: date }));
     setIsChanged(true);
   };
 
@@ -131,38 +100,32 @@ export default function ChangeBook() {
     document.getElementById("avatarInput")?.click();
   };
 
-  const receiveDate = formValues.receiveDate;
-
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
-    // Kiểm tra các trường dữ liệu cần thiết
+
     if (!formValues.book_name || !formValues.book_code || !formValues.author) {
       toast.error("Vui lòng điền tất cả các trường bắt buộc.");
       return;
     }
-  
+
     if (!isChanged) {
       toast.info("Không có thay đổi nào để lưu.");
       return;
     }
-  
-    // Hiển thị hộp thoại xác nhận
+
     confirmAlert({
       title: 'Xác nhận cập nhật sách',
       message: 'Bạn có chắc chắn muốn cập nhật thông tin sách này không?',
       buttons: [
         {
           label: 'Hủy',
-          onClick: () => {
-            console.log("Cập nhật sách đã bị hủy.");
-          }
+          onClick: () => console.log("Cập nhật sách đã bị hủy.")
         },
         {
           label: 'Xác nhận',
           onClick: async () => {
             const formData = new FormData();
+            formData.append('id', formValues.id.toString());
             formData.append('book_name', formValues.book_name);
             formData.append('book_code', formValues.book_code);
             formData.append('author', formValues.author);
@@ -170,46 +133,28 @@ export default function ChangeBook() {
             formData.append('quantity', formValues.quantity.toString());
             formData.append('location', formValues.location);
             formData.append('language', formValues.language);
-            
-            if (receiveDate) {
-              const newDate = new Date(receiveDate);
+
+            if (formValues.receiveDate) {
+              const newDate = new Date(formValues.receiveDate);
               newDate.setDate(newDate.getDate() + 1);
               formData.append('received_date', newDate.toISOString().split('T')[0]);
             }
 
-            // Kiểm tra số lượng (chỉ chứa số và phải lớn hơn 0)
-            const quantityRegex = /^[1-9][0-9]*$/;
-            if (!quantityRegex.test(formValues.quantity.toString())) {
-              toast.error('Số lượng sách không hợp lệ. Vui lòng nhập số nguyên dương.');
-              return;
-            }
-  
             const avatarInput = document.getElementById("avatarInput") as HTMLInputElement;
             if (avatarInput.files && avatarInput.files[0]) {
               const file = avatarInput.files[0];
-              
-              // Tạo tên ảnh mới dựa trên mã sách và thời gian hiện tại
               const newFileName = `${formValues.book_code}_${Date.now()}_${file.name}`;
-              
-              // Thêm tên ảnh mới vào formData
               formData.append('image_link', file, newFileName);
             }
-  
+
             try {
-              const response = await axios.put(`http://localhost:5000/editBook/${formValues.book_code}`, formData, {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                },
+              const response = await axios.put(`http://localhost:5000/editBook/${formValues.id}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
               });
               toast.success(response.data.message);
-
-              setTimeout(() => {
-                navigate('/menu/LibraryBook', { replace: true });
-              }, 3000); // 3000ms = 3 giây
-
+              setTimeout(() => navigate('/menu/LibraryBook', { replace: true }), 3000);
               setIsChanged(false);
             } catch (error) {
-              console.error("Lỗi cập nhật sách:", error);
               toast.error("Có lỗi xảy ra khi cập nhật thông tin sách.");
             }
           }
@@ -224,16 +169,13 @@ export default function ChangeBook() {
       return;
     }
 
-    // Hiển thị hộp thoại xác nhận
     confirmAlert({
       title: 'Xác nhận hủy sách',
       message: 'Bạn có chắc chắn muốn hủy sách này không?',
       buttons: [
         {
           label: 'Hủy',
-          onClick: () => {
-            console.log("Sách đã bị hủy.");
-          }
+          onClick: () => console.log("Sách đã bị hủy.")
         },
         {
           label: 'Xác nhận',
@@ -241,9 +183,8 @@ export default function ChangeBook() {
             try {
               const response = await axios.delete(`http://localhost:5000/deleteBook/${formValues.book_code}`);
               toast.success(response.data.message);
-
-              // Đặt lại các giá trị form và ảnh xem trước
               setFormValues({
+                id: 0,
                 book_name: '',
                 book_code: '',
                 author: '',
@@ -256,14 +197,8 @@ export default function ChangeBook() {
               });
               setImagePreview(DefaultAvatar);
               setIsChanged(false);
-
-              // Trì hoãn 6 giây trước khi chuyển hướng
-              setTimeout(() => {
-                navigate('/menu/LibraryBook', { replace: true });
-              }, 3000); // 3000ms = 3 giây
-
+              setTimeout(() => navigate('/menu/LibraryBook', { replace: true }), 3000);
             } catch (error) {
-              console.error("Error deleting book:", error);
               toast.error("Có lỗi xảy ra khi xóa sách.");
             }
           }

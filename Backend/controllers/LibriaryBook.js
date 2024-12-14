@@ -28,8 +28,8 @@ const bookUpload = multer({
 
 // Hàm kiểm tra dữ liệu đầu vào
 const validateBookData = (data) => {
-    const { book_name, book_code, author, category, quantity, location, language } = data;
-    return book_name && book_code && author && category && quantity && location && language;
+    const { id, book_name, book_code, author, category, quantity, location, language } = data;
+    return id && book_name && book_code && author && category && quantity && location && language;
 };
 
 // Hàm lấy tất cả sách
@@ -61,30 +61,26 @@ const getAllBooks = (req, res) => {
 
 // Hàm thêm sách
 const addBook = (req, res) => {
-    if (!validateBookData(req.body)) { // Kiểm tra dữ liệu đầu vào
-        return res.status(400).json({ message: 'Tất cả các trường là bắt buộc!' });
-    }
-
     const { book_name, book_code, author, category, quantity, location, language, received_date } = req.body;
     const image_link = req.file ? req.file.filename : null; // Lấy tên file hình ảnh
 
     const sql = `INSERT INTO books (book_code, book_name, author, category, quantity, location, language, received_date, image_link) 
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    
+
     const values = [book_code, book_name, author, category, quantity, location, language, received_date, image_link];
 
     db.query(sql, values, (err, result) => {
         if (err) {
-            console.error('Error inserting book:', err);
+            console.error('Error inserting book:', err.message); // In ra lỗi chi tiết
             if (req.file) { // Xóa file đã upload nếu có lỗi
                 const filePath = path.join(__dirname, '..', 'Public', 'Book', req.file.filename);
                 fs.unlink(filePath, (unlinkErr) => {
                     if (unlinkErr) console.error('Error deleting uploaded file:', unlinkErr);
                 });
             }
-            return res.status(500).json({ error: 'Lỗi nhập thông tin sách' });
+            return res.status(500).json({ error: `Lỗi nhập thông tin sách: ${err.message}` });
         }
-        res.status(201).json({ message: 'Thêm sách thành công ', bookId: result.insertId }); // Trả về thông báo thành công
+        res.status(201).json({ message: 'Thêm sách thành công', bookId: result.insertId }); // Trả về thông báo thành công
     });
 };
 
@@ -132,37 +128,39 @@ const DeleteBook = async (req, res) => {
   }
 };
 
-
 // Hàm chỉnh sửa sách
 const editBook = (req, res) => {
-    const { book_code } = req.params;
+    const { id } = req.params; 
     const { book_name, author, category, quantity, location, language, received_date } = req.body;
     const new_image_link = req.file ? req.file.filename : null;
 
-    if (!book_code || !book_name || !author) {
-        return res.status(400).json({ message: "Thiếu dữ liệu" });
+    if (!id || !book_name || !author) {
+        console.log("Thiếu dữ liệu quan trọng (id, book_name, author)");
     }
 
     if (!validateBookData(req.body)) {
-        return res.status(400).json({ message: 'Tất cả các trường là bắt buộc!' });
+        return res.status(400).json({ message: "Tất cả các trường là bắt buộc!" });
     }
 
     let formattedReceivedDate = null;
     if (received_date) {
         const date = new Date(received_date);
-        formattedReceivedDate = date.toISOString().split('T')[0];
+        if (!isNaN(date)) {
+            formattedReceivedDate = date.toISOString().split('T')[0];
+        } else {
+            return res.status(400).json({ message: "Ngày nhận sách không hợp lệ." });
+        }
     }
 
-    const sql = `SELECT image_link FROM books WHERE book_code = ?`;
-
-    db.query(sql, [book_code], (err, results) => {
+    const sql = `SELECT image_link FROM books WHERE id = ?`;
+    db.query(sql, [id], (err, results) => {
         if (err) {
             console.error('Error finding book:', err);
-            return res.status(500).json({ error: 'Error finding book' });
+            return res.status(500).json({ error: "Lỗi khi tìm sách." });
         }
 
         if (results.length === 0) {
-            return res.status(404).json({ message: 'Không tìm thấy sách với mã này.' });
+            return res.status(404).json({ message: "Không tìm thấy sách với ID này." });
         }
 
         const old_image_link = results[0].image_link;
@@ -170,38 +168,43 @@ const editBook = (req, res) => {
         const updateSql = `
             UPDATE books 
             SET 
+                book_code = ?, 
                 book_name = ?, 
                 author = ?, 
                 category = ?, 
-                quantity = ?, 
+                quantity = ?,
                 location = ?, 
                 language = ?, 
                 received_date = COALESCE(?, received_date), 
                 image_link = COALESCE(?, image_link) 
             WHERE 
-                book_code = ?`;
+                id = ?`;
 
-        const values = [book_name, author, category, quantity, location, language, formattedReceivedDate, new_image_link, book_code];
+        const values = [req.body.book_code, book_name, author, category, quantity, location, language, formattedReceivedDate, new_image_link, id];
 
         db.query(updateSql, values, (err, result) => {
             if (err) {
                 console.error('Error updating book:', err);
-                return res.status(500).json({ error: 'Error updating book' });
+                return res.status(500).json({ error: "Lỗi khi cập nhật sách." });
             }
 
             if (result.affectedRows === 0) {
-                return res.status(404).json({ message: 'Không tìm thấy sách với mã này.' });
+                return res.status(404).json({ message: "Không tìm thấy sách với ID này." });
             }
 
-            // Xóa ảnh cũ nếu có ảnh mới
-            if (new_image_link) {
+            // Xóa ảnh cũ nếu có ảnh mới và ảnh cũ tồn tại
+            if (new_image_link && old_image_link) {
                 const oldImagePath = path.join(__dirname, '..', 'Public', 'Book', old_image_link);
                 fs.unlink(oldImagePath, (unlinkErr) => {
-                    if (unlinkErr) console.error('Error deleting old image:', unlinkErr);
+                    if (unlinkErr) {
+                        console.error('Error deleting old image:', unlinkErr);
+                    } else {
+                        console.log('Old image deleted successfully.');
+                    }
                 });
             }
 
-            res.status(200).json({ message: 'Chỉnh sửa thông tin sách thành công ' });
+            res.status(200).json({ message: "Chỉnh sửa thông tin sách thành công." });
         });
     });
 };

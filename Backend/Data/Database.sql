@@ -21,6 +21,7 @@ CREATE TABLE users (
 
 -- Tạo bảng books
 CREATE TABLE books (
+	id INT AUTO_INCREMENT UNIQUE,
     book_code VARCHAR(20) PRIMARY KEY,
     book_name VARCHAR(255) NOT NULL,
     author VARCHAR(100) NOT NULL,
@@ -34,6 +35,7 @@ CREATE TABLE books (
 
 -- Tạo bảng members
 CREATE TABLE members (
+	id INT AUTO_INCREMENT UNIQUE,
     member_code VARCHAR(20) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -45,24 +47,25 @@ CREATE TABLE members (
 );
 
 CREATE TABLE borrowBooks (
+	id INT AUTO_INCREMENT UNIQUE,
     borrowBooks_id VARCHAR(20) PRIMARY KEY,
     member_code VARCHAR(20) NOT NULL,
     book_code VARCHAR(20) NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
     borrowDate DATE NOT NULL,
     returnDate DATE DEFAULT NULL,
-    FOREIGN KEY (member_code) REFERENCES members(member_code),
-    FOREIGN KEY (book_code) REFERENCES books(book_code)
+    FOREIGN KEY (member_code) REFERENCES members(member_code) ON UPDATE CASCADE,
+    FOREIGN KEY (book_code) REFERENCES books(book_code) ON UPDATE CASCADE
 );
 
 CREATE TABLE returnBook (
     returnBook_id VARCHAR(20) PRIMARY KEY,
-    borrowBooks_id VARCHAR(20) NOT NULL,
+    borrowBooks_id VARCHAR(20) NOT NULL ,
 	Fee INT DEFAULT 0,
     PenaltyFees INT DEFAULT 0,
 	latePaymDate INT DEFAULT NULL,
     Status VARCHAR(20) DEFAULT 'Đang mượn',
-    FOREIGN KEY (borrowBooks_id) REFERENCES borrowBooks(borrowBooks_id)
+    FOREIGN KEY (borrowBooks_id) REFERENCES borrowBooks(borrowBooks_id) ON UPDATE CASCADE
 );
 
 -- Thêm dữ liệu sách (books)

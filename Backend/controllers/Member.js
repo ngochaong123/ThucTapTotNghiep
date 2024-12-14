@@ -29,8 +29,8 @@ const memberUpload = multer({
 
 // Hàm kiểm tra dữ liệu đầu vào cho thành viên mới
 const validateMemberData = (data) => {
-    const { member_code, name, age, gender, email, phone } = data;
-    return member_code && name && gender && age && email && phone;
+    const { id, member_code, name, age, gender, email, phone } = data;
+    return id && member_code && name && gender && age && email && phone;
 };
 
 // Hàm lấy danh sách tất cả thành viên
@@ -71,11 +71,6 @@ const addMember = (req, res) => {
     const { member_code, name, age, gender, email, phone } = req.body;
     const avatar_link = req.file ? req.file.filename : null; // Kiểm tra nếu file ảnh đã được tải lên
 
-    // Kiểm tra dữ liệu đầu vào
-    if (!validateMemberData(req.body)) {
-        return res.status(400).json({ message: 'Tất cả các trường là bắt buộc!' });
-    }
-
     // Kiểm tra xem age có phải là số hợp lệ không
     if (isNaN(age) || age <= 0) {
         return res.status(400).json({ message: 'Tuổi phải là một số hợp lệ và lớn hơn 0!' });
@@ -107,49 +102,59 @@ const addMember = (req, res) => {
 
 const DeleteMember = async (req, res) => {
     const { member_code } = req.params;
-  
+
     try {
-      if (!member_code) {
-        return res.status(400).json({ message: "Mã thành viên không hợp lệ." });
-      }
-  
-      // Lấy avatar_link từ cơ sở dữ liệu
-      const [rows] = await db.promise().query('SELECT avatar_link FROM members WHERE member_code = ?', [member_code]);
-      
-      if (rows.length === 0) {
-        return res.status(404).json({ message: "Không tìm thấy thành viên với mã này." });
-      }
-  
-      const avatarLink = rows[0].avatar_link;
-      const avatarPath = path.join(__dirname, '../Public/Members', path.basename(avatarLink)); 
-      // Kiểm tra sự tồn tại của file trước khi xóa
-      if (fs.existsSync(avatarPath)) {
-        fs.unlink(avatarPath, (err) => {
-          if (err) {
-            console.error("Lỗi khi xóa ảnh:", err);
-            return res.status(500).json({ message: "Có lỗi xảy ra khi xóa ảnh." });
-          }
-        });
-      } else {
-        console.log("File ảnh đại diện không tồn tại, bỏ qua bước xóa ảnh.");
-      }
-  
-      // Xóa thành viên khỏi database
-      const result = await db.promise().query('DELETE FROM members WHERE member_code = ?', [member_code]);
-  
-      if (result[0].affectedRows === 0) {
-        return res.status(404).json({ message: "Không tìm thấy thành viên với mã này." });
-      }
+        if (!member_code) {
+            return res.status(400).json({ message: "Mã thành viên không hợp lệ." });
+        }
+
+        // Xóa các bản ghi liên quan trong bảng borrowBooks
+        await db.promise().query('DELETE FROM borrowBooks WHERE member_code = ?', [member_code]);
+
+        // Lấy avatar_link từ cơ sở dữ liệu
+        const [rows] = await db.promise().query('SELECT avatar_link FROM members WHERE member_code = ?', [member_code]);
+        
+        if (rows.length === 0) {
+            return res.status(404).json({ message: "Không tìm thấy thành viên với mã này." });
+        }
+
+        const avatarLink = rows[0].avatar_link;
+        const avatarPath = path.join(__dirname, '../Public/Members', path.basename(avatarLink));
+
+        // Kiểm tra sự tồn tại của file trước khi xóa
+        if (fs.existsSync(avatarPath)) {
+            fs.unlink(avatarPath, (err) => {
+                if (err) {
+                    console.error("Lỗi khi xóa ảnh:", err);
+                    return res.status(500).json({ message: "Có lỗi xảy ra khi xóa ảnh." });
+                }
+            });
+        } else {
+            console.log("File ảnh đại diện không tồn tại, bỏ qua bước xóa ảnh.");
+        }
+
+        // Xóa thành viên khỏi database
+        const result = await db.promise().query('DELETE FROM members WHERE member_code = ?', [member_code]);
+
+        if (result[0].affectedRows === 0) {
+            return res.status(404).json({ message: "Không tìm thấy thành viên với mã này." });
+        }
+
+        res.status(200).json({ message: "Thành viên đã được xóa thành công." });
     } catch (error) {
-      console.error("Error deleting member:", error);
-      res.status(500).json({ message: "Có lỗi xảy ra khi xóa thành viên và ảnh đại diện." });
+        console.error("Error deleting member:", error);
+        res.status(500).json({ message: "Có lỗi xảy ra khi xóa thành viên và ảnh đại diện." });
     }
-};  
+};
+ 
 
 const editMember = (req, res) => {
-    const { member_code } = req.params;
-    const { name, age, gender, email, phone } = req.body;
+    const { id } = req.params;
+    const { member_code, name, age, gender, email, phone } = req.body;
     const new_avatar_link = req.file ? req.file.filename : null;
+
+    console.log("id", id);  // Kiểm tra id từ params
+    console.log("req.body", req.body);  // Kiểm tra dữ liệu gửi lên từ form
 
     // Kiểm tra các trường cần thiết
     if (!member_code || !name || !age || !gender || !email || !phone) {
@@ -161,61 +166,77 @@ const editMember = (req, res) => {
         return res.status(400).json({ message: 'Tất cả các trường là bắt buộc!' });
     }
 
-    const sql = `SELECT avatar_link FROM members WHERE member_code = ?`;
+    // Kiểm tra nếu member_code mới đã tồn tại trong cơ sở dữ liệu
+    const checkMemberCodeSql = `SELECT id FROM members WHERE member_code = ? AND id != ?`;
 
-    db.query(sql, [member_code], (err, results) => {
+    db.query(checkMemberCodeSql, [member_code, id], (err, results) => {
         if (err) {
-            console.error('Error finding member:', err);
-            return res.status(500).json({ error: 'Error finding member' });
+            console.error('Error checking member_code:', err);
+            return res.status(500).json({ error: 'Lỗi kiểm tra member_code' });
         }
 
-        if (results.length === 0) {
-            return res.status(404).json({ message: 'Không tìm thấy thành viên với mã này.' });
+        if (results.length > 0) {
+            return res.status(400).json({ message: 'Mã thành viên đã tồn tại' });
         }
 
-        const old_avatar_link = results[0].avatar_link;
+        // Lấy thông tin thành viên cũ từ cơ sở dữ liệu
+        const sql = `SELECT avatar_link FROM members WHERE id = ?`;
 
-        const updateSql = `
-            UPDATE members 
-            SET 
-                name = ?, 
-                age = ?, 
-                gender = ?,
-                email = ?, 
-                phone = ?, 
-                avatar_link = COALESCE(?, avatar_link) 
-            WHERE 
-                member_code = ?`;
-
-        const values = [name, age, gender, email, phone, new_avatar_link, member_code];
-
-        db.query(updateSql, values, (err, result) => {
+        db.query(sql, [id], (err, results) => {
             if (err) {
-                console.error('Error updating member:', err);
-                return res.status(500).json({ error: 'Lỗi cập nhật thành viên' });
+                console.error('Error finding member:', err);
+                return res.status(500).json({ error: 'Lỗi tìm kiếm thành viên' });
             }
 
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ message: 'Không tìm thấy thành viên với mã này.' });
+            if (results.length === 0) {
+                return res.status(404).json({ message: 'Không tìm thấy thành viên' });
             }
 
-            // Xóa ảnh cũ nếu cập nhật thành công và có ảnh mới
-            if (new_avatar_link && old_avatar_link) {
-                const oldAvatarPath = path.join(__dirname, '..', 'Public', 'Members', old_avatar_link);
-                fs.unlink(oldAvatarPath, (unlinkErr) => {
-                    if (unlinkErr) {
-                        console.error('Error deleting old avatar:', unlinkErr);
-                    } else {
-                        console.log('Old avatar deleted successfully.');
-                    }
-                });
-            }
+            const old_avatar_link = results[0].avatar_link;
 
-            res.status(200).json({ message: 'Thành viên đã được cập nhật thành công' });
+            // Cập nhật thông tin thành viên, bao gồm member_code
+            const updateSql = `
+                UPDATE members 
+                SET 
+                    member_code = ?,
+                    name = ?, 
+                    age = ?, 
+                    gender = ?,
+                    email = ?, 
+                    phone = ?, 
+                    avatar_link = COALESCE(?, avatar_link) 
+                WHERE 
+                    id = ?`;
+
+            const values = [member_code, name, age, gender, email, phone, new_avatar_link, id];
+
+            db.query(updateSql, values, (err, result) => {
+                if (err) {
+                    console.error('Error updating member:', err);
+                    return res.status(500).json({ error: 'Lỗi cập nhật thành viên' });
+                }
+
+                if (result.affectedRows === 0) {
+                    return res.status(404).json({ message: 'Không tìm thấy thành viên với mã này.' });
+                }
+
+                // Nếu có ảnh mới, xóa ảnh cũ
+                if (new_avatar_link && old_avatar_link) {
+                    const oldAvatarPath = path.join(__dirname, '..', 'Public', 'Members', old_avatar_link);
+                    fs.unlink(oldAvatarPath, (unlinkErr) => {
+                        if (unlinkErr) {
+                            console.error('Error deleting old avatar:', unlinkErr);
+                        } else {
+                            console.log('Old avatar deleted successfully.');
+                        }
+                    });
+                }
+
+                res.status(200).json({ message: 'Thành viên đã được cập nhật thành công' });
+            });
         });
     });
 };
-
 
 // Export hàm xử lý
 module.exports = { getAllMembers, addMember, editMember, DeleteMember, memberUpload };

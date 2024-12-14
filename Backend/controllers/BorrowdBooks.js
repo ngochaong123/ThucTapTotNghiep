@@ -2,8 +2,8 @@ const db = require('../Data/Database'); // Kết nối đến cơ sở dữ li�
 
 // Hàm xác thực dữ liệu sách
 const validateBookData = (data) => {
-    const { book_name, book_code, author, category, quantity, location, language } = data;
-    return book_name && book_code && author && category && quantity && location && language;
+    const { id, book_name, book_code, author, category, quantity, location, language } = data;
+    return id && book_name && book_code && author && category && quantity && location && language;
 };
 
 // Hàm lấy tất cả sách đã mượn
@@ -11,6 +11,7 @@ const getAllBorrowBooks = (req, res) => {
     const category = req.query.category; 
     let query = `
         SELECT  
+            borrowBooks.id,
             borrowBooks.borrowBooks_id ,
             members.member_code, 
             members.name, 
@@ -52,7 +53,7 @@ const getAllBorrowBooks = (req, res) => {
         res.json(results);
     });
 };
-
+ 
 // Hàm lấy thông tin thành viên theo mã thành viên
 const getMemberByCode = (req, res) => {
     const { member_code } = req.params;
@@ -147,10 +148,10 @@ const addborrowBook = (req, res) => {
 };
 
 // Hàm cập nhật thông tin mượn sách
-const ChangeBorrowBook = (req, res) => {
-    const { borrowBooks_id, member_code, book_code, quantity, borrowDate, returnDate } = req.body;
+const ChangeBorrowBook = (req, res) => { 
+    const { id, borrowBooks_id, member_code, book_code, quantity, borrowDate, returnDate } = req.body; 
 
-    if (!borrowBooks_id || !member_code || !book_code || !quantity || !borrowDate || !returnDate) {
+    if (!id || !borrowBooks_id || !member_code || !book_code || !quantity || !borrowDate || !returnDate) {
         return res.status(400).json({ error: 'Vui lòng cung cấp đầy đủ thông tin.' });
     }
 
@@ -191,70 +192,46 @@ const ChangeBorrowBook = (req, res) => {
                 return res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật số lượng sách.' });
             }
 
-            if (quantity <= 0) {
-                const deleteBorrowQuery = `
-                    DELETE FROM borrowBooks
+            const updateBorrowQuery = `
+                UPDATE borrowBooks 
+                SET borrowBooks_id = ?, 
+                    member_code = ?, 
+                    book_code = ?, 
+                    quantity = ?, 
+                    borrowDate = ?, 
+                    returnDate = ?
+                WHERE id = ?
+            `;
+
+            db.query(updateBorrowQuery, [borrowBooks_id, member_code, book_code, quantity, borrowDate, returnDate, id], (err, updateResult) => {
+                if (err) {
+                    console.error('Lỗi khi cập nhật thông tin mượn sách:', err);
+                    return res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật thông tin mượn sách.' });
+                }
+
+                if (updateResult.affectedRows === 0) {
+                    return res.status(404).json({ error: 'Không tìm thấy bản ghi.' });
+                }
+
+                const updateReturnBookQuery = `
+                    UPDATE returnBook
+                    SET borrowBooks_id = ?
                     WHERE borrowBooks_id = ?
                 `;
-                db.query(deleteBorrowQuery, [borrowBooks_id], (err) => {
+                db.query(updateReturnBookQuery, [borrowBooks_id, borrowBooks_id], (err) => {
                     if (err) {
-                        console.error('Lỗi khi xóa thông tin mượn sách:', err);
-                        return res.status(500).json({ error: 'Đã xảy ra lỗi khi xóa thông tin mượn sách.' });
+                        console.error('Lỗi khi cập nhật thông tin returnBook:', err);
+                        return res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật returnBook.' });
                     }
 
-                    const updateReturnBookQuery = `
-                        UPDATE returnBook
-                        SET borrowBooks_id = NULL
-                        WHERE borrowBooks_id = ?
-                    `;
-                    db.query(updateReturnBookQuery, [borrowBooks_id], (err) => {
-                        if (err) {
-                            console.error('Lỗi khi cập nhật thông tin returnBook:', err);
-                            return res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật returnBook.' });
-                        }
-
-                        res.status(200).json({ message: 'Bản ghi mượn sách đã được xóa và returnBook đã được cập nhật.' });
-                    });
+                    res.status(200).json({ message: 'Cập nhật thông tin mượn sách và returnBook thành công.' });
                 });
-            } else {
-                const updateBorrowQuery = `
-                    UPDATE borrowBooks 
-                    SET member_code = ?, 
-                        book_code = ?, 
-                        quantity = ?, 
-                        borrowDate = ?, 
-                        returnDate = ?
-                    WHERE borrowBooks_id = ?
-                `;
-
-                db.query(updateBorrowQuery, [member_code, book_code, quantity, borrowDate, returnDate, borrowBooks_id], (err, updateResult) => {
-                    if (err) {
-                        console.error('Lỗi khi cập nhật thông tin mượn sách:', err);
-                        return res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật thông tin mượn sách.' });
-                    }
-
-                    if (updateResult.affectedRows === 0) {
-                        return res.status(404).json({ error: 'Không tìm thấy bản ghi.' });
-                    }
-
-                    const updateReturnBookQuery = `
-                        UPDATE returnBook
-                        SET borrowBooks_id = ?
-                        WHERE borrowBooks_id = ?
-                    `;
-                    db.query(updateReturnBookQuery, [borrowBooks_id, borrowBooks_id], (err) => {
-                        if (err) {
-                            console.error('Lỗi khi cập nhật thông tin returnBook:', err);
-                            return res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật returnBook.' });
-                        }
-
-                        res.status(200).json({ message: 'Cập nhật thông tin mượn sách và returnBook thành công.' });
-                    });
-                });
-            }
+            });
         });
     });
-}; 
+};
+
+
 
 const deleteBorrowBook = (req, res) => {
     const { borrowBooks_id } = req.params;

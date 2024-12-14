@@ -13,12 +13,13 @@ import axios from 'axios';
 
 // Định nghĩa kiểu dữ liệu
 interface BorrowBookFormValues {
+  id: number,
   borrowBooks_id: string;
   name: string;
   book_name: string;
   image_link: string;
-  borrowDate: Date;
-  returnDate: Date;
+  borrowDate: Date | null; 
+  returnDate: Date | null;
   quantity: number;
   category: string;
   member_code: string;
@@ -27,10 +28,12 @@ interface BorrowBookFormValues {
 
 export default function ChangeBorrowBooks() {
   const location = useLocation();
-  const { bookData } = location.state || {}; // Kiểm tra `location.state` có dữ liệu không
+  const { bookData } = location.state;
+  console.log("data",bookData)
   const navigate = useNavigate();
 
   const [formValues, setFormValues] = useState<BorrowBookFormValues>({
+    id: 0,
     borrowBooks_id: '',
     name: '',
     book_name: '',
@@ -51,6 +54,7 @@ export default function ChangeBorrowBooks() {
   useEffect(() => {
     if (bookData) {
       const initialData: BorrowBookFormValues = {
+        id: bookData.id || '',
         borrowBooks_id: bookData.borrowBooks_id || '',
         name: bookData.name || '',
         member_code: bookData.member_code || '',
@@ -176,9 +180,10 @@ export default function ChangeBorrowBooks() {
               toast.error("Ngày trả sách phải lớn hơn ngày mượn.");
               return;
             }
-  
+            
             // Chuẩn bị dữ liệu gửi lên API
             const borrowBookData = {
+              id: bookData?.id,  // Safely access id
               borrowBooks_id: formValues.borrowBooks_id,
               member_code: formValues.member_code,
               book_code: formValues.book_code,
@@ -186,6 +191,8 @@ export default function ChangeBorrowBooks() {
               borrowDate: selectedBorrowDate?.toISOString().split('T')[0],
               returnDate: selectedReturnDate?.toISOString().split('T')[0],
             };
+
+            console.log("data",borrowBookData)
 
             try {
               const response = await axios.post('http://localhost:5000/ChangeBorrowBook', borrowBookData);
@@ -213,7 +220,7 @@ export default function ChangeBorrowBooks() {
         }
       ]
     });
-  };  
+  };
 
   const handleDelete = async () => {
     // Kiểm tra nếu không có mã sách
@@ -242,6 +249,7 @@ export default function ChangeBorrowBooks() {
   
               // Đặt lại các giá trị form và ảnh xem trước
               setFormValues({
+                id: 0,
                 borrowBooks_id: '',
                 name: '',
                 member_code: '',
@@ -250,8 +258,8 @@ export default function ChangeBorrowBooks() {
                 quantity: 0,
                 category: '',
                 book_name: '',
-                borrowDate: new Date(),
-                returnDate: new Date(),
+                borrowDate: null,
+                returnDate: null,
               });
               setAvatarPreview(DefaultAvatar);
 

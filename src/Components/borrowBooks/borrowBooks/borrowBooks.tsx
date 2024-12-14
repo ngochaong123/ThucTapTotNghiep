@@ -9,6 +9,7 @@ import Plus from "../../../images/icon/plus.png";
 import returnBook from "../../../images/icon/towel.png";
 
 interface BorrowBook {
+  id: number;
   borrowBooks_id: string;  
   member_code: string;
   name: string;
@@ -37,7 +38,7 @@ export default function BorrowBooks() {
       const bookToEdit = borrowBooks.find((book) => book.borrowBooks_id === selectedBorrowBookId);
   
       if (bookToEdit) {
-        // Điều hướng đến trang chỉnh sửa
+        // Điều hướng đến trang chỉnh sửa, sử dụng borrowBooks_id thay cho id
         navigate(`/Menu/ChangeBorrowBooks?borrowBooks_id=${bookToEdit.borrowBooks_id}`, { state: { bookData: bookToEdit } });
       } else {
         // Thông báo lỗi nếu không tìm thấy sách
@@ -48,6 +49,7 @@ export default function BorrowBooks() {
       toast.warn('Vui lòng chọn một độc giả mượn sách để chỉnh sửa.');
     }
   };
+  
 
   const toggleFilterMenu = () => {
     setShowFilterMenu(prev => !prev);
@@ -88,7 +90,7 @@ export default function BorrowBooks() {
     fetchCategories(); // Lấy danh sách thể loại khi component được render
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { 
     fetchBorrowedBooks(); // Lấy danh sách sách mượn khi thể loại thay đổi
   }, [selectedCategory]);
 

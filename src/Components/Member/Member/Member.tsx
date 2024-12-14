@@ -12,6 +12,7 @@ import ArrowDown from "../../../images/icon/ArrowDown.png";
 import Plus from "../../../images/icon/plus.png";
 
 interface Member {
+  id: number,
   member_code: string;
   name: string;
   email: string;
