@@ -40,9 +40,6 @@ export default function AddBook() {
   const [languages, setLanguages] = useState<string[]>([]);
   const [locations, setLocations] = useState<string[]>([]);
   const navigate = useNavigate();
-  
-  const isFormValid = formValues.book_name && formValues.book_code && formValues.author && formValues.category && formValues.location
-                      && formValues.avatar && formValues.language && formValues.receiveDate;
 
   useEffect(() => {
     // Gọi API để lấy thể loại sách
@@ -177,8 +174,9 @@ export default function AddBook() {
           onClick: async () => {
             const formData = new FormData();
 
-            if (!isFormValid) {
-              toast.error('Vui lòng điền tất cả các trường bắt buộc!');
+            if (!formValues.book_name || !formValues.book_code || !formValues.author || !formValues.category || !formValues.location || 
+                !formValues.avatar || !formValues.language || !formValues.receiveDate) {
+              toast.error("Vui lòng điền đầy đủ thông tin.");
               return;
             }
 
@@ -310,7 +308,6 @@ export default function AddBook() {
       <div className='ButtonAddBook'>
         <button
           className='btnAddBookSave'
-          disabled={!isFormValid}
           onClick={handleSubmit}
         >
           Lưu

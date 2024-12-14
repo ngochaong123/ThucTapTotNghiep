@@ -32,8 +32,6 @@ export default function AddMember() {
   const [avatarPreview, setAvatarPreview] = useState<string>(DefaultAvatar);
   const navigate = useNavigate();
 
-  const isFormValid = formValues.name && formValues.phone && formValues.email && formValues.member_code && formValues.age && !isNaN(Number(formValues.age)) && Number(formValues.age) <= 100;
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
@@ -104,9 +102,9 @@ export default function AddMember() {
   const handleSubmit = async () => {
     const formData = new FormData();
   
-    // Kiểm tra sự hợp lệ của form
-    if (!isFormValid) {
-      toast.error('Vui lòng điền tất cả các trường bắt buộc và đảm bảo tuổi dưới 100!');
+    if (!formValues.name || !formValues.phone || !formValues.email || !formValues.member_code || 
+      !formValues.age || isNaN(Number(formValues.age)) || Number(formValues.age) > 100) {
+      toast.error("Vui lòng điền đầy đủ thông tin và kiểm tra lại độ tuổi.");
       return;
     }
   
@@ -270,7 +268,6 @@ export default function AddMember() {
       <div className='ButtonAddMember'>
         <button 
           className='SaveButtonMember' 
-          disabled={!isFormValid} 
           onClick={handleSubmit}
         > 
           Lưu 
