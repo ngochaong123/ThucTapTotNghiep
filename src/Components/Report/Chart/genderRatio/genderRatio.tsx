@@ -23,7 +23,11 @@ interface ApexChartState {
   };
 }
 
-const GenderRatioChart: React.FC = () => {
+interface GenderRatioChartProps {
+  year: number; // Nhận năm từ component cha
+}
+
+const GenderRatioChart: React.FC<GenderRatioChartProps> = ({ year }) => {
   const [chartData, setChartData] = useState<ApexChartState>({
     series: [], // Số lượng thành viên
     options: {
@@ -49,8 +53,9 @@ const GenderRatioChart: React.FC = () => {
   });
 
   useEffect(() => {
+    if (year === 0) return; // Nếu chưa chọn năm, không gọi API
     // Fetch dữ liệu từ API
-    fetch("http://localhost:5000/genderRatio")
+    fetch(`http://localhost:5000/genderRatio/${year}`)
       .then((response) => response.json())
       .then((data) => {
         const genders = ["Nam", "Nữ"]; // Giới tính: Nam, Nữ
@@ -65,11 +70,11 @@ const GenderRatioChart: React.FC = () => {
         });
       })
       .catch((error) => console.error("Error fetching data:", error));
-  }, []); // Chạy khi component mount
+  }, [year]); // Lắng nghe sự thay đổi của `year`
 
   return (
     <div>
-      <h2 style={{ textAlign: "center", marginBottom: "30px", marginTop:"30px"}}>
+      <h2 style={{ textAlign: "center", marginBottom: "30px", marginTop: "30px" }}>
         Tỷ lệ giới tính độc giả đăng ký
       </h2>
       <div id="chart">

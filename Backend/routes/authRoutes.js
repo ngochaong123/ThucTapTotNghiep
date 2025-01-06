@@ -45,11 +45,11 @@ router.post('/calculatePenaltyForAll',calculatePenaltyForAll);
 router.delete('/returnBooks/:id',returnBooks); 
 
 //Router chart
-router.get('/OverduePenaltyChart',OverduePenaltyChart);
-router.get('/quantityBooksChart',quantityBooksChart);
-router.get('/genderRatio',genderRatio);
-router.get('/borrowedBooksByCategory',borrowedBooksByCategory);
-router.get('/registrationTrends',registrationTrends); 
+router.get('/OverduePenaltyChart/:year',OverduePenaltyChart);
+router.get('/quantityBooksChart/:year',quantityBooksChart);
+router.get('/genderRatio/:year',genderRatio);
+router.get('/borrowedBooksByCategory/:year',borrowedBooksByCategory);
+router.get('/registrationTrends/:year', registrationTrends);
 
 // Router dowloand data
 router.get('/downloadExcel',downloadExcel);

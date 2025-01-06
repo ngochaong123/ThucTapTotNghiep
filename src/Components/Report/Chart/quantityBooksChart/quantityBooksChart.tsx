@@ -25,7 +25,7 @@ interface ApexChartState {
   };
 }
 
-const QuantityBooksChart: React.FC = () => {
+const QuantityBooksChart: React.FC<{ year: number }> = ({ year }) => {
   const [chartData, setChartData] = useState<ApexChartState>({
     quantity: [],  // Mảng lưu số lượng sách
     options: {
@@ -50,8 +50,8 @@ const QuantityBooksChart: React.FC = () => {
   });
 
   useEffect(() => {
-    // Fetch dữ liệu từ API
-    fetch('http://localhost:5000/quantityBooksChart')
+    // Fetch dữ liệu từ API với tham số year
+    fetch(`http://localhost:5000/quantityBooksChart/${year}`)
       .then(response => response.json())
       .then(data => {
         const categories = data.map((item: { category: string }) => item.category);
@@ -68,7 +68,7 @@ const QuantityBooksChart: React.FC = () => {
         });
       })
       .catch(error => console.error('Error fetching data:', error));
-  }, []); // Chạy 1 lần khi component mount
+  }, [year]); // Chạy lại khi `year` thay đổi
 
   return (
     <div>

@@ -67,3 +67,26 @@
     border-radius: 10px;
     width: 400px;
 }
+
+.ReportDatePicker{
+    width: 68px;
+    margin-left: 10px;
+    cursor:pointer;
+    border: none;
+    outline: none; 
+    background-color: transparent; 
+    font-size: 15px; 
+    position: relative; 
+    z-index: 2;
+    color: white;
+}
+
+.ReportDatePicker:focus {
+    border: none; 
+    outline: none; 
+}
+
+.ReportDatePicker::placeholder {
+    color: white; /* Đổi màu chữ thành trắng */
+    opacity: 1; /* Đảm bảo màu hiển thị rõ */
+}

@@ -23,7 +23,11 @@ interface ApexChartState {
   };
 }
 
-const BorrowedBooksByCategory: React.FC = () => {
+interface BorrowedBooksByCategoryProps {
+  year: number; // Nhận năm từ component cha
+}
+
+const BorrowedBooksByCategory: React.FC<BorrowedBooksByCategoryProps> = ({ year }) => {
   const [chartData, setChartData] = useState<ApexChartState>({
     series: [],
     options: {
@@ -47,8 +51,10 @@ const BorrowedBooksByCategory: React.FC = () => {
   });
 
   useEffect(() => {
-    // Gọi API để lấy số lượng sách mượn theo thể loại
-    fetch('http://localhost:5000/borrowedBooksByCategory')
+    if (year === 0) return; // Nếu chưa chọn năm, không gọi API
+
+    // Gọi API để lấy số lượng sách mượn theo thể loại dựa trên năm
+    fetch(`http://localhost:5000/borrowedBooksByCategory/${year}`)
       .then(response => response.json())
       .then(data => {
         const categories = data.map((item: { category: string }) => item.category);
@@ -63,7 +69,7 @@ const BorrowedBooksByCategory: React.FC = () => {
         });
       })
       .catch(error => console.error('Error fetching data:', error));
-  }, []); // Chạy 1 lần khi component mount
+  }, [year]); // Lắng nghe thay đổi của `year`
 
   return (
     <div>

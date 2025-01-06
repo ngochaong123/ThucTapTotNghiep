@@ -1,72 +1,107 @@
 import React, { Component } from "react";
-import './RegisteredMember.css';
+import "./RegisteredMember.css";
 import ReactApexChart from "react-apexcharts";
 
-class ReaderTrends extends Component<{}, { options: any, series: any[] }> {
-  constructor(props: {}) {
+// Định nghĩa kiểu cho props
+interface ReaderTrendsProps {
+  year: number; // Nhận năm từ props
+}
+
+interface ReaderTrendsState {
+  options: any;
+  series: { name: string; data: number[] }[];
+}
+
+class ReaderTrends extends Component<ReaderTrendsProps, ReaderTrendsState> {
+  constructor(props: ReaderTrendsProps) {
     super(props);
 
     this.state = {
       series: [
         {
           name: "Người đăng ký",
-          data: Array(12).fill(0) // Khởi tạo với giá trị 0 cho mỗi tháng
-        }
+          data: Array(12).fill(0), // Khởi tạo với giá trị 0 cho mỗi tháng
+        },
       ],
       options: {
         chart: {
           height: 350,
-          type: 'line',
+          type: "line",
           zoom: {
-            enabled: false
-          }
+            enabled: false,
+          },
         },
         dataLabels: {
-          enabled: false
+          enabled: false,
         },
         stroke: {
-          curve: 'straight'
+          curve: "straight",
         },
         grid: {
           row: {
-            colors: ['#f3f3f3', 'transparent'],
-            opacity: 0.5
+            colors: ["#f3f3f3", "transparent"],
+            opacity: 0.5,
           },
         },
         xaxis: {
-          categories: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
-        }
+          categories: [
+            "Tháng 1",
+            "Tháng 2",
+            "Tháng 3",
+            "Tháng 4",
+            "Tháng 5",
+            "Tháng 6",
+            "Tháng 7",
+            "Tháng 8",
+            "Tháng 9",
+            "Tháng 10",
+            "Tháng 11",
+            "Tháng 12",
+          ],
+        },
       },
     };
   }
 
   componentDidMount() {
-    // Gọi API khi component được mount
-    fetch('http://localhost:5000/registrationTrends')
-      .then(response => response.json())
-      .then(data => {
-        // Cập nhật dữ liệu người đăng ký mỗi tháng
-        const monthlyRegistrations = Array(12).fill(0);
-        data.forEach((item: { month: number, registrations: number }) => {
-          monthlyRegistrations[item.month - 1] = item.registrations;
-        });
+    this.fetchData(this.props.year);
+  }
 
-        this.setState({
-          series: [
-            {
-              name: "Người đăng ký",
-              data: monthlyRegistrations
-            }
-          ]
-        });
-      })
-      .catch(error => console.error('Error fetching data:', error));
+  componentDidUpdate(prevProps: ReaderTrendsProps) {
+    if (prevProps.year !== this.props.year) {
+      this.fetchData(this.props.year);
+    }
+  }
+
+  fetchData(year: number) {
+    // Lấy dữ liệu từ API với năm được truyền vào
+    fetch(`http://localhost:5000/registrationTrends/${year}`)
+    .then((response) => response.json())
+    .then((data: { month: number; registrations: number }[]) => {
+      // Cập nhật dữ liệu người đăng ký mỗi tháng
+      const monthlyRegistrations = Array(12).fill(0);
+      data.forEach((item) => {
+        monthlyRegistrations[item.month - 1] = item.registrations;
+      });
+  
+      this.setState({
+        series: [
+          {
+            name: "Người đăng ký",
+            data: monthlyRegistrations,
+          },
+        ],
+      });
+    })
+    .catch((error) => console.error("Error fetching data:", error));  
   }
 
   render() {
     return (
       <div>
-        <h3 style={{ textAlign: 'center', marginBottom: '-10px' }}>Số lượng Độc giả đăng ký</h3>
+        <h3 style={{ textAlign: "center", marginBottom: "-10px" }}>
+          Số lượng Độc giả đăng ký
+        </h3>
         <div id="chart">
           <ReactApexChart
             options={this.state.options}

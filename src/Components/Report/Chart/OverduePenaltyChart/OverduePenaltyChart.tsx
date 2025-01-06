@@ -54,7 +54,11 @@ interface ChartState {
   options: ChartOptions;
 }
 
-const OverduePenaltyChart: React.FC = () => {
+interface OverduePenaltyChartProps {
+  year: number; // Thêm prop 'year' cho component này
+}
+
+const OverduePenaltyChart: React.FC<OverduePenaltyChartProps> = ({ year }) => {
   const [chartData, setChartData] = useState<ChartState>({
     series: [
       { name: 'Số tiền phạt', data: [] },
@@ -106,38 +110,38 @@ const OverduePenaltyChart: React.FC = () => {
     return data.sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month));
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/OverduePenaltyChart');
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const data: ChartDataItem[] = await response.json();
-
-        if (data && data.length > 0) {
-          // Sắp xếp dữ liệu tháng theo thứ tự từ 1 đến 12
-          const sortedData = sortByMonthOrder(data);
-
-          const months = sortedData.map((item) => translateMonthToVietnamese(item.month));
-          const penaltyFees = sortedData.map((item) => item.penaltyFees);
-
-          setChartData((prevState) => ({
-            ...prevState,
-            series: [{ name: 'Số tiền phạt', data: penaltyFees }],
-            options: {
-              ...prevState.options,
-              xaxis: { ...prevState.options.xaxis, categories: months },
-            },
-          }));
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
+  const fetchReportsByYear = async (year: number) => {
+    try {
+      const response = await fetch(`http://localhost:5000/OverduePenaltyChart/${year}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
       }
-    };
+      const data: ChartDataItem[] = await response.json();
+  
+      if (data && data.length > 0) {
+        // Sắp xếp dữ liệu tháng theo thứ tự từ 1 đến 12
+        const sortedData = sortByMonthOrder(data);
+  
+        const months = sortedData.map((item) => translateMonthToVietnamese(item.month));
+        const penaltyFees = sortedData.map((item) => item.penaltyFees);
+  
+        setChartData((prevState) => ({
+          ...prevState,
+          series: [{ name: 'Số tiền phạt', data: penaltyFees }],
+          options: {
+            ...prevState.options,
+            xaxis: { ...prevState.options.xaxis, categories: months },
+          },
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-    fetchData();
-  }, []);
+  useEffect(() => {
+    fetchReportsByYear(year);
+  }, [year]); // Gọi lại API mỗi khi year thay đổi
 
   return (
     <div>
