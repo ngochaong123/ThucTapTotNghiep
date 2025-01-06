@@ -150,7 +150,7 @@ export default function AddBook() {
         avatar: file.name,
       });
     } else {
-      alert("Vui lòng chọn một ảnh nhỏ hơn 1MB!");
+      toast.error("Vui lòng chọn một ảnh nhỏ hơn 1MB!");
     }
   };
 

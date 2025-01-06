@@ -180,7 +180,7 @@ export default function Librarian() {
       reader.onloadend = () => setAvatarPreview(reader.result as string);
       reader.readAsDataURL(file);
     } else {
-      alert("Vui lòng chọn một ảnh nhỏ hơn 1MB!");
+      toast.error("Vui lòng chọn một ảnh nhỏ hơn 1MB!");
     }
   };
 
