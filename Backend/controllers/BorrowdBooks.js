@@ -231,8 +231,6 @@ const ChangeBorrowBook = (req, res) => {
     });
 };
 
-
-
 const deleteBorrowBook = (req, res) => {
     const { borrowBooks_id } = req.params;
 
@@ -248,6 +246,11 @@ const deleteBorrowBook = (req, res) => {
             return res.status(404).json({ message: "Không tìm thấy sách với ID này." });
         }
 
+        // Lấy thông tin sách và số lượng sách đã mượn từ bảng borrowBooks
+        const borrowedBook = results[0];
+        const bookCode = borrowedBook.book_code;
+        const quantityBorrowed = borrowedBook.quantity;
+
         // Xóa bản ghi liên quan trong bảng returnBook
         const deleteReturnBookQuery = 'DELETE FROM returnBook WHERE borrowBooks_id = ?';
         db.query(deleteReturnBookQuery, [borrowBooks_id], (err) => {
@@ -256,19 +259,30 @@ const deleteBorrowBook = (req, res) => {
                 return res.status(500).json({ message: "Không thể xóa sách liên quan." });
             }
 
-            // Xóa bản ghi trong bảng borrowBooks
-            const deleteBorrowBookQuery = 'DELETE FROM borrowBooks WHERE borrowBooks_id = ?';
-            db.query(deleteBorrowBookQuery, [borrowBooks_id], (err) => {
+            // Cập nhật lại số lượng sách trong bảng books
+            const updateBookQuery = 'UPDATE books SET quantity = quantity + ? WHERE book_code = ?';
+            db.query(updateBookQuery, [quantityBorrowed, bookCode], (err) => {
                 if (err) {
-                    console.error("Lỗi xóa borrowBooks:", err);
-                    return res.status(500).json({ message: "Không thể xóa sách." });
+                    console.error("Lỗi cập nhật số lượng sách:", err);
+                    return res.status(500).json({ message: "Không thể cập nhật số lượng sách." });
                 }
 
-                // Thành công
-                return res.status(200).json({ message: "Hủy sách sách thành công." });
+                // Xóa bản ghi trong bảng borrowBooks
+                const deleteBorrowBookQuery = 'DELETE FROM borrowBooks WHERE borrowBooks_id = ?';
+                db.query(deleteBorrowBookQuery, [borrowBooks_id], (err) => {
+                    if (err) {
+                        console.error("Lỗi xóa borrowBooks:", err);
+                        return res.status(500).json({ message: "Không thể xóa sách." });
+                    }
+
+                    // Thành công
+                    return res.status(200).json({ message: "Hủy sách sách thành công." });
+                });
             });
         });
     });
 };
+
+
 
 module.exports = { getAllBorrowBooks, getMemberByCode, getBookByCode, addborrowBook, ChangeBorrowBook, deleteBorrowBook};

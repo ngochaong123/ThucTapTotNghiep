@@ -185,33 +185,58 @@ const returnBooks = async (req, res) => {
 
     const borrowBooksId = selectResult[0].borrowBooks_id;
 
-    // Xóa bản ghi trong bảng returnBook
-    const deleteReturnQuery = 'DELETE FROM returnBook WHERE returnBook_id = ?';
+    // Truy vấn để lấy book_code và quantity từ borrowBooks
+    const selectBookQuery = 'SELECT book_code, quantity FROM borrowBooks WHERE borrowBooks_id = ?';
 
-    db.query(deleteReturnQuery, [returnBookId], (err, deleteResult) => {
+    db.query(selectBookQuery, [borrowBooksId], (err, bookResult) => {
       if (err) {
-        console.error('Lỗi khi xóa sách trả:', err);
-        return res.status(500).json({ message: 'Có lỗi xảy ra khi xóa sách trả.' });
+        console.error('Lỗi khi lấy thông tin sách từ borrowBooks:', err);
+        return res.status(500).json({ message: 'Có lỗi xảy ra khi lấy thông tin sách.' });
       }
 
-      if (deleteResult.affectedRows === 0) {
-        return res.status(404).json({ message: 'Không tìm thấy bản ghi sách trả.' });
+      if (bookResult.length === 0) {
+        return res.status(404).json({ message: 'Không tìm thấy bản ghi sách mượn.' });
       }
 
-      // Xóa bản ghi trong bảng borrowBooks
-      const deleteBorrowQuery = 'DELETE FROM borrowBooks WHERE borrowBooks_id = ?';
+      const bookCode = bookResult[0].book_code;
+      const quantityReturned = bookResult[0].quantity;
 
-      db.query(deleteBorrowQuery, [borrowBooksId], (err, borrowDeleteResult) => {
+      // Xóa bản ghi trong bảng returnBook
+      const deleteReturnQuery = 'DELETE FROM returnBook WHERE returnBook_id = ?';
+
+      db.query(deleteReturnQuery, [returnBookId], (err, deleteResult) => {
         if (err) {
-          console.error('Lỗi khi xóa borrowBooks:', err);
-          return res.status(500).json({ message: 'Có lỗi xảy ra khi xóa thông tin mượn sách.' });
+          console.error('Lỗi khi xóa sách trả:', err);
+          return res.status(500).json({ message: 'Có lỗi xảy ra khi xóa sách trả.' });
         }
 
-        return res.status(200).json({ message: 'Xóa sách trả và thông tin mượn sách thành công!' });
+        if (deleteResult.affectedRows === 0) {
+          return res.status(404).json({ message: 'Không tìm thấy bản ghi sách trả.' });
+        }
+
+        // Cập nhật lại số lượng sách trong bảng books
+        const updateBookQuery = 'UPDATE books SET quantity = quantity + ? WHERE book_code = ?';
+        db.query(updateBookQuery, [quantityReturned, bookCode], (err) => {
+          if (err) {
+            console.error('Lỗi cập nhật số lượng sách:', err);
+            return res.status(500).json({ message: 'Có lỗi xảy ra khi cập nhật số lượng sách.' });
+          }
+
+          // Xóa bản ghi trong bảng borrowBooks
+          const deleteBorrowQuery = 'DELETE FROM borrowBooks WHERE borrowBooks_id = ?';
+
+          db.query(deleteBorrowQuery, [borrowBooksId], (err, borrowDeleteResult) => {
+            if (err) {
+              console.error('Lỗi khi xóa borrowBooks:', err);
+              return res.status(500).json({ message: 'Có lỗi xảy ra khi xóa thông tin mượn sách.' });
+            }
+
+            return res.status(200).json({ message: 'Xóa sách trả, cập nhật số lượng sách và thông tin mượn sách thành công!' });
+          });
+        });
       });
     });
   });
 };
- 
 
 module.exports = { getAllreturnBooks, getStatuses, calculatePenaltyForAll, getUniqueFee, returnBooks };
