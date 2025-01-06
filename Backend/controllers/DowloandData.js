@@ -93,16 +93,10 @@ const downloadExcel = async (req, res) => {
             if (err) {
                 console.error('Error sending file:', err);
             } else {
-                console.log('File sent successfully');
-                fs.unlink(filePath, (unlinkErr) => {
-                    if (unlinkErr) {
-                        console.error('Error deleting file:', unlinkErr);
-                    } else {
-                        console.log('File deleted successfully');
-                    }
-                });
+                console.log('File download successful');
+                fs.unlink(filePath, (unlinkErr) => {});
             }
-        });
+        }); 
 
     } catch (error) {
         console.error('Error generating Excel file:', error.message);
